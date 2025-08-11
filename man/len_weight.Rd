@@ -4,14 +4,14 @@
 \alias{len_weight}
 \title{Analyse weight-length relationship}
 \usage{
-len_weight(Weight, Length, Sex = NULL, data)
+len_weight(weight, length, sex = NULL, data)
 }
 \arguments{
-\item{Weight}{Numeric vector of weights}
+\item{weight}{Numeric vector of weights}
 
-\item{Length}{Numeric vector of lengths}
+\item{length}{Numeric vector of lengths}
 
-\item{Sex}{Factor containing two levels}
+\item{sex}{Factor containing two levels}
 
 \item{data}{A data frame containing, minimally, variables for length and weight, and optionally sex}
 }
