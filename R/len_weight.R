@@ -1,27 +1,26 @@
 #' Analyse weight-length relationship
-#' 
-#' Function for running a log-linear regression model to analyse body mass as a function of length. 
-#' Essentially just a wrapper for \code{lm()} and \code{predict.lm()} that tabulates some useful 
-#' summary statistics. Also returns the predicted mean, 95 percent confidence intervals and prediction intervals, 
-#' corrected for bias due to log transformation, and the fitted \code{lm()} objects. 
+#'
+#' Function for running a log-linear regression model to analyse body mass as a function of length.
+#' Essentially just a wrapper for \code{lm()} and \code{predict.lm()} that tabulates some useful
+#' summary statistics. Also returns the predicted mean, 95 percent confidence intervals and prediction intervals,
+#' corrected for bias due to log transformation, and the fitted \code{lm()} objects.
 #' @param weight Numeric vector of weights
 #' @param length Numeric vector of lengths
-#' @param grouping_var Categorical variable containing two or more unique variables (e.g. sex). Will be converted into a factor. 
+#' @param grouping_var Categorical variable containing two or more unique variables (e.g. sex). Will be converted into a factor.
 #' @param data A data frame containing, minimally, variables for length and weight, and optionally sex
 #' @return results A list containing the \code{lm} model, coefficients and other useful info, predicted mean and raw data
 #' @examples
 #' data(spottail)
-#' 
+#'
 #' lw <- len_weight(wgt, length, sex, data = spottail)
-#' 
+#'
 #' summary(lw)
-#' 
+#'
 #' p <- plot(lw, log = T)
-#' 
+#'
 #' p$f + xlab("ln Total Length (mm)") + ylab("ln Weight (kg)") + facet_null()
 #' @export
 len_weight <- function(weight, length, grouping_var = NULL, data) {
-  
   # Load dependencies
   require(tidyverse)
 
@@ -29,22 +28,24 @@ len_weight <- function(weight, length, grouping_var = NULL, data) {
   arguments <- as.list(match.call())
   new <- tibble(length = eval(arguments$length, data), weight = eval(arguments$weight, data))
 
-# If grouping_var is provided as an argument, add it to data
-if (!is.null(arguments$grouping_var)) {
-  new$grouping_var <- as_factor(eval(arguments$grouping_var, data))
-  print(paste0("The categorical variable ", arguments$grouping_var, " has ", length(levels(as.factor(new$grouping_var))), " levels."))
+  # If grouping_var is provided as an argument, add it to data
+  if (!is.null(arguments$grouping_var)) {
+    new$grouping_var <- as_factor(eval(arguments$grouping_var, data))
+    print(paste0("The categorical variable ", arguments$grouping_var, " has ", length(levels(as.factor(new$grouping_var))), " levels."))
+  } else {
+    new$grouping_var <- factor("Unspecified")
+  }
 
-} else {
-  new$grouping_var <- factor("Unspecified")
-}
-  
-# If more than one level is present in 'grouping_var' create a new dataset with all data
-# and append to existing data, remove missing values
-  if(levels(droplevels(new$grouping_var)) |> length()>1){
-    new |> mutate(new, grouping_var = "all") |> rbind(new) |> na.omit() -> new
-}
-  
-  
+  # If more than one level is present in 'grouping_var' create a new dataset with all data
+  # and append to existing data, remove missing values
+  if (levels(droplevels(new$grouping_var)) |> length() > 1) {
+    new |>
+      mutate(new, grouping_var = "all") |>
+      rbind(new) |>
+      na.omit() -> new
+  }
+
+
   # Function for modelling length weight relationship
   len_weight_mod <- function(data) {
     # Run model
@@ -67,7 +68,7 @@ if (!is.null(arguments$grouping_var)) {
 
     # Get mean, confidence and prediction intervals, adjusting for bias in log transform
     pred <- cbind(data.frame(length = len_range), exp(predict(m, newdata = data.frame(length = len_range), interval = "confidence") + summary(m)$sigma^2 / 2)) |>
-      cbind(exp(predict(m, newdata = data.frame(length = len_range), interval = "prediction") + summary(m)$sigma^2 / 2)[,-1])
+      cbind(exp(predict(m, newdata = data.frame(length = len_range), interval = "prediction") + summary(m)$sigma^2 / 2)[, -1])
     names(pred) <- c("length", "wgt", "clower", "cupper", "plower", "pupper")
 
     # Save output
@@ -90,7 +91,7 @@ if (!is.null(arguments$grouping_var)) {
   results <- list(coefs = coefs, preds = preds, mods = mods, data = new)
   class(results) <- "len_weight"
 
-   return(invisible(results))
+  return(invisible(results))
 }
 
 plot.len_weight <- function(x, log = F, display = T, ...) {
