@@ -31,7 +31,7 @@ lw <- len_weight(wgt, length, sex, data = spottail)
 
 summary(lw)
 
-p <- plot(lw, log = T)
+p <- plot(lw)
 
-p$f + xlab("ln Total Length (mm)") + ylab("ln Weight (kg)") + facet_null()
+p$f + xlab("Total Length (mm)") + ylab("Weight (kg)")
 }
