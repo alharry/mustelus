@@ -16,9 +16,9 @@
 #'
 #' summary(lw)
 #'
-#' p <- plot(lw, log = T)
+#' p <- plot(lw)
 #'
-#' p$f + xlab("ln Total Length (mm)") + ylab("ln Weight (kg)") + facet_null()
+#' p$f + xlab("Total Length (mm)") + ylab("Weight (kg)")
 #' @export
 len_weight <- function(weight, length, grouping_var = NULL, data) {
   # Load dependencies
@@ -40,7 +40,7 @@ len_weight <- function(weight, length, grouping_var = NULL, data) {
   # and append to existing data, remove missing values
   if (levels(droplevels(new$grouping_var)) |> length() > 1) {
     new |>
-      mutate(new, grouping_var = "all") |>
+      mutate(new, grouping_var = c("all")) |>
       rbind(new) |>
       na.omit() -> new
   }
@@ -69,84 +69,47 @@ len_weight <- function(weight, length, grouping_var = NULL, data) {
     # Get mean, confidence and prediction intervals, adjusting for bias in log transform
     pred <- cbind(data.frame(length = len_range), exp(predict(m, newdata = data.frame(length = len_range), interval = "confidence") + summary(m)$sigma^2 / 2)) |>
       cbind(exp(predict(m, newdata = data.frame(length = len_range), interval = "prediction") + summary(m)$sigma^2 / 2)[, -1])
-    names(pred) <- c("length", "wgt", "clower", "cupper", "plower", "pupper")
+    names(pred) <- c("length", "weight", "clower", "cupper", "plower", "pupper")
 
     # Save output
     out <- list(coefs = coefs, pred = pred, mod = m)
     return(out)
   }
 
-  # Need something to determine what to give to dlply
-  out <- dlply(new, .(grouping_var), len_weight_mod)
-  coefs <- ldply(out, function(x) {
-    x$coef
-  })
-  preds <- ldply(out, function(x) {
-    x$pred
-  })
-  mods <- llply(out, function(x) {
-    x$mod
-  })
+  # Nest data into groups and run len_weight_mod function
+  results <- new |>
+    group_by(grouping_var) |>
+    nest() |>
+    mutate(coefs = map(data, ~ len_weight_mod(.)$coefs)) |>
+    mutate(preds = map(data, ~ len_weight_mod(.)$pred)) |>
+    mutate(mods = map(data, ~ len_weight_mod(.)$mod))
 
-  results <- list(coefs = coefs, preds = preds, mods = mods, data = new)
-  class(results) <- "len_weight"
-
+  class(results) <- c("len_weight", "tbl_df", "tbl", "data.frame")
   return(invisible(results))
 }
 
-plot.len_weight <- function(x, log = F, display = T, ...) {
-  require(ggplot2)
-
-  pred <- x$preds
-  data <- x$data
-  plots <- list()
-  logplots <- list()
-
-  ## Plots
-  # Normal space
-  for (i in levels(pred$grouping_var)) {
-    p <- ggplot(filter(pred, grouping_var %in% i), aes(x = length, y = wgt)) +
-      geom_line() +
-      geom_line(aes(y = cupper), linetype = "dashed") +
-      geom_line(aes(y = clower), linetype = "dashed") +
-      geom_line(aes(y = pupper), linetype = "dotted") +
-      geom_line(aes(y = plower), linetype = "dotted") +
-      geom_point(data = filter(data, grouping_var %in% i), aes(x = length, y = weight)) +
-      xlab("Length") +
-      ylab("Weight") +
-      facet_wrap(~grouping_var)
-    plots[[i]] <- p
-    # In log space
-    p1 <- ggplot(filter(pred, grouping_var %in% i), aes(x = log(length), y = log(wgt))) +
-      geom_line() +
-      geom_line(aes(y = log(cupper)), linetype = "dashed") +
-      geom_line(aes(y = log(clower)), linetype = "dashed") +
-      geom_line(aes(y = log(pupper)), linetype = "dotted") +
-      geom_line(aes(y = log(plower)), linetype = "dotted") +
-      geom_point(data = filter(data, grouping_var %in% i), aes(x = log(length), y = log(weight))) +
-      xlab("ln length") +
-      ylab("ln weight") +
-      facet_wrap(~grouping_var)
-    logplots[[i]] <- p1
-    if (display == T) {
-      if (log == F) {
-        par(ask = T)
-        plot(p)
-      } else {
-        plot(p1)
-      }
-      flush.console()
-    }
-  }
-  par(ask = F)
-
-  if (log == F) {
-    return(plots = invisible(plots))
-  } else {
-    return(plots = invisible(logplots))
-  }
+#' @export
+summary.len_weight <- function(x, ...) {
+  return(x$coefs |> tibble() |> unnest(cols = everything()))
 }
 
-summary.len_weight <- function(x) {
-  print(x$coefs)
+#' @export
+plot.len_weight <- function(x) {
+  require(tidyverse)
+
+  plot_lims <- x[which(lw$grouping_var %in% c("all", "Unspecified")), ]
+
+  len_weight_plots <- x |>
+    group_split(grouping_var) |>
+    map(~ ggplot() +
+      geom_line(data = .$preds[[1]], aes(x = length, y = weight)) +
+      geom_ribbon(data = .$preds[[1]], aes(x = length, ymin = clower, ymax = cupper), col = "black", fill = "transparent", linetype = "dashed") +
+      geom_ribbon(data = .$preds[[1]], aes(x = length, ymin = plower, ymax = pupper), col = "black", fill = "transparent", linetype = "dotted") +
+      geom_point(data = .$data[[1]], aes(x = length, y = weight)) +
+      geom_point(data = plot_lims$data[[1]], aes(x = length, y = weight), col = "transparent") +
+      theme_classic())
+  
+  names(len_weight_plots) <- lw$grouping_var
+
+  return(len_weight_plots)
 }
