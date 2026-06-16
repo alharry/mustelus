@@ -1,11 +1,12 @@
 Package: mustelus
-Title: What the Package Does (One Line, Title Case)
+Title: Chondrichthyan Fisheries Biology
 Version: 0.0.0.9000
-Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+Authors@R:
+    person("Alastair", "Harry", , "alastair.harry@gmail.com", role = c("aut", "cre"))
+Description: Tools for chondrichthyan fisheries biology, including
+    length-weight relationships.
+License: MIT + file LICENSE
+URL: https://alharry.github.io/mustelus/
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2

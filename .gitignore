@@ -36,3 +36,4 @@ rsconnect/
 .Rproj.user
 .DS_Store
 .Rbuildignore
+docs
