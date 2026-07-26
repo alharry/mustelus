@@ -25,13 +25,14 @@ len_weight <- function(weight, length, grouping_var = NULL, data) {
   require(tidyverse)
 
   # Bring in data
-  arguments <- as.list(match.call())
-  new <- tibble(length = eval(arguments$length, data), weight = eval(arguments$weight, data))
+  new <- data |> transmute(length = {{ length }}, weight = {{ weight }})
 
   # If grouping_var is provided as an argument, add it to data
-  if (!is.null(arguments$grouping_var)) {
-    new$grouping_var <- as_factor(eval(arguments$grouping_var, data))
-    print(paste0("The categorical variable ", arguments$grouping_var, " has ", length(levels(as.factor(new$grouping_var))), " levels."))
+  grp_quo <- rlang::enquo(grouping_var)
+  if (!rlang::quo_is_null(grp_quo)) {
+    new$grouping_var <- as_factor(dplyr::pull(data, !!grp_quo))
+    message("The categorical variable ", rlang::as_label(grp_quo), " has ",
+            nlevels(new$grouping_var), " levels.")
   } else {
     new$grouping_var <- factor("Unspecified")
   }
@@ -80,9 +81,14 @@ len_weight <- function(weight, length, grouping_var = NULL, data) {
   results <- new |>
     group_by(grouping_var) |>
     nest() |>
-    mutate(coefs = map(data, ~ len_weight_mod(.)$coefs)) |>
-    mutate(preds = map(data, ~ len_weight_mod(.)$pred)) |>
-    mutate(mods = map(data, ~ len_weight_mod(.)$mod))
+    mutate(
+      .fit  = map(data, len_weight_mod),
+      coefs = map(.fit, "coefs"),
+      preds = map(.fit, "pred"),
+      mods  = map(.fit, "mod")
+    ) |>
+    select(-.fit) |>
+    mutate(across(c(data, coefs, preds, mods), ~ set_names(., grouping_var)))
 
   class(results) <- c("len_weight", "tbl_df", "tbl", "data.frame")
   return(invisible(results))
@@ -97,7 +103,7 @@ summary.len_weight <- function(x, ...) {
 plot.len_weight <- function(x) {
   require(tidyverse)
 
-  plot_lims <- x[which(lw$grouping_var %in% c("all", "Unspecified")), ]
+  plot_lims <- x[which(x$grouping_var %in% c("all", "Unspecified")), ]
 
   len_weight_plots <- x |>
     group_split(grouping_var) |>
@@ -108,8 +114,8 @@ plot.len_weight <- function(x) {
       geom_point(data = .$data[[1]], aes(x = length, y = weight)) +
       geom_point(data = plot_lims$data[[1]], aes(x = length, y = weight), col = "transparent") +
       theme_classic())
-  
-  names(len_weight_plots) <- lw$grouping_var
+
+  names(len_weight_plots) <- x$grouping_var
 
   return(len_weight_plots)
 }
