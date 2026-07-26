@@ -48,7 +48,7 @@ data(spottail)
 lw <- len_weight(wgt, length, sex, data = spottail)
 #> Loading required package: tidyverse
 #> Warning: there is no package called ‘tidyverse’
-#> Error in tibble(length = eval(arguments$length, data), weight = eval(arguments$weight,     data)): could not find function "tibble"
+#> Error in transmute(data, length = {    {        length    }}, weight = {    {        weight    }}): could not find function "transmute"
 
 summary(lw)
 #> Error: object 'lw' not found
