@@ -79,18 +79,20 @@ corrected for bias due to log transformation, and the fitted <code><a href="http
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">spottail</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">lw</span> <span class="op">&lt;-</span> <span class="fu">len_weight</span><span class="op">(</span><span class="va">wgt</span>, <span class="va">length</span>, <span class="va">sex</span>, data <span class="op">=</span> <span class="va">spottail</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: tidyverse</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>there is no package called ‘tidyverse’</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in transmute(data, length = {    {        length    }}, weight = {    {        weight    }}):</span> could not find function "transmute"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The categorical variable sex has 2 levels.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lw</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'lw' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 8</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          a Std.Error.range       b Std.Error  Sigma    LL     n len.range </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 2.13<span style="color: #949494;">e</span><span style="color: #BB0000;">-10</span> ( 1.441 - 3.16 )   3.47 ( 0.057 ) 0.102  166.    192 478 - 1301</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 1.12<span style="color: #949494;">e</span><span style="color: #BB0000;">-10</span> ( 0.618 - 2.037 )  3.56 ( 0.086 ) 0.096<span style="text-decoration: underline;">8</span>  91.7    99 691 - 1301</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 4.47<span style="color: #949494;">e</span><span style="color: #BB0000;">-10</span> ( 2.457 - 8.148 )  3.36 ( 0.087 ) 0.107   76.9    93 478 - 1139</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">lw</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'lw' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">p</span><span class="op">$</span><span class="va">f</span> <span class="op">+</span> <span class="fu">xlab</span><span class="op">(</span><span class="st">"Total Length (mm)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Weight (kg)"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'p' not found</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in xlab("Total Length (mm)"):</span> could not find function "xlab"</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
