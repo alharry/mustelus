@@ -39,13 +39,12 @@ len_weight <- function(weight, length, grouping_var = NULL, data) {
     new$grouping_var <- factor("Unspecified")
   }
 
+  new <- new[!is.na(new$length) & !is.na(new$weight) & new$length > 0 & new$weight > 0, ]
+
   # If more than one level is present in 'grouping_var' create a new dataset with all data
-  # and append to existing data, remove missing values
+  # and append to existing data
   if (base::length(levels(droplevels(new$grouping_var))) > 1) {
-    new |>
-      mutate(new, grouping_var = c("all")) |>
-      rbind(new) |>
-      na.omit() -> new
+    new <- rbind(mutate(new, grouping_var = "all"), new)
   }
 
   # Function for modelling length weight relationship
