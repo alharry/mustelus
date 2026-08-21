@@ -41,7 +41,7 @@ len_weight <- function(weight, length, grouping_var = NULL, data) {
 
   # If more than one level is present in 'grouping_var' create a new dataset with all data
   # and append to existing data, remove missing values
-  if (levels(droplevels(new$grouping_var)) |> length() > 1) {
+  if (base::length(levels(droplevels(new$grouping_var))) > 1) {
     new |>
       mutate(new, grouping_var = c("all")) |>
       rbind(new) |>
@@ -69,7 +69,7 @@ len_weight <- function(weight, length, grouping_var = NULL, data) {
       Std.Error = paste("(", round(err[2], 3), ")"),
       Sigma = signif(summary(m)$sigma, 4),
       LL = signif(logLik(m)[1], 4),
-      n = length(m$residuals),
+      n = base::length(m$residuals),
       len.range = paste(
         min(data$length[which(data$weight > 0)], na.rm = T),
         "-",
