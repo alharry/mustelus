@@ -39,7 +39,10 @@ len_weight <- function(weight, length, grouping_var = NULL, data) {
     new$grouping_var <- factor("Unspecified")
   }
 
-  new <- new[!is.na(new$length) & !is.na(new$weight) & new$length > 0 & new$weight > 0, ]
+  n_invalid <- sum(new$length <= 0 | new$weight <= 0, na.rm = TRUE)
+  if (n_invalid > 0)
+    warning(n_invalid, " row(s) with zero or negative length/weight values detected and will cause errors in log transformation.")
+  new <- new[!is.na(new$length) & !is.na(new$weight), ]
 
   # If more than one level is present in 'grouping_var' create a new dataset with all data
   # and append to existing data
