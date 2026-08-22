@@ -17,11 +17,29 @@ knitr::opts_chunk$set(
 library(ggplot2)
 ```
 
-The `len_weight()` function fits a log-linear regression of body mass as a function of length:
+## Background
 
-$$\log(W) = \log(a) + b \cdot \log(L)$$
+The relationship between body mass and length in fishes is typically described by a power curve:
 
-which is equivalent to the standard fisheries length-weight relationship $W = aL^b$.
+$$W_i = \alpha L_i^{\beta}$$
+
+where $W_i$ and $L_i$ are the weight and length of individual $i$, and $\alpha$ and $\beta$ are estimated parameters. Individual variability in weight also increases with length, so a multiplicative rather than additive error structure is more appropriate:
+
+$$W_i = \alpha L_i^{\beta} e^{\epsilon}, \quad \epsilon \sim N(0, \sigma^2)$$
+
+Upon log-transformation this becomes a standard linear regression:
+
+$$\ln(W_i) = \ln(\alpha) + \beta \cdot \ln(L_i) + \epsilon$$
+
+where $\ln(\alpha)$ is the intercept and $\beta$ is the slope. This is the model fitted by `len_weight()`.
+
+## Bias correction
+
+A subtle but important consequence of log-transforming the response is that back-transforming predictions gives the *median* weight at a given length, not the mean. For a lognormal distribution, the mean is:
+
+$$E[W \mid L] = e^{\hat{\mu} + \sigma^2/2}$$
+
+where $\sigma^2$ is the residual variance. `len_weight()` applies this correction automatically — all predicted values and intervals are corrected for back-transformation bias.
 
 ## Basic usage
 
@@ -32,6 +50,8 @@ data(spottail)
 lw <- len_weight(wgt, length, data = spottail)
 summary(lw)
 ```
+
+The summary table reports: the intercept on the natural scale ($a = e^{\ln(\alpha)}$), its standard error range, the slope $b$, its standard error, the residual standard deviation $\sigma$, the log-likelihood, sample size, and length range.
 
 ## Grouping by sex
 
@@ -44,7 +64,7 @@ summary(lw_sex)
 
 ## Plotting
 
-`plot()` returns a named list of ggplot objects — one per group — which can be customised with standard ggplot2 calls.
+`plot()` returns a named list of ggplot objects — one per group — which can be customised with standard ggplot2 calls. The solid line is the predicted mean, the dashed ribbon the 95% confidence interval, and the dotted ribbon the 95% prediction interval.
 
 ```{r}
 p <- plot(lw_sex)
@@ -55,9 +75,18 @@ p$f + xlab("Total length (mm)") + ylab("Weight (kg)")
 p$m + xlab("Total length (mm)") + ylab("Weight (kg)")
 ```
 
+## Confidence vs prediction intervals
+
+Both interval types appear in the output. They answer different questions:
+
+- **Confidence interval** — uncertainty in the *mean* weight at a given length. Narrows with more data.
+- **Prediction interval** — expected spread of *individual* weights at a given length. Reflects the biological variability captured by $\sigma$ and does not narrow appreciably with more data.
+
+For most fisheries reporting purposes the prediction interval is more informative, as it describes the range of weights you would expect to observe in the field.
+
 ## Using other length measurements
 
-The function accepts any numeric predictor — fork length, precaudal length, age, or anything else that makes sense to log-transform.
+The function accepts any positive numeric predictor — fork length, precaudal length, or any other measurement that makes biological sense to log-transform.
 
 ```{r}
 lw_fl <- len_weight(wgt, FL, data = spottail)
@@ -66,12 +95,16 @@ summary(lw_fl)
 
 ## Output structure
 
-The result is a nested tibble with one row per group. List columns `data`, `coefs`, `preds`, and `mods` are named by group level for easy access:
+The result is a nested tibble with one row per group. List columns `data`, `coefs`, `preds`, and `mods` are named by group level for direct access:
 
 ```{r}
 # Fitted lm object for females
 lw_sex$mods[["f"]]
+```
 
+```{r}
 # Predicted values for the pooled group
 head(lw_sex$preds[["all"]])
 ```
+
+The `preds` data frame contains six columns: `length`, `weight` (bias-corrected mean), `clower`/`cupper` (95% confidence interval), and `plower`/`pupper` (95% prediction interval).
