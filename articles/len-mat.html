@@ -64,7 +64,7 @@
 
     
     
-<p>The <code><a href="../reference/mat_fun.html">mat_fun()</a></code> function fits a logistic regression of
+<p>The <code><a href="../reference/maturity.html">maturity()</a></code> function fits a logistic regression of
 binary maturity (0 = immature, 1 = mature) as a function of a continuous
 predictor such as length or age:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">mature</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><msup><mi>e</mi><mrow><mi>−</mi><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>⋅</mo><mi>L</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup></mrow></mfrac></mrow><annotation encoding="application/x-tex">P(\text{mature}) = \frac{1}{1 + e^{-(a + b \cdot L)}}</annotation></semantics></math></p>
@@ -82,7 +82,7 @@ to be mature — with bootstrap confidence intervals.</p>
 <span><span class="co">#&gt; Welcome to <span style="font-style: italic;">mustelus</span> package</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">spottail</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">lm50</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mat_fun.html">mat_fun</a></span><span class="op">(</span><span class="va">maturity_stage</span>, <span class="va">length</span>, data <span class="op">=</span> <span class="va">spottail</span>, times <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span>
+<span><span class="va">lm50</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/maturity.html">maturity</a></span><span class="op">(</span><span class="va">maturity_stage</span>, <span class="va">length</span>, data <span class="op">=</span> <span class="va">spottail</span>, times <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: There was 1 warning in `mutate()`.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `L95_b = map_dbl(mod_b, ~(log(0.95/0.05) -</span></span>
 <span><span class="co">#&gt;   coef(.x)[[1]])/coef(.x)[[2]])`.</span></span>
@@ -105,7 +105,7 @@ to be mature — with bootstrap confidence intervals.</p>
 <h2 id="grouping-by-sex">Grouping by sex<a class="anchor" aria-label="anchor" href="#grouping-by-sex"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">lm50_sex</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mat_fun.html">mat_fun</a></span><span class="op">(</span><span class="va">maturity_stage</span>, <span class="va">length</span>, <span class="va">sex</span>, data <span class="op">=</span> <span class="va">spottail</span>, times <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">lm50_sex</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/maturity.html">maturity</a></span><span class="op">(</span><span class="va">maturity_stage</span>, <span class="va">length</span>, <span class="va">sex</span>, data <span class="op">=</span> <span class="va">spottail</span>, times <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span>
 <span><span class="co">#&gt; The categorical variable sex has 2 levels.</span></span>
 <span><span class="co">#&gt; Warning: There were 4 warnings in `mutate()`.</span></span>
 <span><span class="co">#&gt; The first warning was:</span></span>
@@ -172,13 +172,13 @@ units (default is range/10):</p>
 <div class="section level2">
 <h2 id="using-age-as-the-predictor">Using age as the predictor<a class="anchor" aria-label="anchor" href="#using-age-as-the-predictor"></a>
 </h2>
-<p><code><a href="../reference/mat_fun.html">mat_fun()</a></code> works with any continuous predictor — here
+<p><code><a href="../reference/maturity.html">maturity()</a></code> works with any continuous predictor — here
 using age rather than length:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">am50</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mat_fun.html">mat_fun</a></span><span class="op">(</span><span class="va">maturity_stage</span>, <span class="va">age_agree</span>, data <span class="op">=</span> <span class="va">spottail</span>, times <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">am50</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/maturity.html">maturity</a></span><span class="op">(</span><span class="va">maturity_stage</span>, <span class="va">age_agree</span>, data <span class="op">=</span> <span class="va">spottail</span>, times <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: There were 2 warnings in `mutate()`.</span></span>
 <span><span class="co">#&gt; The first warning was:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `.fit = map(data, ~mat_fun_mod(.x))`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `.fit = map(data, ~maturity_mod(.x))`.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In group 1: `grouping_var = Unspecified`.</span></span>
 <span><span class="co">#&gt; Caused by warning:</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> glm.fit: fitted probabilities numerically 0 or 1 occurred</span></span>

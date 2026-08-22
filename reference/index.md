@@ -4,7 +4,7 @@
 
 - [`len_weight()`](https://alharry.github.io/mustelus/reference/len_weight.md)
   : Analyse weight-length relationship
-- [`mat_fun()`](https://alharry.github.io/mustelus/reference/mat_fun.md)
+- [`maturity()`](https://alharry.github.io/mustelus/reference/maturity.md)
   : Analyse length or age at maturity
 - [`sandbar`](https://alharry.github.io/mustelus/reference/sandbar.md) :
   Sandbar shark data

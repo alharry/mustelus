@@ -1,7 +1,7 @@
 # Length at maturity analysis
 
 The
-[`mat_fun()`](https://alharry.github.io/mustelus/reference/mat_fun.md)
+[`maturity()`](https://alharry.github.io/mustelus/reference/maturity.md)
 function fits a logistic regression of binary maturity (0 = immature, 1
 = mature) as a function of a continuous predictor such as length or age:
 
@@ -21,7 +21,7 @@ library(mustelus)
 #> Welcome to mustelus package
 data(spottail)
 
-lm50 <- mat_fun(maturity_stage, length, data = spottail, times = 200)
+lm50 <- maturity(maturity_stage, length, data = spottail, times = 200)
 #> Warning: There was 1 warning in `mutate()`.
 #> ℹ In argument: `L95_b = map_dbl(mod_b, ~(log(0.95/0.05) -
 #>   coef(.x)[[1]])/coef(.x)[[2]])`.
@@ -45,7 +45,7 @@ summary(lm50)
 
 ``` r
 
-lm50_sex <- mat_fun(maturity_stage, length, sex, data = spottail, times = 200)
+lm50_sex <- maturity(maturity_stage, length, sex, data = spottail, times = 200)
 #> The categorical variable sex has 2 levels.
 #> Warning: There were 4 warnings in `mutate()`.
 #> The first warning was:
@@ -130,15 +130,15 @@ plot(lm50, binwidth = 50)$Unspecified +
 
 ## Using age as the predictor
 
-[`mat_fun()`](https://alharry.github.io/mustelus/reference/mat_fun.md)
+[`maturity()`](https://alharry.github.io/mustelus/reference/maturity.md)
 works with any continuous predictor — here using age rather than length:
 
 ``` r
 
-am50 <- mat_fun(maturity_stage, age_agree, data = spottail, times = 200)
+am50 <- maturity(maturity_stage, age_agree, data = spottail, times = 200)
 #> Warning: There were 2 warnings in `mutate()`.
 #> The first warning was:
-#> ℹ In argument: `.fit = map(data, ~mat_fun_mod(.x))`.
+#> ℹ In argument: `.fit = map(data, ~maturity_mod(.x))`.
 #> ℹ In group 1: `grouping_var = Unspecified`.
 #> Caused by warning:
 #> ! glm.fit: fitted probabilities numerically 0 or 1 occurred
