@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 library(ggplot2)
 ```
 
-The `len_mat()` function fits a logistic regression of binary maturity (0 = immature, 1 = mature) as a function of a continuous predictor such as length or age:
+The `mat_fun()` function fits a logistic regression of binary maturity (0 = immature, 1 = mature) as a function of a continuous predictor such as length or age:
 
 $$P(\text{mature}) = \frac{1}{1 + e^{-(a + b \cdot L)}}$$
 
@@ -29,14 +29,14 @@ Key outputs are $L_{50}$ and $L_{95}$ — the lengths (or ages) at which 50% and
 library(mustelus)
 data(spottail)
 
-lm50 <- len_mat(maturity_stage, length, data = spottail, times = 200)
+lm50 <- mat_fun(maturity_stage, length, data = spottail, times = 200)
 summary(lm50)
 ```
 
 ## Grouping by sex
 
 ```{r}
-lm50_sex <- len_mat(maturity_stage, length, sex, data = spottail, times = 200)
+lm50_sex <- mat_fun(maturity_stage, length, sex, data = spottail, times = 200)
 summary(lm50_sex)
 ```
 
@@ -82,10 +82,10 @@ plot(lm50, binwidth = 50)$Unspecified +
 
 ## Using age as the predictor
 
-`len_mat()` works with any continuous predictor — here using age rather than length:
+`mat_fun()` works with any continuous predictor — here using age rather than length:
 
 ```{r}
-am50 <- len_mat(maturity_stage, age_agree, data = spottail, times = 200)
+am50 <- mat_fun(maturity_stage, age_agree, data = spottail, times = 200)
 summary(am50)
 ```
 

@@ -13,7 +13,7 @@ len_weight(weight, length, grouping_var = NULL, data)
 
 \item{grouping_var}{Categorical variable containing two or more unique variables (e.g. sex). Will be converted into a factor.}
 
-\item{data}{A data frame containing, minimally, variables for length and weight, and optionally sex}
+\item{data}{A data frame containing, minimally, variables for length and weight, and optionally sex or another grouping variable}
 }
 \value{
 results A list containing the \code{lm} model, coefficients and other useful info, predicted mean and raw data
