@@ -1,8 +1,9 @@
 # Length at maturity analysis
 
-The `len_mat()` function fits a logistic regression of binary maturity
-(0 = immature, 1 = mature) as a function of a continuous predictor such
-as length or age:
+The
+[`mat_fun()`](https://alharry.github.io/mustelus/reference/mat_fun.md)
+function fits a logistic regression of binary maturity (0 = immature, 1
+= mature) as a function of a continuous predictor such as length or age:
 
 ``` math
 P(\text{mature}) = \frac{1}{1 + e^{-(a + b \cdot L)}}
@@ -20,7 +21,7 @@ library(mustelus)
 #> Welcome to mustelus package
 data(spottail)
 
-lm50 <- len_mat(maturity_stage, length, data = spottail, times = 200)
+lm50 <- mat_fun(maturity_stage, length, data = spottail, times = 200)
 #> Warning: There was 1 warning in `mutate()`.
 #> ℹ In argument: `L95_b = map_dbl(mod_b, ~(log(0.95/0.05) -
 #>   coef(.x)[[1]])/coef(.x)[[2]])`.
@@ -28,7 +29,7 @@ lm50 <- len_mat(maturity_stage, length, data = spottail, times = 200)
 #> Caused by warning:
 #> ! There were 63 warnings in `mutate()`.
 #> The first warning was:
-#> ℹ In argument: `mod_b = map(splits, ~glm(mat ~ len, family = binomial, data =
+#> ℹ In argument: `mod_b = map(splits, ~glm(mat ~ x, family = binomial, data =
 #>   rsample::analysis(.x)))`.
 #> Caused by warning:
 #> ! glm.fit: fitted probabilities numerically 0 or 1 occurred
@@ -44,7 +45,7 @@ summary(lm50)
 
 ``` r
 
-lm50_sex <- len_mat(maturity_stage, length, sex, data = spottail, times = 200)
+lm50_sex <- mat_fun(maturity_stage, length, sex, data = spottail, times = 200)
 #> The categorical variable sex has 2 levels.
 #> Warning: There were 4 warnings in `mutate()`.
 #> The first warning was:
@@ -54,7 +55,7 @@ lm50_sex <- len_mat(maturity_stage, length, sex, data = spottail, times = 200)
 #> Caused by warning:
 #> ! There were 67 warnings in `mutate()`.
 #> The first warning was:
-#> ℹ In argument: `mod_b = map(splits, ~glm(mat ~ len, family = binomial, data =
+#> ℹ In argument: `mod_b = map(splits, ~glm(mat ~ x, family = binomial, data =
 #>   rsample::analysis(.x)))`.
 #> Caused by warning:
 #> ! glm.fit: fitted probabilities numerically 0 or 1 occurred
@@ -129,15 +130,15 @@ plot(lm50, binwidth = 50)$Unspecified +
 
 ## Using age as the predictor
 
-`len_mat()` works with any continuous predictor — here using age rather
-than length:
+[`mat_fun()`](https://alharry.github.io/mustelus/reference/mat_fun.md)
+works with any continuous predictor — here using age rather than length:
 
 ``` r
 
-am50 <- len_mat(maturity_stage, age_agree, data = spottail, times = 200)
+am50 <- mat_fun(maturity_stage, age_agree, data = spottail, times = 200)
 #> Warning: There were 2 warnings in `mutate()`.
 #> The first warning was:
-#> ℹ In argument: `.fit = map(data, ~len_mat_mod(.x))`.
+#> ℹ In argument: `.fit = map(data, ~mat_fun_mod(.x))`.
 #> ℹ In group 1: `grouping_var = Unspecified`.
 #> Caused by warning:
 #> ! glm.fit: fitted probabilities numerically 0 or 1 occurred
@@ -172,7 +173,7 @@ quantile(lm50_sex$mods[["f"]]$fitted.values)
 
 # Predicted maturity curve for females
 head(lm50_sex$preds[["f"]])
-#>        len          mat        lower        upper
+#>          x          mat        lower        upper
 #> 1 634.0000 2.220446e-16 2.220446e-16 5.346166e-13
 #> 2 637.3518 2.220446e-16 2.220446e-16 7.193201e-13
 #> 3 640.7035 2.220446e-16 2.220446e-16 9.678395e-13

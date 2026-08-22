@@ -33,7 +33,7 @@ len_weight(weight, length, grouping_var = NULL, data)
 - data:
 
   A data frame containing, minimally, variables for length and weight,
-  and optionally sex
+  and optionally sex or another grouping variable
 
 ## Value
 
