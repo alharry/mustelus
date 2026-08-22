@@ -116,35 +116,47 @@ summary.len_mat <- function(x, ...) {
 }
 
 #' @export
-plot.len_mat <- function(x, bins = 10, ...) {
+plot.len_mat <- function(x, raw_data = c("proportions", "rug", "none"),
+                         binwidth = NULL, ...) {
+  raw_data  <- match.arg(raw_data)
   plot_lims <- x[which(x$grouping_var %in% c("all", "Unspecified")), ]
 
   len_mat_plots <- x |>
     group_split(grouping_var) |>
     map(function(grp) {
-      raw   <- grp$data[[1]]
-      pred  <- grp$preds[[1]]
+      raw  <- grp$data[[1]]
+      pred <- grp$preds[[1]]
 
-      # Bin observed proportions using base R
-      breaks <- seq(min(raw$len, na.rm = TRUE), max(raw$len, na.rm = TRUE), length.out = bins + 1)
-      bin    <- cut(raw$len, breaks = breaks, include.lowest = TRUE)
-      props  <- data.frame(
-        len = (breaks[-1] + breaks[-base::length(breaks)]) / 2,
-        mat = as.numeric(tapply(raw$mat, bin, mean, na.rm = TRUE)),
-        n   = as.numeric(tapply(raw$mat, bin, base::length))
-      )
-      props <- props[!is.na(props$mat), ]
-
-      ggplot() +
+      p <- ggplot() +
         geom_ribbon(data = pred, aes(x = len, ymin = lower, ymax = upper),
                     fill = "grey70") +
         geom_line(data = pred, aes(x = len, y = mat)) +
-        geom_point(data = props, aes(x = len, y = mat, size = n)) +
-        geom_point(data = plot_lims$data[[1]], aes(x = len, y = 0), col = "transparent") +
-        scale_size_area(max_size = 6) +
+        geom_point(data = plot_lims$data[[1]], aes(x = len, y = 0),
+                   col = "transparent") +
         scale_y_continuous(limits = c(0, 1)) +
-        theme_classic() +
-        theme(legend.position = "none")
+        theme_classic()
+
+      if (raw_data == "proportions") {
+        bw     <- if (is.null(binwidth)) diff(range(raw$len, na.rm = TRUE)) / 10 else binwidth
+        breaks <- seq(min(raw$len, na.rm = TRUE), max(raw$len, na.rm = TRUE) + bw, by = bw)
+        bin    <- cut(raw$len, breaks = breaks, include.lowest = TRUE)
+        props  <- data.frame(
+          len = breaks[-base::length(breaks)] + bw / 2,
+          mat = as.numeric(tapply(raw$mat, bin, mean, na.rm = TRUE)),
+          n   = as.numeric(tapply(raw$mat, bin, base::length))
+        )
+        props <- props[!is.na(props$mat), ]
+        p <- p +
+          geom_point(data = props, aes(x = len, y = mat, size = n)) +
+          scale_size_area(max_size = 6) +
+          theme(legend.position = "none")
+      } else if (raw_data == "rug") {
+        p <- p +
+          geom_rug(data = raw[raw$mat == 1, ], aes(x = len), sides = "t", alpha = 0.4) +
+          geom_rug(data = raw[raw$mat == 0, ], aes(x = len), sides = "b", alpha = 0.4)
+      }
+
+      p
     })
 
   names(len_mat_plots) <- x$grouping_var
