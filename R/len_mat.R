@@ -116,8 +116,8 @@ summary.len_mat <- function(x, ...) {
 }
 
 #' @export
-plot.len_mat <- function(x, raw_data = c("proportions", "rug", "none"),
-                         binwidth = NULL, ...) {
+plot.len_mat <- function(x, raw_data = c("proportions", "point", "rug", "none"),
+                         binwidth = NULL, alpha = 1, ...) {
   raw_data  <- match.arg(raw_data)
   plot_lims <- x[which(x$grouping_var %in% c("all", "Unspecified")), ]
 
@@ -136,7 +136,7 @@ plot.len_mat <- function(x, raw_data = c("proportions", "rug", "none"),
         scale_y_continuous(limits = c(0, 1)) +
         theme_classic()
 
-      if (raw_data == "proportions") {
+      if (raw_data %in% c("proportions", "point")) {
         bw     <- if (is.null(binwidth)) diff(range(raw$len, na.rm = TRUE)) / 10 else binwidth
         breaks <- seq(min(raw$len, na.rm = TRUE), max(raw$len, na.rm = TRUE) + bw, by = bw)
         bin    <- cut(raw$len, breaks = breaks, include.lowest = TRUE)
@@ -146,10 +146,15 @@ plot.len_mat <- function(x, raw_data = c("proportions", "rug", "none"),
           n   = as.numeric(tapply(raw$mat, bin, base::length))
         )
         props <- props[!is.na(props$mat), ]
-        p <- p +
-          geom_point(data = props, aes(x = len, y = mat, size = n)) +
-          scale_size_area(max_size = 6) +
-          theme(legend.position = "none")
+        if (raw_data == "proportions") {
+          p <- p +
+            geom_point(data = props, aes(x = len, y = mat, size = n), alpha = alpha) +
+            scale_size_area(max_size = 6) +
+            theme(legend.position = "none")
+        } else {
+          p <- p +
+            geom_point(data = props, aes(x = len, y = mat), alpha = alpha)
+        }
       } else if (raw_data == "rug") {
         p <- p +
           geom_rug(data = raw[raw$mat == 1, ], aes(x = len), sides = "t", alpha = 0.4) +
