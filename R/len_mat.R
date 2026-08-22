@@ -91,20 +91,27 @@ len_mat <- function(mat, len, grouping_var = NULL, data, times = 1000) {
       upper = apply(boot_pred_mat, 1, quantile, 0.975)
     )
 
-    list(coefs = coefs, pred = pred, mod = m)
+    # Store bootstrap coefficients for optional curve visualisation
+    boot_coefs <- data.frame(
+      a = map_dbl(boot_stats$mod_b, ~ coef(.x)[[1]]),
+      b = map_dbl(boot_stats$mod_b, ~ coef(.x)[[2]])
+    )
+
+    list(coefs = coefs, pred = pred, mod = m, boot_coefs = boot_coefs)
   }
 
   results <- new |>
     group_by(grouping_var) |>
     nest() |>
     mutate(
-      .fit  = map(data, ~ len_mat_mod(.x)),
-      coefs = map(.fit, "coefs"),
-      preds = map(.fit, "pred"),
-      mods  = map(.fit, "mod")
+      .fit       = map(data, ~ len_mat_mod(.x)),
+      coefs      = map(.fit, "coefs"),
+      preds      = map(.fit, "pred"),
+      mods       = map(.fit, "mod"),
+      boot_coefs = map(.fit, "boot_coefs")
     ) |>
     select(-.fit) |>
-    mutate(across(c(data, coefs, preds, mods), ~ set_names(., grouping_var)))
+    mutate(across(c(data, coefs, preds, mods, boot_coefs), ~ set_names(., grouping_var)))
 
   class(results) <- c("len_mat", "tbl_df", "tbl", "data.frame")
   return(invisible(results))
@@ -116,8 +123,8 @@ summary.len_mat <- function(x, ...) {
 }
 
 #' @export
-plot.len_mat <- function(x, raw_data = c("proportions", "point", "rug", "none"),
-                         binwidth = NULL, alpha = 1, ...) {
+plot.len_mat <- function(x, raw_data = c("proportions", "point", "rug", "bootstrap", "none"),
+                         binwidth = NULL, alpha = 1, n_boot = 100, ...) {
   raw_data  <- match.arg(raw_data)
   plot_lims <- x[which(x$grouping_var %in% c("all", "Unspecified")), ]
 
@@ -126,6 +133,31 @@ plot.len_mat <- function(x, raw_data = c("proportions", "point", "rug", "none"),
     map(function(grp) {
       raw  <- grp$data[[1]]
       pred <- grp$preds[[1]]
+
+      if (raw_data == "bootstrap") {
+        bc        <- grp$boot_coefs[[1]]
+        n_draw    <- min(n_boot, nrow(bc))
+        bc_sample <- bc[sample(nrow(bc), n_draw), ]
+        len_range <- seq(min(raw$len, na.rm = TRUE), max(raw$len, na.rm = TRUE), length.out = 200)
+        boot_curves <- do.call(rbind, lapply(seq_len(n_draw), function(i) {
+          data.frame(
+            len       = len_range,
+            mat       = 1 / (1 + exp(-(bc_sample$a[i] + bc_sample$b[i] * len_range))),
+            replicate = i
+          )
+        }))
+
+        p <- ggplot() +
+          geom_line(data = boot_curves,
+                    aes(x = len, y = mat, group = replicate),
+                    colour = "grey70", linewidth = 0.3) +
+          geom_line(data = pred, aes(x = len, y = mat)) +
+          geom_point(data = plot_lims$data[[1]], aes(x = len, y = 0),
+                     col = "transparent") +
+          scale_y_continuous(limits = c(0, 1)) +
+          theme_classic()
+        return(p)
+      }
 
       p <- ggplot() +
         geom_ribbon(data = pred, aes(x = len, ymin = lower, ymax = upper),
