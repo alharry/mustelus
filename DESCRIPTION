@@ -22,3 +22,7 @@ Imports:
     tibble,
     tidyr
 LazyData: true
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

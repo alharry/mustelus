@@ -1,0 +1,77 @@
+---
+title: "Length-weight analysis"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Length-weight analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 6,
+  fig.height = 4
+)
+library(ggplot2)
+```
+
+The `len_weight()` function fits a log-linear regression of body mass as a function of length:
+
+$$\log(W) = \log(a) + b \cdot \log(L)$$
+
+which is equivalent to the standard fisheries length-weight relationship $W = aL^b$.
+
+## Basic usage
+
+```{r}
+library(mustelus)
+data(spottail)
+
+lw <- len_weight(wgt, length, data = spottail)
+summary(lw)
+```
+
+## Grouping by sex
+
+Pass a grouping variable to fit separate models per group. A pooled model across all groups is automatically included.
+
+```{r}
+lw_sex <- len_weight(wgt, length, sex, data = spottail)
+summary(lw_sex)
+```
+
+## Plotting
+
+`plot()` returns a named list of ggplot objects — one per group — which can be customised with standard ggplot2 calls.
+
+```{r}
+p <- plot(lw_sex)
+p$f + xlab("Total length (mm)") + ylab("Weight (kg)")
+```
+
+```{r}
+p$m + xlab("Total length (mm)") + ylab("Weight (kg)")
+```
+
+## Using other length measurements
+
+The function accepts any numeric predictor — fork length, precaudal length, age, or anything else that makes sense to log-transform.
+
+```{r}
+lw_fl <- len_weight(wgt, FL, data = spottail)
+summary(lw_fl)
+```
+
+## Output structure
+
+The result is a nested tibble with one row per group. List columns `data`, `coefs`, `preds`, and `mods` are named by group level for easy access:
+
+```{r}
+# Fitted lm object for females
+lw_sex$mods[["f"]]
+
+# Predicted values for the pooled group
+head(lw_sex$preds[["all"]])
+```

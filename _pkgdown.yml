@@ -2,3 +2,21 @@ url: https://alharry.github.io/mustelus/
 template:
   bootstrap: 5
 
+navbar:
+  structure:
+    left: [intro, articles, reference, news]
+  components:
+    articles:
+      text: Articles
+      menu:
+        - text: Length-weight analysis
+          href: articles/len-weight.html
+        - text: Length at maturity analysis
+          href: articles/len-mat.html
+
+articles:
+  - title: Function guides
+    contents:
+      - len-weight
+      - len-mat
+

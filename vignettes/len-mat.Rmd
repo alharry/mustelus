@@ -1,0 +1,107 @@
+---
+title: "Length at maturity analysis"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Length at maturity analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 6,
+  fig.height = 4
+)
+library(ggplot2)
+```
+
+The `len_mat()` function fits a logistic regression of binary maturity (0 = immature, 1 = mature) as a function of a continuous predictor such as length or age:
+
+$$P(\text{mature}) = \frac{1}{1 + e^{-(a + b \cdot L)}}$$
+
+Key outputs are $L_{50}$ and $L_{95}$ — the lengths (or ages) at which 50% and 95% of individuals are expected to be mature — with bootstrap confidence intervals.
+
+## Basic usage
+
+```{r}
+library(mustelus)
+data(spottail)
+
+lm50 <- len_mat(maturity_stage, length, data = spottail, times = 200)
+summary(lm50)
+```
+
+## Grouping by sex
+
+```{r}
+lm50_sex <- len_mat(maturity_stage, length, sex, data = spottail, times = 200)
+summary(lm50_sex)
+```
+
+## Plotting
+
+`plot()` returns a named list of ggplot objects. The default shows binned observed proportions scaled by sample size.
+
+```{r}
+p <- plot(lm50_sex)
+p$f + xlab("Total length (mm)") + ylab("Proportion mature")
+```
+
+### Plot styles
+
+Three styles for raw data display are available:
+
+```{r}
+# Proportions (default) — point size scaled by n per bin
+plot(lm50, raw_data = "proportions")$Unspecified +
+  xlab("Total length (mm)") + ylab("Proportion mature")
+```
+
+```{r}
+# Point — same bins, uniform point size
+plot(lm50, raw_data = "point")$Unspecified +
+  xlab("Total length (mm)") + ylab("Proportion mature")
+```
+
+```{r}
+# Rug — mature individuals on top, immature on bottom
+plot(lm50, raw_data = "rug")$Unspecified +
+  xlab("Total length (mm)") + ylab("Proportion mature")
+```
+
+### Adjusting bin width
+
+The `binwidth` argument controls the width of bins in data units (default is range/10):
+
+```{r}
+plot(lm50, binwidth = 50)$Unspecified +
+  xlab("Total length (mm)") + ylab("Proportion mature")
+```
+
+## Using age as the predictor
+
+`len_mat()` works with any continuous predictor — here using age rather than length:
+
+```{r}
+am50 <- len_mat(maturity_stage, age_agree, data = spottail, times = 200)
+summary(am50)
+```
+
+```{r}
+plot(am50, binwidth = 1)$Unspecified +
+  xlab("Age (years)") + ylab("Proportion mature")
+```
+
+## Output structure
+
+Like `len_weight()`, the result is a nested tibble with named list columns per group:
+
+```{r}
+# Bootstrap L50 estimates for all individuals
+quantile(lm50_sex$mods[["f"]]$fitted.values)
+
+# Predicted maturity curve for females
+head(lm50_sex$preds[["f"]])
+```
