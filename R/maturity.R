@@ -8,19 +8,19 @@
 #' @param grouping_var Optional categorical grouping variable (e.g. sex). Will be converted to a factor.
 #' @param data A data frame containing the above variables
 #' @param times Number of bootstrap replicates (default 1000)
-#' @return A nested tibble of class \code{"mat_fun"} with one row per group,
+#' @return A nested tibble of class \code{"maturity"} with one row per group,
 #'   containing list columns \code{data}, \code{coefs}, \code{preds}, and \code{mods},
 #'   each named by the grouping variable level.
 #' @examples
 #' data(spottail)
 #'
-#' lm50 <- mat_fun(maturity_stage, length, sex, data = spottail, times = 100)
+#' lm50 <- maturity(maturity_stage, length, sex, data = spottail, times = 100)
 #'
 #' summary(lm50)
 #'
 #' plot(lm50)
 #' @export
-mat_fun <- function(mat, x, grouping_var = NULL, data, times = 1000) {
+maturity <- function(mat, x, grouping_var = NULL, data, times = 1000) {
   # Bring in data
   new <- data |> transmute(x = {{ x }}, mat = {{ mat }})
 
@@ -49,7 +49,7 @@ mat_fun <- function(mat, x, grouping_var = NULL, data, times = 1000) {
   }
 
   # Per-group modelling function
-  mat_fun_mod <- function(data) {
+  maturity_mod <- function(data) {
     m <- glm(mat ~ x, family = binomial, data = data)
     a <- coef(m)[[1]]
     b <- coef(m)[[2]]
@@ -104,7 +104,7 @@ mat_fun <- function(mat, x, grouping_var = NULL, data, times = 1000) {
     group_by(grouping_var) |>
     nest() |>
     mutate(
-      .fit       = map(data, ~ mat_fun_mod(.x)),
+      .fit       = map(data, ~ maturity_mod(.x)),
       coefs      = map(.fit, "coefs"),
       preds      = map(.fit, "pred"),
       mods       = map(.fit, "mod"),
@@ -113,22 +113,22 @@ mat_fun <- function(mat, x, grouping_var = NULL, data, times = 1000) {
     select(-.fit) |>
     mutate(across(c(data, coefs, preds, mods, boot_coefs), ~ set_names(., grouping_var)))
 
-  class(results) <- c("mat_fun", "tbl_df", "tbl", "data.frame")
+  class(results) <- c("maturity", "tbl_df", "tbl", "data.frame")
   return(invisible(results))
 }
 
 #' @export
-summary.mat_fun <- function(x, ...) {
+summary.maturity <- function(x, ...) {
   x$coefs |> tibble() |> unnest(cols = everything())
 }
 
 #' @export
-plot.mat_fun <- function(x, raw_data = c("proportions", "point", "rug", "bootstrap", "none"),
+plot.maturity <- function(x, raw_data = c("proportions", "point", "rug", "bootstrap", "none"),
                          binwidth = NULL, alpha = 1, n_boot = 100, ...) {
   raw_data  <- match.arg(raw_data)
   plot_lims <- x[which(x$grouping_var %in% c("all", "Unspecified")), ]
 
-  mat_fun_plots <- x |>
+  maturity_plots <- x |>
     group_split(grouping_var) |>
     map(function(grp) {
       raw  <- grp$data[[1]]
@@ -196,6 +196,6 @@ plot.mat_fun <- function(x, raw_data = c("proportions", "point", "rug", "bootstr
       p
     })
 
-  names(mat_fun_plots) <- x$grouping_var
-  return(mat_fun_plots)
+  names(maturity_plots) <- x$grouping_var
+  return(maturity_plots)
 }
