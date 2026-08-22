@@ -18,6 +18,7 @@ Imports:
     ggplot2,
     purrr,
     rlang,
+    rsample,
     tibble,
     tidyr
 LazyData: true
