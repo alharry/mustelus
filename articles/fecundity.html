@@ -126,13 +126,12 @@ range over which the model applies.</p>
 <div class="section level2">
 <h2 id="plotting">Plotting<a class="anchor" aria-label="anchor" href="#plotting"></a>
 </h2>
-<p><code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> returns a named list of ggplot objects, one per
-group. The solid line is the fitted mean, the dashed ribbon the 95%
-confidence interval, and the dotted ribbon the 95% prediction interval —
-the presentation used by Walker (2005).</p>
+<p><code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> returns a ggplot object, which can be customised
+with standard ggplot2 calls. The solid line is the fitted mean, the
+dashed ribbon the 95% confidence interval, and the dotted ribbon the 95%
+prediction interval — the presentation used by Walker (2005).</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fec</span><span class="op">)</span></span>
-<span><span class="va">p</span><span class="op">$</span><span class="va">Unspecified</span> <span class="op">+</span> <span class="fu">xlab</span><span class="op">(</span><span class="st">"Total length (mm)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Number of embryos"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fec</span><span class="op">)</span> <span class="op">+</span> <span class="fu">xlab</span><span class="op">(</span><span class="st">"Total length (mm)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Number of embryos"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="fecundity_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" alt="" width="576"></p>
 <p>As in <code><a href="../reference/len_weight.html">len_weight()</a></code>, the two interval types answer
 different questions. The confidence interval describes uncertainty in
@@ -156,59 +155,36 @@ length:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  1.73 ( 0.303 )   0.227 ( 0.0487 )      0.299 0.000<span style="text-decoration: underline;">023</span> 0.829    53     3.04</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: fec.range &lt;chr&gt;, x.range &lt;chr&gt;</span></span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fec_age</span><span class="op">)</span><span class="op">$</span><span class="va">Unspecified</span> <span class="op">+</span> <span class="fu">xlab</span><span class="op">(</span><span class="st">"Age (years)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Number of embryos"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fec_age</span><span class="op">)</span> <span class="op">+</span> <span class="fu">xlab</span><span class="op">(</span><span class="st">"Age (years)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Number of embryos"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="fecundity_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="576"></p>
-</div>
-<div class="section level2">
-<h2 id="grouping">Grouping<a class="anchor" aria-label="anchor" href="#grouping"></a>
-</h2>
-<p>Passing a grouping variable fits a separate model per group and adds
-a pooled <code>"all"</code> group. Groups with fewer than three gravid
-females cannot support a regression with intervals and are dropped with
-a warning.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fec_yr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fecundity.html">fecundity</a></span><span class="op">(</span><span class="va">emb</span>, <span class="va">length</span>, <span class="va">year</span>, data <span class="op">=</span> <span class="va">spottail</span><span class="op">)</span></span>
-<span><span class="co">#&gt; The categorical variable year has 6 levels.</span></span>
-<span><span class="co">#&gt; Warning in fecundity(emb, length, year, data = spottail): Group(s) with fewer</span></span>
-<span><span class="co">#&gt; than 3 observations were dropped: 2007</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fec_yr</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 11</span></span></span>
-<span><span class="co">#&gt;        a a.Std.Error       b b.Std.Error r.squared  p.value Sigma     n mean.fec</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  -<span style="color: #BB0000;">7.79</span> ( 1.28 )    0.009<span style="text-decoration: underline;">49</span> ( 0.00111 )     0.52  2.71<span style="color: #949494;">e</span><span style="color: #BB0000;">-12</span> 0.686    69     3.06</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>  -<span style="color: #BB0000;">7.82</span> ( 2.34 )    0.009<span style="text-decoration: underline;">44</span> ( 0.002 )       0.451 6.64<span style="color: #949494;">e</span><span style="color: #BB0000;">- 5</span> 0.738    29     3.21</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>  -<span style="color: #BB0000;">8.34</span> ( 1.78 )    0.010<span style="text-decoration: underline;">1</span>  ( 0.00159 )     0.549 3.57<span style="color: #949494;">e</span><span style="color: #BB0000;">- 7</span> 0.680    35     2.94</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> -<span style="color: #BB0000;">11.0</span>  ( 3.08 )    0.012   ( 0.00264 )     0.873 2   <span style="color: #949494;">e</span><span style="color: #BB0000;">- 2</span> 0.411     5     3   </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: fec.range &lt;chr&gt;, x.range &lt;chr&gt;</span></span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fec_yr</span><span class="op">)</span><span class="op">$</span><span class="va">`2009`</span> <span class="op">+</span> <span class="fu">xlab</span><span class="op">(</span><span class="st">"Total length (mm)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Number of embryos"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="fecundity_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="576"></p>
 </div>
 <div class="section level2">
 <h2 id="output-structure">Output structure<a class="anchor" aria-label="anchor" href="#output-structure"></a>
 </h2>
-<p>The result is a nested tibble with one row per group and named list
-columns:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Fitted lm object for the pooled group</span></span>
-<span><span class="va">fec_yr</span><span class="op">$</span><span class="va">mods</span><span class="op">[[</span><span class="st">"all"</span><span class="op">]</span><span class="op">]</span></span>
+<p>Unlike <code><a href="../reference/len_weight.html">len_weight()</a></code> and <code><a href="../reference/maturity.html">maturity()</a></code>,
+<code><a href="../reference/fecundity.html">fecundity()</a></code> fits a single model and takes no grouping
+variable. The result is a one row tibble whose list columns hold the
+components of that fit:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Fitted lm object</span></span>
+<span><span class="va">fec</span><span class="op">$</span><span class="va">mods</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; lm(formula = fec ~ x, data = data)</span></span>
+<span><span class="co">#&gt; lm(formula = fec ~ x, data = new)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficients:</span></span>
 <span><span class="co">#&gt; (Intercept)            x  </span></span>
-<span><span class="co">#&gt;   -7.790308     0.009486</span></span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<span><span class="co">#&gt;   -7.752597     0.009465</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Predicted values</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fec_yr</span><span class="op">$</span><span class="va">preds</span><span class="op">[[</span><span class="st">"all"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fec</span><span class="op">$</span><span class="va">preds</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt;          x      fec   clower   cupper    plower   pupper</span></span>
-<span><span class="co">#&gt; 1 1014.000 1.828990 1.497392 2.160587 0.4198767 3.238103</span></span>
-<span><span class="co">#&gt; 2 1015.442 1.842671 1.513849 2.171494 0.4342086 3.251134</span></span>
-<span><span class="co">#&gt; 3 1016.884 1.856353 1.530297 2.182408 0.4485336 3.264172</span></span>
-<span><span class="co">#&gt; 4 1018.327 1.870034 1.546738 2.193331 0.4628516 3.277217</span></span>
-<span><span class="co">#&gt; 5 1019.769 1.883716 1.563170 2.204261 0.4771626 3.290269</span></span>
-<span><span class="co">#&gt; 6 1021.211 1.897397 1.579594 2.215200 0.4914665 3.303328</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 1010.000 1.806733 1.479740 2.133726 0.4080167 3.205450</span></span>
+<span><span class="co">#&gt; 2 1011.462 1.820574 1.496316 2.144831 0.4224940 3.218653</span></span>
+<span><span class="co">#&gt; 3 1012.925 1.834414 1.512885 2.155943 0.4369645 3.231863</span></span>
+<span><span class="co">#&gt; 4 1014.387 1.848254 1.529445 2.167063 0.4514282 3.245080</span></span>
+<span><span class="co">#&gt; 5 1015.849 1.862094 1.545998 2.178191 0.4658851 3.258304</span></span>
+<span><span class="co">#&gt; 6 1017.312 1.875935 1.562542 2.189327 0.4803351 3.271534</span></span></code></pre></div>
 <p>The <code>preds</code> data frame contains six columns:
 <code>x</code>, <code>fec</code> (predicted mean),
 <code>clower</code>/<code>cupper</code> (95% confidence interval), and

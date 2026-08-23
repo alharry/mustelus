@@ -10,7 +10,7 @@ confidence and prediction intervals, in the style of Walker (2005).
 ## Usage
 
 ``` r
-fecundity(fec, x, grouping_var = NULL, data)
+fecundity(fec, x, data)
 ```
 
 ## Arguments
@@ -23,20 +23,14 @@ fecundity(fec, x, grouping_var = NULL, data)
 
   Continuous predictor variable (e.g. length, age)
 
-- grouping_var:
-
-  Optional categorical grouping variable (e.g. region). Will be
-  converted to a factor.
-
 - data:
 
   A data frame containing the above variables
 
 ## Value
 
-A nested tibble of class `"fecundity"` with one row per group,
-containing list columns `data`, `coefs`, `preds`, and `mods`, each named
-by the grouping variable level.
+A one row tibble of class `"fecundity"` containing the list columns
+`data`, `coefs`, `preds`, and `mods`.
 
 ## Details
 
@@ -65,8 +59,6 @@ summary(fec)
 #> 1 -7.75 ( 1.24 )    0.00946 ( 0.00108 )     0.527 7.97e-13 0.682    71     3.06
 #> # ℹ 2 more variables: fec.range <chr>, x.range <chr>
 
-p <- plot(fec)
-
-p$Unspecified + xlab("Total length (mm)") + ylab("Number of embryos")
+plot(fec) + xlab("Total length (mm)") + ylab("Number of embryos")
 #> Error in xlab("Total length (mm)"): could not find function "xlab"
 ```

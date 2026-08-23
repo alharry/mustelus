@@ -51,16 +51,15 @@ model applies.
 
 ## Plotting
 
-[`plot()`](https://rdrr.io/r/graphics/plot.default.html) returns a named
-list of ggplot objects, one per group. The solid line is the fitted
-mean, the dashed ribbon the 95% confidence interval, and the dotted
-ribbon the 95% prediction interval — the presentation used by Walker
-(2005).
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) returns a
+ggplot object, which can be customised with standard ggplot2 calls. The
+solid line is the fitted mean, the dashed ribbon the 95% confidence
+interval, and the dotted ribbon the 95% prediction interval — the
+presentation used by Walker (2005).
 
 ``` r
 
-p <- plot(fec)
-p$Unspecified + xlab("Total length (mm)") + ylab("Number of embryos")
+plot(fec) + xlab("Total length (mm)") + ylab("Number of embryos")
 ```
 
 ![](fecundity_files/figure-html/unnamed-chunk-2-1.png)
@@ -92,70 +91,45 @@ summary(fec_age)
 
 ``` r
 
-plot(fec_age)$Unspecified + xlab("Age (years)") + ylab("Number of embryos")
+plot(fec_age) + xlab("Age (years)") + ylab("Number of embryos")
 ```
 
 ![](fecundity_files/figure-html/unnamed-chunk-4-1.png)
 
-## Grouping
-
-Passing a grouping variable fits a separate model per group and adds a
-pooled `"all"` group. Groups with fewer than three gravid females cannot
-support a regression with intervals and are dropped with a warning.
-
-``` r
-
-fec_yr <- fecundity(emb, length, year, data = spottail)
-#> The categorical variable year has 6 levels.
-#> Warning in fecundity(emb, length, year, data = spottail): Group(s) with fewer
-#> than 3 observations were dropped: 2007
-summary(fec_yr)
-#> # A tibble: 4 × 11
-#>        a a.Std.Error       b b.Std.Error r.squared  p.value Sigma     n mean.fec
-#>    <dbl> <chr>         <dbl> <chr>           <dbl>    <dbl> <dbl> <int>    <dbl>
-#> 1  -7.79 ( 1.28 )    0.00949 ( 0.00111 )     0.52  2.71e-12 0.686    69     3.06
-#> 2  -7.82 ( 2.34 )    0.00944 ( 0.002 )       0.451 6.64e- 5 0.738    29     3.21
-#> 3  -8.34 ( 1.78 )    0.0101  ( 0.00159 )     0.549 3.57e- 7 0.680    35     2.94
-#> 4 -11.0  ( 3.08 )    0.012   ( 0.00264 )     0.873 2   e- 2 0.411     5     3   
-#> # ℹ 2 more variables: fec.range <chr>, x.range <chr>
-```
-
-``` r
-
-plot(fec_yr)$`2009` + xlab("Total length (mm)") + ylab("Number of embryos")
-```
-
-![](fecundity_files/figure-html/unnamed-chunk-6-1.png)
-
 ## Output structure
 
-The result is a nested tibble with one row per group and named list
-columns:
+Unlike
+[`len_weight()`](https://alharry.github.io/mustelus/reference/len_weight.md)
+and
+[`maturity()`](https://alharry.github.io/mustelus/reference/maturity.md),
+[`fecundity()`](https://alharry.github.io/mustelus/reference/fecundity.md)
+fits a single model and takes no grouping variable. The result is a one
+row tibble whose list columns hold the components of that fit:
 
 ``` r
 
-# Fitted lm object for the pooled group
-fec_yr$mods[["all"]]
+# Fitted lm object
+fec$mods[[1]]
 #> 
 #> Call:
-#> lm(formula = fec ~ x, data = data)
+#> lm(formula = fec ~ x, data = new)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>   -7.790308     0.009486
+#>   -7.752597     0.009465
 ```
 
 ``` r
 
 # Predicted values
-head(fec_yr$preds[["all"]])
+head(fec$preds[[1]])
 #>          x      fec   clower   cupper    plower   pupper
-#> 1 1014.000 1.828990 1.497392 2.160587 0.4198767 3.238103
-#> 2 1015.442 1.842671 1.513849 2.171494 0.4342086 3.251134
-#> 3 1016.884 1.856353 1.530297 2.182408 0.4485336 3.264172
-#> 4 1018.327 1.870034 1.546738 2.193331 0.4628516 3.277217
-#> 5 1019.769 1.883716 1.563170 2.204261 0.4771626 3.290269
-#> 6 1021.211 1.897397 1.579594 2.215200 0.4914665 3.303328
+#> 1 1010.000 1.806733 1.479740 2.133726 0.4080167 3.205450
+#> 2 1011.462 1.820574 1.496316 2.144831 0.4224940 3.218653
+#> 3 1012.925 1.834414 1.512885 2.155943 0.4369645 3.231863
+#> 4 1014.387 1.848254 1.529445 2.167063 0.4514282 3.245080
+#> 5 1015.849 1.862094 1.545998 2.178191 0.4658851 3.258304
+#> 6 1017.312 1.875935 1.562542 2.189327 0.4803351 3.271534
 ```
 
 The `preds` data frame contains six columns: `x`, `fec` (predicted
