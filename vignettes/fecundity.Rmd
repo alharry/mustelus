@@ -54,13 +54,13 @@ and the predictor range over which the model applies.
 
 ## Plotting
 
-`plot()` returns a named list of ggplot objects, one per group. The solid line is
-the fitted mean, the dashed ribbon the 95% confidence interval, and the dotted
-ribbon the 95% prediction interval — the presentation used by Walker (2005).
+`plot()` returns a ggplot object, which can be customised with standard ggplot2
+calls. The solid line is the fitted mean, the dashed ribbon the 95% confidence
+interval, and the dotted ribbon the 95% prediction interval — the presentation
+used by Walker (2005).
 
 ```{r}
-p <- plot(fec)
-p$Unspecified + xlab("Total length (mm)") + ylab("Number of embryos")
+plot(fec) + xlab("Total length (mm)") + ylab("Number of embryos")
 ```
 
 As in `len_weight()`, the two interval types answer different questions. The
@@ -80,36 +80,23 @@ summary(fec_age)
 ```
 
 ```{r}
-plot(fec_age)$Unspecified + xlab("Age (years)") + ylab("Number of embryos")
-```
-
-## Grouping
-
-Passing a grouping variable fits a separate model per group and adds a pooled
-`"all"` group. Groups with fewer than three gravid females cannot support a
-regression with intervals and are dropped with a warning.
-
-```{r}
-fec_yr <- fecundity(emb, length, year, data = spottail)
-summary(fec_yr)
-```
-
-```{r}
-plot(fec_yr)$`2009` + xlab("Total length (mm)") + ylab("Number of embryos")
+plot(fec_age) + xlab("Age (years)") + ylab("Number of embryos")
 ```
 
 ## Output structure
 
-The result is a nested tibble with one row per group and named list columns:
+Unlike `len_weight()` and `maturity()`, `fecundity()` fits a single model and
+takes no grouping variable. The result is a one row tibble whose list columns
+hold the components of that fit:
 
 ```{r}
-# Fitted lm object for the pooled group
-fec_yr$mods[["all"]]
+# Fitted lm object
+fec$mods[[1]]
 ```
 
 ```{r}
 # Predicted values
-head(fec_yr$preds[["all"]])
+head(fec$preds[[1]])
 ```
 
 The `preds` data frame contains six columns: `x`, `fec` (predicted mean),

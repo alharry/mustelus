@@ -4,21 +4,18 @@
 \alias{fecundity}
 \title{Analyse fecundity as a function of length or age}
 \usage{
-fecundity(fec, x, grouping_var = NULL, data)
+fecundity(fec, x, data)
 }
 \arguments{
 \item{fec}{Numeric vector of fecundity counts (e.g. number of embryos)}
 
 \item{x}{Continuous predictor variable (e.g. length, age)}
 
-\item{grouping_var}{Optional categorical grouping variable (e.g. region). Will be converted to a factor.}
-
 \item{data}{A data frame containing the above variables}
 }
 \value{
-A nested tibble of class \code{"fecundity"} with one row per group,
-containing list columns \code{data}, \code{coefs}, \code{preds}, and \code{mods},
-each named by the grouping variable level.
+A one row tibble of class \code{"fecundity"} containing the list
+columns \code{data}, \code{coefs}, \code{preds}, and \code{mods}.
 }
 \description{
 Fits a linear regression of fecundity (e.g. number of \emph{in utero} embryos)
@@ -40,9 +37,7 @@ fec <- fecundity(emb, length, data = spottail)
 
 summary(fec)
 
-p <- plot(fec)
-
-p$Unspecified + xlab("Total length (mm)") + ylab("Number of embryos")
+plot(fec) + xlab("Total length (mm)") + ylab("Number of embryos")
 }
 \references{
 Walker, T.I. (2005) Reproduction in fisheries science.
