@@ -6,6 +6,8 @@
 \alias{mustelus-package}
 \title{mustelus: Chondrichthyan Fisheries Biology}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Tools for chondrichthyan fisheries biology, including length-weight relationships.
 }
 \seealso{

@@ -12,11 +12,14 @@ navbar:
         - text: Length-weight analysis
           href: articles/len-weight.html
         - text: Length at maturity analysis
-          href: articles/len-mat.html
+          href: articles/maturity.html
+        - text: Fecundity analysis
+          href: articles/fecundity.html
 
 articles:
   - title: Function guides
     contents:
       - len-weight
-      - len-mat
+      - maturity
+      - fecundity
 

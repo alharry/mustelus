@@ -1,0 +1,122 @@
+---
+title: "Fecundity analysis"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Fecundity analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 6,
+  fig.height = 4
+)
+library(ggplot2)
+```
+
+## Background
+
+Fecundity in chondrichthyans — the number of *in utero* embryos carried by a
+gravid female — typically increases with maternal body size. `fecundity()` fits
+the simplest description of that relationship, an ordinary linear regression:
+
+$$F_i = a + b \cdot L_i + \epsilon, \quad \epsilon \sim N(0, \sigma^2)$$
+
+where $F_i$ is the number of embryos carried by female $i$ and $L_i$ is her
+length (or age). The slope $b$ is the increase in litter size per unit length,
+and is usually the quantity of interest.
+
+## Non-gravid animals are excluded
+
+A fecundity count of zero means an animal was not gravid, not that its fecundity
+was zero. Including such records would bias the intercept downwards and inflate
+the slope. `fecundity()` therefore drops records with zero or negative counts
+before fitting and reports how many were removed. Predictions span the length or
+age range of gravid animals only.
+
+## Basic usage
+
+```{r}
+library(mustelus)
+data(spottail)
+
+fec <- fecundity(emb, length, data = spottail)
+summary(fec)
+```
+
+The summary reports the intercept $a$ and slope $b$ with their standard errors,
+the coefficient of determination, the p-value for the slope, the residual
+standard deviation $\sigma$, sample size, mean and range of observed fecundity,
+and the predictor range over which the model applies.
+
+## Plotting
+
+`plot()` returns a named list of ggplot objects, one per group. The solid line is
+the fitted mean, the dashed ribbon the 95% confidence interval, and the dotted
+ribbon the 95% prediction interval — the presentation used by Walker (2005).
+
+```{r}
+p <- plot(fec)
+p$Unspecified + xlab("Total length (mm)") + ylab("Number of embryos")
+```
+
+As in `len_weight()`, the two interval types answer different questions. The
+confidence interval describes uncertainty in *mean* litter size at a given
+length and narrows as data accumulate; the prediction interval describes the
+spread of litter sizes you would expect to observe in *individual* females, and
+does not narrow appreciably. For predicting the reproductive output of a female
+of known size, the prediction interval is the relevant one.
+
+## Using age as the predictor
+
+Any continuous predictor works — here maternal age rather than length:
+
+```{r}
+fec_age <- fecundity(emb, age_agree, data = spottail)
+summary(fec_age)
+```
+
+```{r}
+plot(fec_age)$Unspecified + xlab("Age (years)") + ylab("Number of embryos")
+```
+
+## Grouping
+
+Passing a grouping variable fits a separate model per group and adds a pooled
+`"all"` group. Groups with fewer than three gravid females cannot support a
+regression with intervals and are dropped with a warning.
+
+```{r}
+fec_yr <- fecundity(emb, length, year, data = spottail)
+summary(fec_yr)
+```
+
+```{r}
+plot(fec_yr)$`2009` + xlab("Total length (mm)") + ylab("Number of embryos")
+```
+
+## Output structure
+
+The result is a nested tibble with one row per group and named list columns:
+
+```{r}
+# Fitted lm object for the pooled group
+fec_yr$mods[["all"]]
+```
+
+```{r}
+# Predicted values
+head(fec_yr$preds[["all"]])
+```
+
+The `preds` data frame contains six columns: `x`, `fec` (predicted mean),
+`clower`/`cupper` (95% confidence interval), and `plower`/`pupper` (95%
+prediction interval).
+
+## Reference
+
+Walker, T.I. (2005) Reproduction in fisheries science. In: Hamlett, W.C. (ed)
+*Reproductive Biology and Phylogeny of Chondrichthyes*.
