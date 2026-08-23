@@ -29,6 +29,8 @@ examples.
 
 ## All functions
 
+- [`fecundity()`](https://alharry.github.io/mustelus/reference/fecundity.md)
+  : Analyse fecundity as a function of length or age
 - [`len_weight()`](https://alharry.github.io/mustelus/reference/len_weight.md)
   : Analyse weight-length relationship
 - [`maturity()`](https://alharry.github.io/mustelus/reference/maturity.md)
@@ -45,4 +47,6 @@ examples.
 - [Length-weight
   analysis](https://alharry.github.io/mustelus/articles/len-weight.md):
 - [Length at maturity
-  analysis](https://alharry.github.io/mustelus/articles/len-mat.md):
+  analysis](https://alharry.github.io/mustelus/articles/maturity.md):
+- [Fecundity
+  analysis](https://alharry.github.io/mustelus/articles/fecundity.md):

@@ -2,6 +2,8 @@
 
 ## All functions
 
+- [`fecundity()`](https://alharry.github.io/mustelus/reference/fecundity.md)
+  : Analyse fecundity as a function of length or age
 - [`len_weight()`](https://alharry.github.io/mustelus/reference/len_weight.md)
   : Analyse weight-length relationship
 - [`maturity()`](https://alharry.github.io/mustelus/reference/maturity.md)
