@@ -17,6 +17,8 @@ pak::pak("alharry/mustelus")
   bootstrap confidence intervals on $L_{50}$ and $L_{95}$.
 - `fecundity()` — fecundity as a function of length or age by linear
   regression, with confidence and prediction intervals.
+- `clasp_length()` — clasper elongation as a function of length or age by
+  nonlinear (logistic) regression, with bootstrap confidence intervals.
 
 Each returns a tibble with list columns holding the data, coefficients,
 predictions and fitted model, and has `summary()` and `plot()` methods.

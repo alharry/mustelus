@@ -15,6 +15,8 @@ navbar:
           href: articles/maturity.html
         - text: Fecundity analysis
           href: articles/fecundity.html
+        - text: Clasper length analysis
+          href: articles/clasp-length.html
 
 articles:
   - title: Function guides
@@ -22,4 +24,5 @@ articles:
       - len-weight
       - maturity
       - fecundity
+      - clasp-length
 

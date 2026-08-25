@@ -1,0 +1,134 @@
+---
+title: "Clasper length analysis"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Clasper length analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 6,
+  fig.height = 4
+)
+library(ggplot2)
+set.seed(42)
+```
+
+## Background
+
+Male chondrichthyans undergo a rapid elongation and calcification of the
+claspers as they mature. Clasper length plotted against body length or age is
+therefore sigmoid: near-constant in juveniles, steeply increasing through
+maturation, and asymptotic in adults. `clasp_length()` fits that curve:
+
+$$CL = b + (a - b)\left(1 + e^{-\log(19)\,(x - L_{50})/(L_{95} - L_{50})}\right)^{-1}$$
+
+where $b$ and $a$ are the juvenile and adult asymptotes, and $L_{50}$ and
+$L_{95}$ are the values of the predictor at which clasper length reaches 50% and
+95% of the way between them. The $\log(19)$ term is what makes $L_{50}$ and
+$L_{95}$ mean exactly that — the same reparameterisation used by `maturity()`,
+so the two are directly comparable.
+
+The model is fitted on the log scale by `nls()`. This gives multiplicative
+error, matching the way variability in clasper length grows with clasper size,
+and means the fitted curve describes *median* clasper length at a given size.
+
+## Basic usage
+
+Females have no clasper measurement and are dropped automatically, so the whole
+data frame can be passed in:
+
+```{r}
+library(mustelus)
+data(spottail)
+
+cl <- clasp_length(clasp_length, length, clasp_calc, data = spottail, times = 200)
+summary(cl)
+```
+
+Claspers are around `r round(summary(cl)$b)` mm in juveniles and asymptote near
+`r round(summary(cl)$a)` mm in adults, with the transition centred on
+`r round(summary(cl)$L50)` mm.
+
+## Plotting
+
+```{r}
+plot(cl) + xlab("Total length (mm)") + ylab("Clasper length (mm)")
+```
+
+The solid line is the fitted median, the dashed ribbon the 95% confidence
+interval and the dotted ribbon the 95% prediction interval. Both are obtained by
+bootstrap: the confidence interval from the percentiles of the resampled curves,
+and the prediction interval by combining that bootstrap variance with the
+residual variance of the fit.
+
+Passing the optional calcification variable shades the points by stage — white
+for uncalcified, grey for partially calcified and black for fully calcified.
+This is a useful check on the fitted curve, since the three stages should
+separate along it: uncalcified animals on the lower asymptote, partially
+calcified animals through the steep transition, and calcified animals on the
+upper asymptote. Calcification is used only for plotting and does not enter the
+model.
+
+## Using age as the predictor
+
+```{r}
+cl_age <- clasp_length(clasp_length, age_agree, clasp_calc, data = spottail, times = 200)
+summary(cl_age)
+```
+
+```{r}
+plot(cl_age) + xlab("Age (years)") + ylab("Clasper length (mm)")
+```
+
+## Starting values
+
+`nls()` needs starting values, and `clasp_length()` derives them from the data:
+the asymptotes from the mean clasper length of the smallest and largest 20% of
+animals, and $L_{50}$ and $L_{95}$ by interpolating binned means. Fitting uses
+the `"port"` algorithm with both asymptotes constrained positive, since a
+negative asymptote would make the log-scale model undefined.
+
+If a fit fails to converge, supply starting values directly:
+
+```{r}
+clasp_length(clasp_length, length,
+  data = spottail, times = 50,
+  start = list(a = 80, b = 13, L50 = 900, L95 = 990)
+) |> summary()
+```
+
+## Comparison with maturity
+
+Because both functions report $L_{50}$ on the same scale, clasper elongation can
+be compared directly with the onset of maturity:
+
+```{r, warning = FALSE, message = FALSE}
+mat <- maturity(maturity_stage, length, data = spottail[spottail$sex == "m", ],
+                times = 200)
+
+data.frame(
+  quantity = c("Clasper elongation", "Maturity"),
+  L50      = c(summary(cl)$L50, summary(mat)$L50),
+  L95      = c(summary(cl)$L95, summary(mat)$L95)
+)
+```
+
+## Output structure
+
+The result is a one row tibble with list columns, including the bootstrap
+parameter estimates:
+
+```{r}
+# Fitted nls object
+cl$mods[[1]]
+```
+
+```{r}
+# Bootstrap parameter estimates, one row per replicate
+head(cl$boot_coefs[[1]])
+```
