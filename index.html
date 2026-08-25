@@ -43,6 +43,7 @@
 <li><a class="dropdown-item" href="articles/len-weight.html">Length-weight analysis</a></li>
     <li><a class="dropdown-item" href="articles/maturity.html">Length at maturity analysis</a></li>
     <li><a class="dropdown-item" href="articles/fecundity.html">Fecundity analysis</a></li>
+    <li><a class="dropdown-item" href="articles/clasp-length.html">Clasper length analysis</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
@@ -82,6 +83,8 @@
 <code><a href="reference/maturity.html">maturity()</a></code> — length or age at maturity via logistic regression, with bootstrap confidence intervals on <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>50</mn></msub><annotation encoding="application/x-tex">L_{50}</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>95</mn></msub><annotation encoding="application/x-tex">L_{95}</annotation></semantics></math>.</li>
 <li>
 <code><a href="reference/fecundity.html">fecundity()</a></code> — fecundity as a function of length or age by linear regression, with confidence and prediction intervals.</li>
+<li>
+<code><a href="reference/clasp_length.html">clasp_length()</a></code> — clasper elongation as a function of length or age by nonlinear (logistic) regression, with bootstrap confidence intervals.</li>
 </ul>
 <p>Each returns a tibble with list columns holding the data, coefficients, predictions and fitted model, and has <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> and <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> methods. <code><a href="reference/len_weight.html">len_weight()</a></code> and <code><a href="reference/maturity.html">maturity()</a></code> accept an optional grouping variable and fit one model per group plus a pooled group. See the <a href="https://alharry.github.io/mustelus/articles/">articles</a> for worked examples.</p>
 </div>

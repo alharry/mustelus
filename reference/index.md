@@ -2,6 +2,8 @@
 
 ## All functions
 
+- [`clasp_length()`](https://alharry.github.io/mustelus/reference/clasp_length.md)
+  : Analyse clasper length as a function of length or age
 - [`fecundity()`](https://alharry.github.io/mustelus/reference/fecundity.md)
   : Analyse fecundity as a function of length or age
 - [`len_weight()`](https://alharry.github.io/mustelus/reference/len_weight.md)

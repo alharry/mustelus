@@ -21,6 +21,9 @@ pak::pak("alharry/mustelus")
 - [`fecundity()`](https://alharry.github.io/mustelus/reference/fecundity.md)
   — fecundity as a function of length or age by linear regression, with
   confidence and prediction intervals.
+- [`clasp_length()`](https://alharry.github.io/mustelus/reference/clasp_length.md)
+  — clasper elongation as a function of length or age by nonlinear
+  (logistic) regression, with bootstrap confidence intervals.
 
 Each returns a tibble with list columns holding the data, coefficients,
 predictions and fitted model, and has

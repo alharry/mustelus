@@ -52,22 +52,22 @@ lm50 <- maturity(maturity_stage, length, sex, data = spottail, times = 100)
 #>   coef(.x)[[1]])/coef(.x)[[2]])`.
 #> ℹ In group 0: .
 #> Caused by warning:
-#> ! There were 24 warnings in `mutate()`.
+#> ! There were 33 warnings in `mutate()`.
 #> The first warning was:
 #> ℹ In argument: `mod_b = map(splits, ~glm(mat ~ x, family = binomial, data =
 #>   rsample::analysis(.x)))`.
 #> Caused by warning:
 #> ! glm.fit: fitted probabilities numerically 0 or 1 occurred
-#> ℹ Run `dplyr::last_dplyr_warnings()` to see the 23 remaining warnings.
+#> ℹ Run `dplyr::last_dplyr_warnings()` to see the 32 remaining warnings.
 #> ℹ Run `dplyr::last_dplyr_warnings()` to see the 3 remaining warnings.
 
 summary(lm50)
 #> # A tibble: 3 × 10
 #>        a      b   L50 L50_lower L50_upper   L95 L95_lower L95_upper     n     N
 #>    <dbl>  <dbl> <dbl>     <dbl>     <dbl> <dbl>     <dbl>     <dbl> <int> <int>
-#> 1  -55.4 0.0594  934.      927.      941.  983.      966.     1002    430   341
-#> 2 -124.  0.131   951.      940.      964.  973.      942.      993.   118    97
-#> 3  -51.1 0.0550  929.      921.      939.  983.      963.      999.   312   244
+#> 1  -55.4 0.0594  934.      925.      941   983.      966.      996    430   341
+#> 2 -124.  0.131   951.      939.      962.  973.      942.      992.   118    97
+#> 3  -51.1 0.0550  929.      921.      937.  983.      964.     1004    312   244
 
 plot(lm50)
 #> $all
