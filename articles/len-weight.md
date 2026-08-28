@@ -2,6 +2,39 @@
 
 ## Background
 
+Length and weight are probably the two most routinely taken measurements
+in fisheries science, although length is the far easier one to measure.
+Length can be measured quickly (and often non-lethally), and is more
+often or not the standard measurement. Weight is far more challenging to
+collect, especially in the field. It needs a stable platform and, if at
+sea, a compensating balance to accurately measure. Weight also varies
+with gut fullness, body condition, and gonad state. In the case of
+larger chondrichthyan species, it is often impractical to measure. These
+reasons are why good length weight don’t exist for that many
+chondrichthyan species and precisely why is is worth collecting this
+information, which serves a range of practical uses.
+
+This conversion between length and weight underpins a surprising amount
+of subsequent work in fisheries science. Catch is reported and managed
+in tonnes whereas biological sampling yields numbers of fish at length,
+so moving between the two requires a weight–length relationship, as does
+converting population length structure (the distribution of lengths in a
+population) to biomass. The age-structured population dynamics models
+that are commonly used in stock assessments need weight-at-age, which is
+normally obtained by passing predicted length-at-age from a growth curve
+through the weight–length relationship; yield-per-recruit, spawning
+stock biomass and other demographic calculations follow. The same
+relationship underlies body condition indices, which compare the
+observed weight of an individual against the weight expected for its
+length (Froese, 2006).
+
+Despite its importance, the length weight relationship is considered
+trivial, as noted by Froese (2006) who quotes *Quantitative Fisheries
+Stock Assessment* (Hilborn and Walters, 2001): length–weight analysis is
+“a good thing to have your teenage children do” as a way of learning
+about correlation and regression, and if the teenager struggles with
+estimating $`\beta`$, one can take comfort in assuming $`\beta = 3`$.
+
 The relationship between body mass and length in fishes is typically
 described by a power curve:
 
@@ -26,13 +59,46 @@ Upon log-transformation this becomes a standard linear regression:
 
 where $`\ln(\alpha)`$ is the intercept and $`\beta`$ is the slope. This
 is the model fitted by
-[`len_weight()`](https://alharry.github.io/mustelus/reference/len_weight.md).
+[`len_weight()`](https://alharry.github.io/mustelus/reference/len_weight.md),
+which reports $`\alpha`$ as `a` and $`\beta`$ as `b`.
+
+## Interpreting the parameters
+
+$`\beta`$, the exponent, is the more informative of the two parameters.
+It describes how weight scales with length:
+
+- $`\beta = 3`$ — **isometric** growth. Weight rises as the cube of
+  length, so body shape and specific gravity stay constant as the animal
+  grows and a fish that doubles in length becomes eight times heavier
+  (i.e. the cube law).
+- $`\beta > 3`$ — **positive allometry**. Large individuals are
+  relatively heavier for their length, gaining girth or depth faster
+  than length.
+- $`\beta < 3`$ — **negative allometry**. Large individuals are
+  relatively more slender for the length.
+
+Froese’s (2006) meta-analysis of 3929 relationships across 1773 species
+found a median $`\beta`$ of 3.03, significantly greater than 3, so a
+slight tendency toward positive allometry is the norm rather than the
+exception. Froese (2006) indicates that $`2.5 < \beta < 3.5`$ is the
+expected range for this coefficient.
+
+$`\alpha`$, the coefficient, is the intercept on the log scale and
+reflects body form: at a given $`\beta`$, eel-like and elongate species
+carry smaller values than fusiform and deep-bodied species. It is also
+important to note that $`\alpha`$ depends on the measurement units and
+on which length measurement was used, changing by a factor of
+$`10^{\beta}`$ when length is converted from millimetres to centimetres.
+Values are therefore not comparable across studies unless the units are
+the same. Froese (2006) provides some of these commonly used conversion
+factors.
 
 ## Bias correction
 
-A subtle but important consequence of log-transforming the response is
-that back-transforming predictions gives the *median* weight at a given
-length, not the mean. For a lognormal distribution, the mean is:
+A subtle consequence of log-transforming in the regression of weight
+against length is that back-transforming predictions gives the *median*
+weight at a given length, not the mean. For a lognormal distribution,
+the mean is:
 
 ``` math
 E[W \mid L] = e^{\hat{\mu} + \sigma^2/2}
@@ -40,8 +106,16 @@ E[W \mid L] = e^{\hat{\mu} + \sigma^2/2}
 
 where $`\sigma^2`$ is the residual variance.
 [`len_weight()`](https://alharry.github.io/mustelus/reference/len_weight.md)
-applies this correction automatically — all predicted values and
-intervals are corrected for back-transformation bias.
+accounts for this — all predicted values and intervals are corrected for
+back-transformation bias, following Beauchamp and Olson (1973).
+
+The size of the correction is $`e^{\sigma^2/2}`$, so it depends only on
+the residual variance and is constant across the length range. It is
+negligible for a tight relationship and grows quickly once residual
+variation is substantial: at $`\sigma = 0.1`$ it inflates predictions by
+0.5%, at $`\sigma = 0.3`$ by 4.6%, and at $`\sigma = 0.5`$ by 13%.
+Reported values of $`\sigma`$ therefore indicate how much difference the
+correction makes for a given data set.
 
 ## Basic usage
 
@@ -63,6 +137,15 @@ The summary table reports: the intercept on the natural scale
 ($`a = e^{\ln(\alpha)}`$), its standard error range, the slope $`b`$,
 its standard error, the residual standard deviation $`\sigma`$, the
 log-likelihood, sample size, and length range.
+
+In the case of the spot-tail data the exponent, 3.47, is well above 3
+and sits near the top of Froese’s expected range, indicating positive
+allometry: larger spottail sharks are relatively heavier for their
+length than smaller ones. And `a` is around 2.1e-10. This value
+corresponds to the median weight in kilograms of a one millimetre long
+shark, extrapolated from a curve fitted to individuals two to three
+orders of magnitude larger, so it doesn’t have any particularly
+important biological interpretation.
 
 ## Grouping by sex
 
@@ -171,3 +254,19 @@ head(lw_sex$preds[["all"]])
 The `preds` data frame contains six columns: `length`, `weight`
 (bias-corrected mean), `clower`/`cupper` (95% confidence interval), and
 `plower`/`pupper` (95% prediction interval).
+
+## References
+
+Beauchamp, J.J. and Olson, J.S. (1973) Corrections for bias in
+regression estimates after logarithmic transformation. *Ecology*
+**54**(6), 1403–1407.
+[doi:10.2307/1934208](https://doi.org/10.2307/1934208)
+
+Froese, R. (2006) Cube law, condition factor and weight–length
+relationships: history, meta-analysis and recommendations. *Journal of
+Applied Ichthyology* **22**(4), 241–253.
+[doi:10.1111/j.1439-0426.2006.00805.x](https://doi.org/10.1111/j.1439-0426.2006.00805.x)
+
+Hilborn, R. and Walters, C.J. (2001) *Quantitative Fisheries Stock
+Assessment: Choice, Dynamics and Uncertainty*. Kluwer Academic
+Publishers, Boston. (Cited in Froese, 2006.)

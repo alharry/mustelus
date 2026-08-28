@@ -73,6 +73,39 @@
 <div class="section level2">
 <h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
 </h2>
+<p>Length and weight are probably the two most routinely taken
+measurements in fisheries science, although length is the far easier one
+to measure. Length can be measured quickly (and often non-lethally), and
+is more often or not the standard measurement. Weight is far more
+challenging to collect, especially in the field. It needs a stable
+platform and, if at sea, a compensating balance to accurately measure.
+Weight also varies with gut fullness, body condition, and gonad state.
+In the case of larger chondrichthyan species, it is often impractical to
+measure. These reasons are why good length weight don’t exist for that
+many chondrichthyan species and precisely why is is worth collecting
+this information, which serves a range of practical uses.</p>
+<p>This conversion between length and weight underpins a surprising
+amount of subsequent work in fisheries science. Catch is reported and
+managed in tonnes whereas biological sampling yields numbers of fish at
+length, so moving between the two requires a weight–length relationship,
+as does converting population length structure (the distribution of
+lengths in a population) to biomass. The age-structured population
+dynamics models that are commonly used in stock assessments need
+weight-at-age, which is normally obtained by passing predicted
+length-at-age from a growth curve through the weight–length
+relationship; yield-per-recruit, spawning stock biomass and other
+demographic calculations follow. The same relationship underlies body
+condition indices, which compare the observed weight of an individual
+against the weight expected for its length (Froese, 2006).</p>
+<p>Despite its importance, the length weight relationship is considered
+trivial, as noted by Froese (2006) who quotes <em>Quantitative Fisheries
+Stock Assessment</em> (Hilborn and Walters, 2001): length–weight
+analysis is “a good thing to have your teenage children do” as a way of
+learning about correlation and regression, and if the teenager struggles
+with estimating
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math>,
+one can take comfort in assuming
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">\beta = 3</annotation></semantics></math>.</p>
 <p>The relationship between body mass and length in fishes is typically
 described by a power curve:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mi>i</mi></msub><mo>=</mo><mi>α</mi><msubsup><mi>L</mi><mi>i</mi><mi>β</mi></msubsup></mrow><annotation encoding="application/x-tex">W_i = \alpha L_i^{\beta}</annotation></semantics></math></p>
@@ -97,21 +130,86 @@ regression:</p>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">ln</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>α</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\ln(\alpha)</annotation></semantics></math>
 is the intercept and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math>
-is the slope. This is the model fitted by <code><a href="../reference/len_weight.html">len_weight()</a></code>.</p>
+is the slope. This is the model fitted by <code><a href="../reference/len_weight.html">len_weight()</a></code>,
+which reports
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+as <code>a</code> and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math>
+as <code>b</code>.</p>
+</div>
+<div class="section level2">
+<h2 id="interpreting-the-parameters">Interpreting the parameters<a class="anchor" aria-label="anchor" href="#interpreting-the-parameters"></a>
+</h2>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math>,
+the exponent, is the more informative of the two parameters. It
+describes how weight scales with length:</p>
+<ul>
+<li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">\beta = 3</annotation></semantics></math>
+— <strong>isometric</strong> growth. Weight rises as the cube of length,
+so body shape and specific gravity stay constant as the animal grows and
+a fish that doubles in length becomes eight times heavier (i.e. the cube
+law).</li>
+<li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi><mo>&gt;</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">\beta &gt; 3</annotation></semantics></math>
+— <strong>positive allometry</strong>. Large individuals are relatively
+heavier for their length, gaining girth or depth faster than
+length.</li>
+<li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi><mo>&lt;</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">\beta &lt; 3</annotation></semantics></math>
+— <strong>negative allometry</strong>. Large individuals are relatively
+more slender for the length.</li>
+</ul>
+<p>Froese’s (2006) meta-analysis of 3929 relationships across 1773
+species found a median
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math>
+of 3.03, significantly greater than 3, so a slight tendency toward
+positive allometry is the norm rather than the exception. Froese (2006)
+indicates that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2.5</mn><mo>&lt;</mo><mi>β</mi><mo>&lt;</mo><mn>3.5</mn></mrow><annotation encoding="application/x-tex">2.5 &lt; \beta &lt; 3.5</annotation></semantics></math>
+is the expected range for this coefficient.</p>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>,
+the coefficient, is the intercept on the log scale and reflects body
+form: at a given
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math>,
+eel-like and elongate species carry smaller values than fusiform and
+deep-bodied species. It is also important to note that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+depends on the measurement units and on which length measurement was
+used, changing by a factor of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mi>β</mi></msup><annotation encoding="application/x-tex">10^{\beta}</annotation></semantics></math>
+when length is converted from millimetres to centimetres. Values are
+therefore not comparable across studies unless the units are the same.
+Froese (2006) provides some of these commonly used conversion
+factors.</p>
 </div>
 <div class="section level2">
 <h2 id="bias-correction">Bias correction<a class="anchor" aria-label="anchor" href="#bias-correction"></a>
 </h2>
-<p>A subtle but important consequence of log-transforming the response
-is that back-transforming predictions gives the <em>median</em> weight
-at a given length, not the mean. For a lognormal distribution, the mean
-is:</p>
+<p>A subtle consequence of log-transforming in the regression of weight
+against length is that back-transforming predictions gives the
+<em>median</em> weight at a given length, not the mean. For a lognormal
+distribution, the mean is:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false" form="prefix">[</mo><mi>W</mi><mo>∣</mo><mi>L</mi><mo stretchy="false" form="postfix">]</mo><mo>=</mo><msup><mi>e</mi><mrow><mover><mi>μ</mi><mo accent="true">̂</mo></mover><mo>+</mo><msup><mi>σ</mi><mn>2</mn></msup><mi>/</mi><mn>2</mn></mrow></msup></mrow><annotation encoding="application/x-tex">E[W \mid L] = e^{\hat{\mu} + \sigma^2/2}</annotation></semantics></math></p>
 <p>where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>σ</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\sigma^2</annotation></semantics></math>
-is the residual variance. <code><a href="../reference/len_weight.html">len_weight()</a></code> applies this
-correction automatically — all predicted values and intervals are
-corrected for back-transformation bias.</p>
+is the residual variance. <code><a href="../reference/len_weight.html">len_weight()</a></code> accounts for this —
+all predicted values and intervals are corrected for back-transformation
+bias, following Beauchamp and Olson (1973).</p>
+<p>The size of the correction is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>e</mi><mrow><msup><mi>σ</mi><mn>2</mn></msup><mi>/</mi><mn>2</mn></mrow></msup><annotation encoding="application/x-tex">e^{\sigma^2/2}</annotation></semantics></math>,
+so it depends only on the residual variance and is constant across the
+length range. It is negligible for a tight relationship and grows
+quickly once residual variation is substantial: at
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>0.1</mn></mrow><annotation encoding="application/x-tex">\sigma = 0.1</annotation></semantics></math>
+it inflates predictions by 0.5%, at
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>0.3</mn></mrow><annotation encoding="application/x-tex">\sigma = 0.3</annotation></semantics></math>
+by 4.6%, and at
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">\sigma = 0.5</annotation></semantics></math>
+by 13%. Reported values of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>
+therefore indicate how much difference the correction makes for a given
+data set.</p>
 </div>
 <div class="section level2">
 <h2 id="basic-usage">Basic usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
@@ -134,6 +232,14 @@ its standard error range, the slope
 its standard error, the residual standard deviation
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>,
 the log-likelihood, sample size, and length range.</p>
+<p>In the case of the spot-tail data the exponent, 3.47, is well above 3
+and sits near the top of Froese’s expected range, indicating positive
+allometry: larger spottail sharks are relatively heavier for their
+length than smaller ones. And <code>a</code> is around 2.1e-10. This
+value corresponds to the median weight in kilograms of a one millimetre
+long shark, extrapolated from a curve fitted to individuals two to three
+orders of magnitude larger, so it doesn’t have any particularly
+important biological interpretation.</p>
 </div>
 <div class="section level2">
 <h2 id="grouping-by-sex">Grouping by sex<a class="anchor" aria-label="anchor" href="#grouping-by-sex"></a>
@@ -230,6 +336,19 @@ to log-transform.</p>
 <code>length</code>, <code>weight</code> (bias-corrected mean),
 <code>clower</code>/<code>cupper</code> (95% confidence interval), and
 <code>plower</code>/<code>pupper</code> (95% prediction interval).</p>
+</div>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<p>Beauchamp, J.J. and Olson, J.S. (1973) Corrections for bias in
+regression estimates after logarithmic transformation. <em>Ecology</em>
+<strong>54</strong>(6), 1403–1407. <a href="https://doi.org/10.2307/1934208" class="external-link">doi:10.2307/1934208</a></p>
+<p>Froese, R. (2006) Cube law, condition factor and weight–length
+relationships: history, meta-analysis and recommendations. <em>Journal
+of Applied Ichthyology</em> <strong>22</strong>(4), 241–253. <a href="https://doi.org/10.1111/j.1439-0426.2006.00805.x" class="external-link">doi:10.1111/j.1439-0426.2006.00805.x</a></p>
+<p>Hilborn, R. and Walters, C.J. (2001) <em>Quantitative Fisheries Stock
+Assessment: Choice, Dynamics and Uncertainty</em>. Kluwer Academic
+Publishers, Boston. (Cited in Froese, 2006.)</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
