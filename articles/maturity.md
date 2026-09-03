@@ -22,18 +22,6 @@ library(mustelus)
 data(spottail)
 
 lm50 <- maturity(maturity_stage, length, data = spottail, times = 200)
-#> Warning: There was 1 warning in `mutate()`.
-#> ℹ In argument: `L95_b = map_dbl(mod_b, ~(log(0.95/0.05) -
-#>   coef(.x)[[1]])/coef(.x)[[2]])`.
-#> ℹ In group 0: .
-#> Caused by warning:
-#> ! There were 63 warnings in `mutate()`.
-#> The first warning was:
-#> ℹ In argument: `mod_b = map(splits, ~glm(mat ~ x, family = binomial, data =
-#>   rsample::analysis(.x)))`.
-#> Caused by warning:
-#> ! glm.fit: fitted probabilities numerically 0 or 1 occurred
-#> ℹ Run `dplyr::last_dplyr_warnings()` to see the 62 remaining warnings.
 summary(lm50)
 #> # A tibble: 1 × 10
 #>       a      b   L50 L50_lower L50_upper   L95 L95_lower L95_upper     n     N
@@ -47,20 +35,11 @@ summary(lm50)
 
 lm50_sex <- maturity(maturity_stage, length, sex, data = spottail, times = 200)
 #> The categorical variable sex has 2 levels.
-#> Warning: There were 4 warnings in `mutate()`.
-#> The first warning was:
-#> ℹ In argument: `L95_b = map_dbl(mod_b, ~(log(0.95/0.05) -
-#>   coef(.x)[[1]])/coef(.x)[[2]])`.
-#> ℹ In group 0: .
-#> Caused by warning:
-#> ! There were 67 warnings in `mutate()`.
-#> The first warning was:
-#> ℹ In argument: `mod_b = map(splits, ~glm(mat ~ x, family = binomial, data =
-#>   rsample::analysis(.x)))`.
+#> Warning: There was 1 warning in `mutate()`.
+#> ℹ In argument: `.fit = map(data, ~maturity_mod(.x))`.
+#> ℹ In group 2: `grouping_var = "f"`.
 #> Caused by warning:
 #> ! glm.fit: fitted probabilities numerically 0 or 1 occurred
-#> ℹ Run `dplyr::last_dplyr_warnings()` to see the 66 remaining warnings.
-#> ℹ Run `dplyr::last_dplyr_warnings()` to see the 3 remaining warnings.
 summary(lm50_sex)
 #> # A tibble: 3 × 10
 #>        a      b   L50 L50_lower L50_upper   L95 L95_lower L95_upper     n     N
@@ -136,13 +115,11 @@ works with any continuous predictor — here using age rather than length:
 ``` r
 
 am50 <- maturity(maturity_stage, age_agree, data = spottail, times = 200)
-#> Warning: There were 2 warnings in `mutate()`.
-#> The first warning was:
+#> Warning: There was 1 warning in `mutate()`.
 #> ℹ In argument: `.fit = map(data, ~maturity_mod(.x))`.
 #> ℹ In group 1: `grouping_var = Unspecified`.
 #> Caused by warning:
 #> ! glm.fit: fitted probabilities numerically 0 or 1 occurred
-#> ℹ Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning.
 summary(am50)
 #> # A tibble: 1 × 10
 #>       a     b   L50 L50_lower L50_upper   L95 L95_lower L95_upper     n     N

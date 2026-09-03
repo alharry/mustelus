@@ -46,20 +46,11 @@ data(spottail)
 
 lm50 <- maturity(maturity_stage, length, sex, data = spottail, times = 100)
 #> The categorical variable sex has 2 levels.
-#> Warning: There were 4 warnings in `mutate()`.
-#> The first warning was:
-#> ℹ In argument: `L95_b = map_dbl(mod_b, ~(log(0.95/0.05) -
-#>   coef(.x)[[1]])/coef(.x)[[2]])`.
-#> ℹ In group 0: .
-#> Caused by warning:
-#> ! There were 33 warnings in `mutate()`.
-#> The first warning was:
-#> ℹ In argument: `mod_b = map(splits, ~glm(mat ~ x, family = binomial, data =
-#>   rsample::analysis(.x)))`.
+#> Warning: There was 1 warning in `mutate()`.
+#> ℹ In argument: `.fit = map(data, ~maturity_mod(.x))`.
+#> ℹ In group 2: `grouping_var = "f"`.
 #> Caused by warning:
 #> ! glm.fit: fitted probabilities numerically 0 or 1 occurred
-#> ℹ Run `dplyr::last_dplyr_warnings()` to see the 32 remaining warnings.
-#> ℹ Run `dplyr::last_dplyr_warnings()` to see the 3 remaining warnings.
 
 summary(lm50)
 #> # A tibble: 3 × 10

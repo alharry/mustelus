@@ -89,18 +89,6 @@ to be mature — with bootstrap confidence intervals.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">spottail</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">lm50</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/maturity.html">maturity</a></span><span class="op">(</span><span class="va">maturity_stage</span>, <span class="va">length</span>, data <span class="op">=</span> <span class="va">spottail</span>, times <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: There was 1 warning in `mutate()`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `L95_b = map_dbl(mod_b, ~(log(0.95/0.05) -</span></span>
-<span><span class="co">#&gt;   coef(.x)[[1]])/coef(.x)[[2]])`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In group 0: .</span></span>
-<span><span class="co">#&gt; Caused by warning:</span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> There were 63 warnings in `mutate()`.</span></span>
-<span><span class="co">#&gt; The first warning was:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `mod_b = map(splits, ~glm(mat ~ x, family = binomial, data =</span></span>
-<span><span class="co">#&gt;   rsample::analysis(.x)))`.</span></span>
-<span><span class="co">#&gt; Caused by warning:</span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> glm.fit: fitted probabilities numerically 0 or 1 occurred</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Run `dplyr::last_dplyr_warnings()` to see the 62 remaining warnings.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lm50</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 10</span></span></span>
 <span><span class="co">#&gt;       a      b   L50 L50_lower L50_upper   L95 L95_lower L95_upper     n     N</span></span>
@@ -113,20 +101,11 @@ to be mature — with bootstrap confidence intervals.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lm50_sex</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/maturity.html">maturity</a></span><span class="op">(</span><span class="va">maturity_stage</span>, <span class="va">length</span>, <span class="va">sex</span>, data <span class="op">=</span> <span class="va">spottail</span>, times <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span>
 <span><span class="co">#&gt; The categorical variable sex has 2 levels.</span></span>
-<span><span class="co">#&gt; Warning: There were 4 warnings in `mutate()`.</span></span>
-<span><span class="co">#&gt; The first warning was:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `L95_b = map_dbl(mod_b, ~(log(0.95/0.05) -</span></span>
-<span><span class="co">#&gt;   coef(.x)[[1]])/coef(.x)[[2]])`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In group 0: .</span></span>
-<span><span class="co">#&gt; Caused by warning:</span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> There were 67 warnings in `mutate()`.</span></span>
-<span><span class="co">#&gt; The first warning was:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `mod_b = map(splits, ~glm(mat ~ x, family = binomial, data =</span></span>
-<span><span class="co">#&gt;   rsample::analysis(.x)))`.</span></span>
+<span><span class="co">#&gt; Warning: There was 1 warning in `mutate()`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `.fit = map(data, ~maturity_mod(.x))`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In group 2: `grouping_var = "f"`.</span></span>
 <span><span class="co">#&gt; Caused by warning:</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> glm.fit: fitted probabilities numerically 0 or 1 occurred</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Run `dplyr::last_dplyr_warnings()` to see the 66 remaining warnings.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Run `dplyr::last_dplyr_warnings()` to see the 3 remaining warnings.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lm50_sex</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 10</span></span></span>
 <span><span class="co">#&gt;        a      b   L50 L50_lower L50_upper   L95 L95_lower L95_upper     n     N</span></span>
@@ -182,13 +161,11 @@ units (default is range/10):</p>
 using age rather than length:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">am50</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/maturity.html">maturity</a></span><span class="op">(</span><span class="va">maturity_stage</span>, <span class="va">age_agree</span>, data <span class="op">=</span> <span class="va">spottail</span>, times <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: There were 2 warnings in `mutate()`.</span></span>
-<span><span class="co">#&gt; The first warning was:</span></span>
+<span><span class="co">#&gt; Warning: There was 1 warning in `mutate()`.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `.fit = map(data, ~maturity_mod(.x))`.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In group 1: `grouping_var = Unspecified`.</span></span>
 <span><span class="co">#&gt; Caused by warning:</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> glm.fit: fitted probabilities numerically 0 or 1 occurred</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">am50</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 10</span></span></span>
 <span><span class="co">#&gt;       a     b   L50 L50_lower L50_upper   L95 L95_lower L95_upper     n     N</span></span>
