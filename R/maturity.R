@@ -33,6 +33,19 @@ maturity <- function(mat, x, grouping_var = NULL, data, times = 1000) {
   grp_quo <- rlang::enquo(grouping_var)
   if (!rlang::quo_is_null(grp_quo)) {
     new$grouping_var <- as_factor(dplyr::pull(data, !!grp_quo))
+
+    # Rows with a missing grouping value would otherwise form their own
+    # group under group_by()/nest(), rather than being excluded like
+    # missing x or mat
+    n_na_grp <- sum(is.na(new$grouping_var))
+    if (n_na_grp > 0) {
+      message(
+        n_na_grp, " row(s) with missing ", rlang::as_label(grp_quo),
+        " were dropped."
+      )
+      new <- new[!is.na(new$grouping_var), ]
+    }
+
     message(
       "The categorical variable ", rlang::as_label(grp_quo),
       " has ", nlevels(new$grouping_var), " levels."
@@ -56,11 +69,36 @@ maturity <- function(mat, x, grouping_var = NULL, data, times = 1000) {
     L50 <- -a / b
     L95 <- (log(0.95 / 0.05) - a) / b
 
-    # Bootstrap resamples
+    # Bootstrap resamples. A resample can, by chance, contain no variation
+    # in x (e.g. the same row duplicated), which leaves the slope aliased
+    # (NA) rather than triggering an error; such replicates are dropped
+    # before computing quantiles, which otherwise fail on NA/NaN input
     boot_splits <- rsample::bootstraps(data, times = times)
     boot_stats <- boot_splits |>
       mutate(
-        mod_b = map(splits, ~ glm(mat ~ x, family = binomial, data = rsample::analysis(.x))),
+        mod_b = map(splits, ~ suppressWarnings(
+          glm(mat ~ x, family = binomial, data = rsample::analysis(.x))
+        )),
+        ok = map_lgl(mod_b, ~ all(is.finite(coef(.x))))
+      )
+
+    n_bad <- sum(!boot_stats$ok)
+    if (n_bad > 0) {
+      message(
+        n_bad, " of ", times, " bootstrap replicates produced a non-finite ",
+        "fit (e.g. no variation in x within the resample) and were dropped."
+      )
+      boot_stats <- boot_stats[boot_stats$ok, ]
+    }
+    if (nrow(boot_stats) < 2) {
+      stop(
+        "Fewer than 2 usable bootstrap replicates for this group. Increase ",
+        "'times' or check that there is enough data and variation in x."
+      )
+    }
+
+    boot_stats <- boot_stats |>
+      mutate(
         L50_b = map_dbl(mod_b, ~ -coef(.x)[[1]] / coef(.x)[[2]]),
         L95_b = map_dbl(mod_b, ~ (log(0.95 / 0.05) - coef(.x)[[1]]) / coef(.x)[[2]])
       )
