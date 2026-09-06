@@ -31,6 +31,7 @@ The number dropped is reported as a message. Predictions therefore span the
 length or age range of gravid animals only.
 }
 \examples{
+library(ggplot2)
 data(spottail)
 
 fec <- fecundity(emb, length, data = spottail)

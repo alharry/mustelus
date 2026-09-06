@@ -19,6 +19,7 @@
 #' @references Walker, T.I. (2005) Reproduction in fisheries science.
 #'   In: Hamlett, W.C. (ed) \emph{Reproductive Biology and Phylogeny of Chondrichthyes}.
 #' @examples
+#' library(ggplot2)
 #' data(spottail)
 #'
 #' fec <- fecundity(emb, length, data = spottail)

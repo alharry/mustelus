@@ -12,6 +12,7 @@
 #'   containing list columns \code{data}, \code{coefs}, \code{preds}, and \code{mods},
 #'   each named by the grouping variable level.
 #' @examples
+#' library(ggplot2)
 #' data(spottail)
 #'
 #' lm50 <- maturity(maturity_stage, length, sex, data = spottail, times = 100)

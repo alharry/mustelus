@@ -91,6 +91,7 @@ clasp_start <- function(d) {
 #'   columns \code{data}, \code{coefs}, \code{preds}, \code{mods} and
 #'   \code{boot_coefs}.
 #' @examples
+#' library(ggplot2)
 #' data(spottail)
 #'
 #' cl <- clasp_length(clasp_length, length, clasp_calc, data = spottail, times = 200)

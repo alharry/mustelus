@@ -52,6 +52,7 @@ data frame containing both sexes is safe provided females are recorded as
 \code{NA}.
 }
 \examples{
+library(ggplot2)
 data(spottail)
 
 cl <- clasp_length(clasp_length, length, clasp_calc, data = spottail, times = 200)

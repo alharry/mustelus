@@ -25,6 +25,7 @@ summary statistics. Also returns the predicted mean, 95 percent confidence inter
 corrected for bias due to log transformation, and the fitted \code{lm()} objects.
 }
 \examples{
+library(ggplot2)
 data(spottail)
 
 lw <- len_weight(wgt, length, sex, data = spottail)

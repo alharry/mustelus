@@ -13,6 +13,8 @@ navbar:
           href: articles/len-weight.html
         - text: Length at maturity analysis
           href: articles/maturity.html
+        - text: Length at maternity analysis
+          href: articles/maternity.html
         - text: Fecundity analysis
           href: articles/fecundity.html
         - text: Clasper length analysis
@@ -23,6 +25,7 @@ articles:
     contents:
       - len-weight
       - maturity
+      - maternity
       - fecundity
       - clasp-length
 

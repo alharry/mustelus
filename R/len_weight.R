@@ -10,6 +10,7 @@
 #' @param data A data frame containing, minimally, variables for length and weight, and optionally sex or another grouping variable
 #' @return results A list containing the \code{lm} model, coefficients and other useful info, predicted mean and raw data
 #' @examples
+#' library(ggplot2)
 #' data(spottail)
 #'
 #' lw <- len_weight(wgt, length, sex, data = spottail)

@@ -28,6 +28,7 @@ function of length, age, or another continuous predictor. Bootstrap
 confidence intervals are computed via \code{rsample}.
 }
 \examples{
+library(ggplot2)
 data(spottail)
 
 lm50 <- maturity(maturity_stage, length, sex, data = spottail, times = 100)

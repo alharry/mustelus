@@ -15,6 +15,9 @@ pak::pak("alharry/mustelus")
   confidence and prediction intervals.
 - `maturity()` — length or age at maturity via logistic regression, with
   bootstrap confidence intervals on $L_{50}$ and $L_{95}$.
+- `maternity()` — length or age at maternity via the three-parameter
+  logistic function of Walker (2005), with $P_{Max}$ either estimated
+  or fixed, implemented in RTMB.
 - `fecundity()` — fecundity as a function of length or age by linear
   regression, with confidence and prediction intervals.
 - `clasp_length()` — clasper elongation as a function of length or age by
