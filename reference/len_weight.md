@@ -43,6 +43,7 @@ info, predicted mean and raw data
 ## Examples
 
 ``` r
+library(ggplot2)
 data(spottail)
 
 lw <- len_weight(wgt, length, sex, data = spottail)
@@ -59,5 +60,4 @@ summary(lw)
 p <- plot(lw)
 
 p$f + xlab("Total Length (mm)") + ylab("Weight (kg)")
-#> Error in xlab("Total Length (mm)"): could not find function "xlab"
 ```

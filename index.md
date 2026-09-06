@@ -18,6 +18,10 @@ pak::pak("alharry/mustelus")
 - [`maturity()`](https://alharry.github.io/mustelus/reference/maturity.md)
   — length or age at maturity via logistic regression, with bootstrap
   confidence intervals on $`L_{50}`$ and $`L_{95}`$.
+- [`maternity()`](https://alharry.github.io/mustelus/reference/maternity.md)
+  — length or age at maternity via the three-parameter logistic function
+  of Walker (2005), with $`P_{Max}`$ either estimated or fixed,
+  implemented in RTMB.
 - [`fecundity()`](https://alharry.github.io/mustelus/reference/fecundity.md)
   — fecundity as a function of length or age by linear regression, with
   confidence and prediction intervals.

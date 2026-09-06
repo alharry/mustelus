@@ -42,6 +42,7 @@ grouping variable level.
 ## Examples
 
 ``` r
+library(ggplot2)
 data(spottail)
 
 lm50 <- maturity(maturity_stage, length, sex, data = spottail, times = 100)
@@ -56,9 +57,9 @@ summary(lm50)
 #> # A tibble: 3 × 10
 #>        a      b   L50 L50_lower L50_upper   L95 L95_lower L95_upper     n     N
 #>    <dbl>  <dbl> <dbl>     <dbl>     <dbl> <dbl>     <dbl>     <dbl> <int> <int>
-#> 1  -55.4 0.0594  934.      925.      941   983.      966.      996    430   341
-#> 2 -124.  0.131   951.      939.      962.  973.      942.      992.   118    97
-#> 3  -51.1 0.0550  929.      921.      937.  983.      964.     1004    312   244
+#> 1  -55.4 0.0594  934.      924.      943.  983.      965       998.   430   341
+#> 2 -124.  0.131   951.      940.      968.  973.      942       994.   118    97
+#> 3  -51.1 0.0550  929.      921.      938.  983.      960.      998.   312   244
 
 plot(lm50)
 #> $all

@@ -23,6 +23,7 @@ confidence intervals are computed via rsample."><meta property="og:image" conten
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/len-weight.html">Length-weight analysis</a></li>
     <li><a class="dropdown-item" href="../articles/maturity.html">Length at maturity analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/maternity.html">Length at maternity analysis</a></li>
     <li><a class="dropdown-item" href="../articles/fecundity.html">Fecundity analysis</a></li>
     <li><a class="dropdown-item" href="../articles/clasp-length.html">Clasper length analysis</a></li>
   </ul></li>
@@ -85,7 +86,8 @@ each named by the grouping variable level.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">spottail</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">spottail</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">lm50</span> <span class="op">&lt;-</span> <span class="fu">maturity</span><span class="op">(</span><span class="va">maturity_stage</span>, <span class="va">length</span>, <span class="va">sex</span>, data <span class="op">=</span> <span class="va">spottail</span>, times <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The categorical variable sex has 2 levels.</span>
@@ -99,9 +101,9 @@ each named by the grouping variable level.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 10</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        a      b   L50 L50_lower L50_upper   L95 L95_lower L95_upper     n     N</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  -<span style="color: #BB0000;">55.4</span> 0.059<span style="text-decoration: underline;">4</span>  934.      925.      941   983.      966.      996    430   341</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> -<span style="color: #BB0000;">124.</span>  0.131   951.      939.      962.  973.      942.      992.   118    97</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>  -<span style="color: #BB0000;">51.1</span> 0.055<span style="text-decoration: underline;">0</span>  929.      921.      937.  983.      964.     <span style="text-decoration: underline;">1</span>004    312   244</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  -<span style="color: #BB0000;">55.4</span> 0.059<span style="text-decoration: underline;">4</span>  934.      924.      943.  983.      965       998.   430   341</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> -<span style="color: #BB0000;">124.</span>  0.131   951.      940.      968.  973.      942       994.   118    97</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>  -<span style="color: #BB0000;">51.1</span> 0.055<span style="text-decoration: underline;">0</span>  929.      921.      938.  983.      960.      998.   312   244</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">lm50</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $all</span>

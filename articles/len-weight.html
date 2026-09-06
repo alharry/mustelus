@@ -39,6 +39,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/len-weight.html">Length-weight analysis</a></li>
     <li><a class="dropdown-item" href="../articles/maturity.html">Length at maturity analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/maternity.html">Length at maternity analysis</a></li>
     <li><a class="dropdown-item" href="../articles/fecundity.html">Fecundity analysis</a></li>
     <li><a class="dropdown-item" href="../articles/clasp-length.html">Clasper length analysis</a></li>
   </ul>
@@ -268,10 +269,10 @@ line is the predicted mean, the dashed ribbon the 95% confidence
 interval, and the dotted ribbon the 95% prediction interval.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">lw_sex</span><span class="op">)</span></span>
-<span><span class="va">p</span><span class="op">$</span><span class="va">f</span> <span class="op">+</span> <span class="fu">xlab</span><span class="op">(</span><span class="st">"Total length (mm)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Weight (kg)"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">p</span><span class="op">$</span><span class="va">f</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Total length (mm)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Weight (kg)"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="len-weight_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="576"></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span><span class="op">$</span><span class="va">m</span> <span class="op">+</span> <span class="fu">xlab</span><span class="op">(</span><span class="st">"Total length (mm)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Weight (kg)"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">p</span><span class="op">$</span><span class="va">m</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Total length (mm)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Weight (kg)"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="len-weight_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="576"></p>
 </div>
 <div class="section level2">

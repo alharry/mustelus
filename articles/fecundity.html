@@ -39,6 +39,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/len-weight.html">Length-weight analysis</a></li>
     <li><a class="dropdown-item" href="../articles/maturity.html">Length at maturity analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/maternity.html">Length at maternity analysis</a></li>
     <li><a class="dropdown-item" href="../articles/fecundity.html">Fecundity analysis</a></li>
     <li><a class="dropdown-item" href="../articles/clasp-length.html">Clasper length analysis</a></li>
   </ul>
@@ -132,7 +133,7 @@ with standard ggplot2 calls. The solid line is the fitted mean, the
 dashed ribbon the 95% confidence interval, and the dotted ribbon the 95%
 prediction interval — the presentation used by Walker (2005).</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fec</span><span class="op">)</span> <span class="op">+</span> <span class="fu">xlab</span><span class="op">(</span><span class="st">"Total length (mm)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Number of embryos"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fec</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Total length (mm)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Number of embryos"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="fecundity_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" alt="" width="576"></p>
 <p>As in <code><a href="../reference/len_weight.html">len_weight()</a></code>, the two interval types answer
 different questions. The confidence interval describes uncertainty in
@@ -156,7 +157,7 @@ length:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  1.73 ( 0.303 )   0.227 ( 0.0487 )      0.299 0.000<span style="text-decoration: underline;">023</span> 0.829    53     3.04</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: fec.range &lt;chr&gt;, x.range &lt;chr&gt;</span></span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fec_age</span><span class="op">)</span> <span class="op">+</span> <span class="fu">xlab</span><span class="op">(</span><span class="st">"Age (years)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Number of embryos"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fec_age</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Age (years)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Number of embryos"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="fecundity_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="576"></p>
 </div>
 <div class="section level2">

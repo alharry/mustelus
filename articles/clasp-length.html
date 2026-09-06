@@ -39,6 +39,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/len-weight.html">Length-weight analysis</a></li>
     <li><a class="dropdown-item" href="../articles/maturity.html">Length at maturity analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/maternity.html">Length at maternity analysis</a></li>
     <li><a class="dropdown-item" href="../articles/fecundity.html">Fecundity analysis</a></li>
     <li><a class="dropdown-item" href="../articles/clasp-length.html">Clasper length analysis</a></li>
   </ul>
@@ -127,7 +128,7 @@ adults, with the transition centred on 898 mm.</p>
 <h2 id="plotting">Plotting<a class="anchor" aria-label="anchor" href="#plotting"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cl</span><span class="op">)</span> <span class="op">+</span> <span class="fu">xlab</span><span class="op">(</span><span class="st">"Total length (mm)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Clasper length (mm)"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cl</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Total length (mm)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Clasper length (mm)"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="clasp-length_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" alt="" width="576"></p>
 <p>The solid line is the fitted median, the dashed ribbon the 95%
 confidence interval and the dotted ribbon the 95% prediction interval.
@@ -158,7 +159,7 @@ is used only for plotting and does not enter the model.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: L95_lower &lt;dbl&gt;, L95_upper &lt;dbl&gt;, Sigma &lt;dbl&gt;, n &lt;int&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   x.range &lt;chr&gt;</span></span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cl_age</span><span class="op">)</span> <span class="op">+</span> <span class="fu">xlab</span><span class="op">(</span><span class="st">"Age (years)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Clasper length (mm)"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cl_age</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Age (years)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Clasper length (mm)"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="clasp-length_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="576"></p>
 </div>
 <div class="section level2">

@@ -48,6 +48,7 @@ Walker, T.I. (2005) Reproduction in fisheries science. In: Hamlett, W.C.
 ## Examples
 
 ``` r
+library(ggplot2)
 data(spottail)
 
 fec <- fecundity(emb, length, data = spottail)
@@ -60,5 +61,4 @@ summary(fec)
 #> # ℹ 2 more variables: fec.range <chr>, x.range <chr>
 
 plot(fec) + xlab("Total length (mm)") + ylab("Number of embryos")
-#> Error in xlab("Total length (mm)"): could not find function "xlab"
 ```

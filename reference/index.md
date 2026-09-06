@@ -8,6 +8,8 @@
   : Analyse fecundity as a function of length or age
 - [`len_weight()`](https://alharry.github.io/mustelus/reference/len_weight.md)
   : Analyse weight-length relationship
+- [`maternity()`](https://alharry.github.io/mustelus/reference/maternity.md)
+  : Analyse length or age at maternity
 - [`maturity()`](https://alharry.github.io/mustelus/reference/maturity.md)
   : Analyse length or age at maturity
 - [`sandbar`](https://alharry.github.io/mustelus/reference/sandbar.md) :

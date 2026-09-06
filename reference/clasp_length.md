@@ -70,6 +70,7 @@ recorded as `NA`.
 ## Examples
 
 ``` r
+library(ggplot2)
 data(spottail)
 
 cl <- clasp_length(clasp_length, length, clasp_calc, data = spottail, times = 200)
@@ -84,5 +85,4 @@ summary(cl)
 #> #   x.range <chr>
 
 plot(cl) + xlab("Total length (mm)") + ylab("Clasper length (mm)")
-#> Error in xlab("Total length (mm)"): could not find function "xlab"
 ```
