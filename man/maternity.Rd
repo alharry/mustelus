@@ -27,7 +27,9 @@ data; a value in (0, 1] fixes it.}
 A one row tibble of class \code{"maternity"} containing the list
 columns \code{data}, \code{coefs}, \code{preds}, \code{mods} and
 \code{boot_coefs}. \code{mods} holds the \code{RTMB} objective function,
-the \code{nlminb} result and the \code{sdreport}.
+the \code{nlminb} result and the \code{sdreport}. \code{coefs} reports
+asymptotic standard errors alongside the bootstrap intervals, and
+\code{convergence} is \code{FALSE} if any parameter is poorly identified.
 }
 \description{
 Fits the three-parameter logistic maternity function of Walker (2005) to

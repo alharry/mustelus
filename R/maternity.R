@@ -114,7 +114,9 @@ maternity_fit <- function(d, start, fixed) {
 #' @return A one row tibble of class \code{"maternity"} containing the list
 #'   columns \code{data}, \code{coefs}, \code{preds}, \code{mods} and
 #'   \code{boot_coefs}. \code{mods} holds the \code{RTMB} objective function,
-#'   the \code{nlminb} result and the \code{sdreport}.
+#'   the \code{nlminb} result and the \code{sdreport}. \code{coefs} reports
+#'   asymptotic standard errors alongside the bootstrap intervals, and
+#'   \code{convergence} is \code{FALSE} if any parameter is poorly identified.
 #' @references
 #' Harry, A.V., Baremore, I.E. and Piercy, A.N. (2024) Quantifying maternal
 #' reproductive output of chondrichthyan fishes. \emph{Canadian Journal of
@@ -181,6 +183,30 @@ maternity <- function(matern, x, data, pmax = NULL, times = 1000, start = NULL) 
   }
   sr <- RTMB::sdreport(obj)
 
+  # Check the parameters are actually identified. A gap in x spanning the
+  # transition leaves the likelihood flat in m50 and m95: the gradient is zero,
+  # so the optimiser returns its starting values, and because each bootstrap
+  # replicate starts from those same values it does not move either, giving a
+  # spuriously narrow interval. A standard error wider than the data itself is
+  # the signature, and pdHess does not catch it
+  se <- tryCatch(
+    suppressWarnings(summary(sr, "fixed")[, "Std. Error"]),
+    error = function(e) rep(NA_real_, base::length(opt$par))
+  )
+  names(se) <- names(opt$par)
+  se_limit <- c(m50 = diff(range(new$x)), m95 = diff(range(new$x)), pmax = 1)
+  poorly_identified <- names(se)[!is.finite(se) | se > se_limit[names(se)]]
+  if (base::length(poorly_identified) > 0) {
+    warning(
+      "Parameter(s) ", paste(poorly_identified, collapse = ", "),
+      " are poorly identified: the standard error exceeds the range of the ",
+      "data, indicating a flat likelihood. The estimate depends on the ",
+      "starting value and the bootstrap interval will be far too narrow. ",
+      "This usually means a gap in the predictor spanning the transition, or ",
+      "too few animals near it."
+    )
+  }
+
   est <- as.list(opt$par)
   if (fixed) est$pmax <- pmax
   k <- base::length(opt$par)
@@ -242,11 +268,15 @@ maternity <- function(matern, x, data, pmax = NULL, times = 1000, start = NULL) 
     pmax        = signif(est$pmax, 4),
     pmax_lower  = if (fixed) NA_real_ else ci("pmax")[1],
     pmax_upper  = if (fixed) NA_real_ else ci("pmax")[2],
+    m50_se      = signif(unname(se["m50"]), 4),
+    m95_se      = signif(unname(se["m95"]), 4),
+    pmax_se     = if (fixed) NA_real_ else signif(unname(se["pmax"]), 4),
     n           = nrow(new),
     N           = sum(new$matern),
     nll         = signif(opt$objective, 4),
     AIC         = signif(aic, 4),
-    convergence = opt$convergence == 0 && isTRUE(sr$pdHess)
+    convergence = opt$convergence == 0 && isTRUE(sr$pdHess) &&
+                  base::length(poorly_identified) == 0
   )
   rownames(coefs) <- NULL
 
