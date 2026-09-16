@@ -165,24 +165,35 @@ summary.maturity <- function(x, ...) {
 plot.maturity <- function(x, raw_data = c("proportions", "point", "rug", "bootstrap", "none"),
                          binwidth = NULL, alpha = 1, n_boot = 100, ...) {
   raw_data  <- match.arg(raw_data)
-  plot_lims <- x[which(x$grouping_var %in% c("all", "Unspecified")), ]
 
-  maturity_plots <- x |>
-    group_split(grouping_var) |>
-    map(function(grp) {
-      raw  <- grp$data[[1]]
-      pred <- grp$preds[[1]]
+  # Common axis limits across groups, taken from the pooled group. A grouping
+  # variable with only one level has no pooled group, so fall back to the
+  # combined data rather than indexing an empty selection
+  plot_lims <- x[which(x$grouping_var %in% c("all", "Unspecified")), ]
+  lims_data <- if (nrow(plot_lims) > 0) {
+    plot_lims$data[[1]]
+  } else {
+    do.call(rbind, x$data)
+  }
+
+  # Iterate over rows directly rather than group_split(), which returns groups
+  # in factor-level order. That need not match the row order of the result, so
+  # names assigned from x$grouping_var could be attached to the wrong plots
+  maturity_plots <- seq_len(nrow(x)) |>
+    map(function(i) {
+      raw  <- x$data[[i]]
+      pred <- x$preds[[i]]
 
       if (raw_data == "bootstrap") {
-        bc        <- grp$boot_coefs[[1]]
+        bc        <- x$boot_coefs[[i]]
         n_draw    <- min(n_boot, nrow(bc))
         bc_sample <- bc[sample(nrow(bc), n_draw), ]
         x_range   <- seq(min(raw$x, na.rm = TRUE), max(raw$x, na.rm = TRUE), length.out = 200)
-        boot_curves <- do.call(rbind, lapply(seq_len(n_draw), function(i) {
+        boot_curves <- do.call(rbind, lapply(seq_len(n_draw), function(j) {
           data.frame(
             x         = x_range,
-            mat       = 1 / (1 + exp(-(bc_sample$a[i] + bc_sample$b[i] * x_range))),
-            replicate = i
+            mat       = 1 / (1 + exp(-(bc_sample$a[j] + bc_sample$b[j] * x_range))),
+            replicate = j
           )
         }))
 
@@ -191,7 +202,7 @@ plot.maturity <- function(x, raw_data = c("proportions", "point", "rug", "bootst
                     aes(x = x, y = mat, group = replicate),
                     colour = "grey70", linewidth = 0.3) +
           geom_line(data = pred, aes(x = x, y = mat)) +
-          geom_point(data = plot_lims$data[[1]], aes(x = x, y = 0),
+          geom_point(data = lims_data, aes(x = x, y = 0),
                      col = "transparent") +
           scale_y_continuous(limits = c(0, 1)) +
           theme_classic()
@@ -202,7 +213,7 @@ plot.maturity <- function(x, raw_data = c("proportions", "point", "rug", "bootst
         geom_ribbon(data = pred, aes(x = x, ymin = lower, ymax = upper),
                     fill = "grey70") +
         geom_line(data = pred, aes(x = x, y = mat)) +
-        geom_point(data = plot_lims$data[[1]], aes(x = x, y = 0),
+        geom_point(data = lims_data, aes(x = x, y = 0),
                    col = "transparent") +
         scale_y_continuous(limits = c(0, 1)) +
         theme_classic()
@@ -228,8 +239,8 @@ plot.maturity <- function(x, raw_data = c("proportions", "point", "rug", "bootst
         }
       } else if (raw_data == "rug") {
         p <- p +
-          geom_rug(data = raw[raw$mat == 1, ], aes(x = x), sides = "t", alpha = 0.4) +
-          geom_rug(data = raw[raw$mat == 0, ], aes(x = x), sides = "b", alpha = 0.4)
+          geom_rug(data = raw[which(raw$mat == 1), ], aes(x = x), sides = "t", alpha = 0.4) +
+          geom_rug(data = raw[which(raw$mat == 0), ], aes(x = x), sides = "b", alpha = 0.4)
       }
 
       p

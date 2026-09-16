@@ -325,8 +325,8 @@ plot.maternity <- function(x, raw_data = c("proportions", "point", "rug", "boots
     }
   } else if (raw_data == "rug") {
     p <- p +
-      geom_rug(data = raw[raw$matern == 1, ], aes(x = x), sides = "t", alpha = 0.4) +
-      geom_rug(data = raw[raw$matern == 0, ], aes(x = x), sides = "b", alpha = 0.4)
+      geom_rug(data = raw[which(raw$matern == 1), ], aes(x = x), sides = "t", alpha = 0.4) +
+      geom_rug(data = raw[which(raw$matern == 0), ], aes(x = x), sides = "b", alpha = 0.4)
   }
 
   p

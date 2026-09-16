@@ -135,30 +135,40 @@ summary.len_weight <- function(x, ...) {
 
 #' @export
 plot.len_weight <- function(x) {
+  # Common axis limits across groups, taken from the pooled group. A grouping
+  # variable with only one level has no pooled group, so fall back to the
+  # combined data rather than indexing an empty selection
   plot_lims <- x[which(x$grouping_var %in% c("all", "Unspecified")), ]
+  lims_data <- if (nrow(plot_lims) > 0) {
+    plot_lims$data[[1]]
+  } else {
+    do.call(rbind, x$data)
+  }
 
-  len_weight_plots <- x |>
-    group_split(grouping_var) |>
+  # Iterate over rows directly rather than group_split(), which returns groups
+  # in factor-level order. That need not match the row order of the result, so
+  # names assigned from x$grouping_var could be attached to the wrong plots
+  len_weight_plots <- seq_len(nrow(x)) |>
     map(
       ~ ggplot() +
-        geom_line(data = .$preds[[1]], aes(x = length, y = weight)) +
+        geom_line(data = x$preds[[.x]], aes(x = length, y = weight)) +
         geom_ribbon(
-          data = .$preds[[1]],
+          data = x$preds[[.x]],
           aes(x = length, ymin = clower, ymax = cupper),
           col = "black",
           fill = "transparent",
           linetype = "dashed"
         ) +
         geom_ribbon(
-          data = .$preds[[1]],
+          data = x$preds[[.x]],
           aes(x = length, ymin = plower, ymax = pupper),
           col = "black",
           fill = "transparent",
           linetype = "dotted"
         ) +
-        geom_point(data = .$data[[1]], aes(x = length, y = weight)) +
+        geom_point(data = x$data[[.x]], aes(x = length, y = weight)) +
         geom_point(
-          data = plot_lims$data[[1]],
+          data = lims_data,
           aes(x = length, y = weight),
           col = "transparent"
         ) +
