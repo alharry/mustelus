@@ -93,12 +93,12 @@ By default $`P_{Max}`$ is estimated from the data:
 
 mt <- maternity(maternity_stage, FL, data = sandbar, times = 500)
 summary(mt)
-#> # A tibble: 1 × 15
+#> # A tibble: 1 × 18
 #>   method      m50 m50_lower m50_upper   m95 m95_lower m95_upper  pmax pmax_lower
 #>   <chr>     <dbl>     <dbl>     <dbl> <dbl>     <dbl>     <dbl> <dbl>      <dbl>
 #> 1 3PLF-est…  160.      157.       164  174.      168.      183. 0.480      0.396
-#> # ℹ 6 more variables: pmax_upper <dbl>, n <int>, N <int>, nll <dbl>, AIC <dbl>,
-#> #   convergence <lgl>
+#> # ℹ 9 more variables: pmax_upper <dbl>, m50_se <dbl>, m95_se <dbl>,
+#> #   pmax_se <dbl>, n <int>, N <int>, nll <dbl>, AIC <dbl>, convergence <lgl>
 ```
 
 The summary reports the three parameters with bootstrap 95% confidence

@@ -170,12 +170,12 @@ is estimated from the data:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/maternity.html">maternity</a></span><span class="op">(</span><span class="va">maternity_stage</span>, <span class="va">FL</span>, data <span class="op">=</span> <span class="va">sandbar</span>, times <span class="op">=</span> <span class="fl">500</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mt</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 15</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 18</span></span></span>
 <span><span class="co">#&gt;   method      m50 m50_lower m50_upper   m95 m95_lower m95_upper  pmax pmax_lower</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 3PLF-est…  160.      157.       164  174.      168.      183. 0.480      0.396</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6 more variables: pmax_upper &lt;dbl&gt;, n &lt;int&gt;, N &lt;int&gt;, nll &lt;dbl&gt;, AIC &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   convergence &lt;lgl&gt;</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 9 more variables: pmax_upper &lt;dbl&gt;, m50_se &lt;dbl&gt;, m95_se &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   pmax_se &lt;dbl&gt;, n &lt;int&gt;, N &lt;int&gt;, nll &lt;dbl&gt;, AIC &lt;dbl&gt;, convergence &lt;lgl&gt;</span></span></span></code></pre></div>
 <p>The summary reports the three parameters with bootstrap 95%
 confidence intervals, the number of females (<code>n</code>) and the
 number in maternal condition (<code>N</code>), the negative

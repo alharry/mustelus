@@ -90,7 +90,9 @@ data; a value in (0, 1] fixes it.</p></dd>
     <p>A one row tibble of class <code>"maternity"</code> containing the list
 columns <code>data</code>, <code>coefs</code>, <code>preds</code>, <code>mods</code> and
 <code>boot_coefs</code>. <code>mods</code> holds the <code>RTMB</code> objective function,
-the <code>nlminb</code> result and the <code>sdreport</code>.</p>
+the <code>nlminb</code> result and the <code>sdreport</code>. <code>coefs</code> reports
+asymptotic standard errors alongside the bootstrap intervals, and
+<code>convergence</code> is <code>FALSE</code> if any parameter is poorly identified.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -139,23 +141,23 @@ Science Publishers, Enfield, NH, pp. 81–127.</p>
 <span class="r-in"><span><span class="va">mt</span> <span class="op">&lt;-</span> <span class="fu">maternity</span><span class="op">(</span><span class="va">maternity_stage</span>, <span class="va">FL</span>, data <span class="op">=</span> <span class="va">sandbar</span>, times <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> 3 of 200 bootstrap replicates failed to converge or contained no maternal females and were dropped.</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mt</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 15</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 18</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   method      m50 m50_lower m50_upper   m95 m95_lower m95_upper  pmax pmax_lower</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 3PLF-est…  160.      157.      165.  174.      167.      184. 0.480      0.385</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 6 more variables: pmax_upper &lt;dbl&gt;, n &lt;int&gt;, N &lt;int&gt;, nll &lt;dbl&gt;, AIC &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   convergence &lt;lgl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 9 more variables: pmax_upper &lt;dbl&gt;, m50_se &lt;dbl&gt;, m95_se &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   pmax_se &lt;dbl&gt;, n &lt;int&gt;, N &lt;int&gt;, nll &lt;dbl&gt;, AIC &lt;dbl&gt;, convergence &lt;lgl&gt;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Fix it at 0.5, as for a biennial cycle, and compare by AIC</span></span></span>
 <span class="r-in"><span><span class="va">mt_biennial</span> <span class="op">&lt;-</span> <span class="fu">maternity</span><span class="op">(</span><span class="va">maternity_stage</span>, <span class="va">FL</span>, data <span class="op">=</span> <span class="va">sandbar</span>,</span></span>
 <span class="r-in"><span>                         pmax <span class="op">=</span> <span class="fl">0.5</span>, times <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mt_biennial</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 15</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 18</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   method      m50 m50_lower m50_upper   m95 m95_lower m95_upper  pmax pmax_lower</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 3PLF-fix…  161.      159.      163.  176.      172.      182.   0.5         <span style="color: #BB0000;">NA</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 6 more variables: pmax_upper &lt;dbl&gt;, n &lt;int&gt;, N &lt;int&gt;, nll &lt;dbl&gt;, AIC &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   convergence &lt;lgl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 9 more variables: pmax_upper &lt;dbl&gt;, m50_se &lt;dbl&gt;, m95_se &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   pmax_se &lt;dbl&gt;, n &lt;int&gt;, N &lt;int&gt;, nll &lt;dbl&gt;, AIC &lt;dbl&gt;, convergence &lt;lgl&gt;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mt</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Fork length (cm)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Proportion in maternal condition"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="maternity-1.png" alt="" width="700" height="433"></span>

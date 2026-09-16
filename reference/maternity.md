@@ -45,6 +45,9 @@ maternity(matern, x, data, pmax = NULL, times = 1000, start = NULL)
 A one row tibble of class `"maternity"` containing the list columns
 `data`, `coefs`, `preds`, `mods` and `boot_coefs`. `mods` holds the
 `RTMB` objective function, the `nlminb` result and the `sdreport`.
+`coefs` reports asymptotic standard errors alongside the bootstrap
+intervals, and `convergence` is `FALSE` if any parameter is poorly
+identified.
 
 ## Details
 
@@ -99,23 +102,23 @@ data(sandbar)
 mt <- maternity(maternity_stage, FL, data = sandbar, times = 200)
 #> 3 of 200 bootstrap replicates failed to converge or contained no maternal females and were dropped.
 summary(mt)
-#> # A tibble: 1 × 15
+#> # A tibble: 1 × 18
 #>   method      m50 m50_lower m50_upper   m95 m95_lower m95_upper  pmax pmax_lower
 #>   <chr>     <dbl>     <dbl>     <dbl> <dbl>     <dbl>     <dbl> <dbl>      <dbl>
 #> 1 3PLF-est…  160.      157.      165.  174.      167.      184. 0.480      0.385
-#> # ℹ 6 more variables: pmax_upper <dbl>, n <int>, N <int>, nll <dbl>, AIC <dbl>,
-#> #   convergence <lgl>
+#> # ℹ 9 more variables: pmax_upper <dbl>, m50_se <dbl>, m95_se <dbl>,
+#> #   pmax_se <dbl>, n <int>, N <int>, nll <dbl>, AIC <dbl>, convergence <lgl>
 
 # Fix it at 0.5, as for a biennial cycle, and compare by AIC
 mt_biennial <- maternity(maternity_stage, FL, data = sandbar,
                          pmax = 0.5, times = 200)
 summary(mt_biennial)
-#> # A tibble: 1 × 15
+#> # A tibble: 1 × 18
 #>   method      m50 m50_lower m50_upper   m95 m95_lower m95_upper  pmax pmax_lower
 #>   <chr>     <dbl>     <dbl>     <dbl> <dbl>     <dbl>     <dbl> <dbl>      <dbl>
 #> 1 3PLF-fix…  161.      159.      163.  176.      172.      182.   0.5         NA
-#> # ℹ 6 more variables: pmax_upper <dbl>, n <int>, N <int>, nll <dbl>, AIC <dbl>,
-#> #   convergence <lgl>
+#> # ℹ 9 more variables: pmax_upper <dbl>, m50_se <dbl>, m95_se <dbl>,
+#> #   pmax_se <dbl>, n <int>, N <int>, nll <dbl>, AIC <dbl>, convergence <lgl>
 
 plot(mt) + xlab("Fork length (cm)") + ylab("Proportion in maternal condition")
 ```
