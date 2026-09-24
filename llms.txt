@@ -28,6 +28,10 @@ pak::pak("alharry/mustelus")
 - [`clasp_length()`](https://alharry.github.io/mustelus/reference/clasp_length.md)
   — clasper elongation as a function of length or age by nonlinear
   (logistic) regression, with bootstrap confidence intervals.
+- [`growth()`](https://alharry.github.io/mustelus/reference/growth.md) —
+  von Bertalanffy growth parameterised by length at birth, with optional
+  ageing error as a random effect and optional neonate data, implemented
+  in RTMB.
 
 Each returns a tibble with list columns holding the data, coefficients,
 predictions and fitted model, and has
@@ -49,6 +53,8 @@ examples.
   : Analyse clasper length as a function of length or age
 - [`fecundity()`](https://alharry.github.io/mustelus/reference/fecundity.md)
   : Analyse fecundity as a function of length or age
+- [`growth()`](https://alharry.github.io/mustelus/reference/growth.md) :
+  Analyse growth from length at age data
 - [`len_weight()`](https://alharry.github.io/mustelus/reference/len_weight.md)
   : Analyse weight-length relationship
 - [`maternity()`](https://alharry.github.io/mustelus/reference/maternity.md)
@@ -74,3 +80,5 @@ examples.
   analysis](https://alharry.github.io/mustelus/articles/fecundity.md):
 - [Clasper length
   analysis](https://alharry.github.io/mustelus/articles/clasp-length.md):
+- [Growth
+  analysis](https://alharry.github.io/mustelus/articles/growth.md):

@@ -6,6 +6,8 @@
   : Analyse clasper length as a function of length or age
 - [`fecundity()`](https://alharry.github.io/mustelus/reference/fecundity.md)
   : Analyse fecundity as a function of length or age
+- [`growth()`](https://alharry.github.io/mustelus/reference/growth.md) :
+  Analyse growth from length at age data
 - [`len_weight()`](https://alharry.github.io/mustelus/reference/len_weight.md)
   : Analyse weight-length relationship
 - [`maternity()`](https://alharry.github.io/mustelus/reference/maternity.md)

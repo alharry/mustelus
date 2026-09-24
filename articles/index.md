@@ -12,3 +12,5 @@
   analysis](https://alharry.github.io/mustelus/articles/fecundity.md):
 - [Clasper length
   analysis](https://alharry.github.io/mustelus/articles/clasp-length.md):
+- [Growth
+  analysis](https://alharry.github.io/mustelus/articles/growth.md):
