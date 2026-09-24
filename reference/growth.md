@@ -91,10 +91,10 @@ argument, age is treated as measured without error.
 **Neonates.** Supplying `neonate`, an indicator for individuals of known
 age zero such as those with an unhealed umbilical scar, adds their
 lengths as direct information on \\L_0\\ through \\L\_{0,i} \sim N(L_0,
-(CV_L L_0)^2)\\. Flagged individuals are used only for this term: any
-that also carry an age are removed from the length at age data, since an
-age-zero observation and a length at birth observation carry the same
-information and including both would count it twice.
+(CV_L L\_{0,i})^2)\\. Flagged individuals are used only for this term:
+any that also carry an age are removed from the length at age data,
+since an age-zero observation and a length at birth observation carry
+the same information and including both would count it twice.
 
 Estimation is by maximum likelihood using `RTMB`, with the random
 effects integrated out by the Laplace approximation. Confidence
@@ -132,8 +132,8 @@ summary(g)
 #> # A tibble: 2 × 17
 #>   group  Linf Linf_lower Linf_upper     K K_lower K_upper    L0 L0_lower
 #>   <chr> <dbl>      <dbl>      <dbl> <dbl>   <dbl>   <dbl> <dbl>    <dbl>
-#> 1 f      1242       1216       1268 0.380   0.348   0.412  522.     507.
-#> 2 m      1084       1065       1103 0.576   0.522   0.629  522.     507.
+#> 1 f      1241       1215       1266 0.383   0.350   0.415  519.     505.
+#> 2 m      1083       1064       1103 0.580   0.526   0.633  519.     505.
 #> # ℹ 8 more variables: L0_upper <dbl>, CV_L <dbl>, n <int>, n0 <int>,
 #> #   cv_age <dbl>, nll <dbl>, AIC <dbl>, convergence <lgl>
 

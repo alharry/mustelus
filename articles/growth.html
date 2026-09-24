@@ -126,7 +126,7 @@ readings, following Chang (1982), and held fixed.</p>
 <p>Animals with an unhealed umbilical scar are known to be age zero.
 Their lengths are direct information on
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mrow><mn>0</mn><mo>,</mo><mi>i</mi></mrow></msub><mo>∼</mo><mi>N</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>L</mi><mn>0</mn></msub><mo>,</mo><mo stretchy="false" form="prefix">(</mo><mi>C</mi><msub><mi>V</mi><mi>L</mi></msub><msub><mi>L</mi><mn>0</mn></msub><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">L_{0,i} \sim N(L_0, (CV_L L_0)^2)</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mrow><mn>0</mn><mo>,</mo><mi>i</mi></mrow></msub><mo>∼</mo><mi>N</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>L</mi><mn>0</mn></msub><mo>,</mo><mo stretchy="false" form="prefix">(</mo><mi>C</mi><msub><mi>V</mi><mi>L</mi></msub><msub><mi>L</mi><mrow><mn>0</mn><mo>,</mo><mi>i</mi></mrow></msub><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">L_{0,i} \sim N(L_0, (CV_L L_{0,i})^2)</annotation></semantics></math></p>
 <p>These are often available in numbers, and from animals that were
 never aged, so they add information at no cost.</p>
 <p>Fitting is by maximum likelihood with <code>RTMB</code>, the random
@@ -134,6 +134,17 @@ effects integrated out by the Laplace approximation. Confidence
 intervals on the curve come from the delta method; prediction intervals
 add
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><msub><mi>V</mi><mi>L</mi></msub></mrow><annotation encoding="application/x-tex">CV_L</annotation></semantics></math>.</p>
+<p>This is a port of the <code>TMB</code> implementation used in Harry
+et al. (2019), and reproduces the published estimates for
+<em>Carcharhinus limbatus</em> to within rounding:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_{\infty}</annotation></semantics></math>
+263.3 and 241.9 cm,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
+0.1418 and 0.1565,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>
+72.77 cm and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><msub><mi>V</mi><mi>L</mi></msub></mrow><annotation encoding="application/x-tex">CV_L</annotation></semantics></math>
+0.0487.</p>
 </div>
 </div>
 <div class="section level2">
@@ -149,8 +160,8 @@ add
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 17</span></span></span>
 <span><span class="co">#&gt;   group  Linf Linf_lower Linf_upper     K K_lower K_upper    L0 L0_lower</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> f      <span style="text-decoration: underline;">1</span>242       <span style="text-decoration: underline;">1</span>216       <span style="text-decoration: underline;">1</span>268 0.380   0.348   0.412  522.     507.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> m      <span style="text-decoration: underline;">1</span>084       <span style="text-decoration: underline;">1</span>065       <span style="text-decoration: underline;">1</span>103 0.576   0.522   0.629  522.     507.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> f      <span style="text-decoration: underline;">1</span>241       <span style="text-decoration: underline;">1</span>215       <span style="text-decoration: underline;">1</span>266 0.383   0.350   0.415  519.     505.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> m      <span style="text-decoration: underline;">1</span>083       <span style="text-decoration: underline;">1</span>064       <span style="text-decoration: underline;">1</span>103 0.580   0.526   0.633  519.     505.</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 8 more variables: L0_upper &lt;dbl&gt;, CV_L &lt;dbl&gt;, n &lt;int&gt;, n0 &lt;int&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   cv_age &lt;dbl&gt;, nll &lt;dbl&gt;, AIC &lt;dbl&gt;, convergence &lt;lgl&gt;</span></span></span></code></pre></div>
 <p>The summary has one row per group.
@@ -166,7 +177,7 @@ per group (<code>n</code>), the number of neonates (<code>n0</code>),
 the ageing CV if used, the negative log-likelihood, AIC, and whether the
 fit converged with a positive-definite Hessian.</p>
 <p>Female spot-tail sharks reach a larger asymptotic length than males
-(1242 against 1084 mm) and grow more slowly toward it (0.38 against
+(1241 against 1083 mm) and grow more slowly toward it (0.38 against
 0.58). That pattern, females larger and slower, is common in
 carcharhinids.</p>
 </div>
@@ -221,8 +232,8 @@ here are two simulated readings around it:</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 5</span></span></span>
 <span><span class="co">#&gt;   group  Linf     K    L0 cv_age</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> f      <span style="text-decoration: underline;">1</span>243 0.37   528.  0.182</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> m      <span style="text-decoration: underline;">1</span>079 0.586  528.  0.182</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> f      <span style="text-decoration: underline;">1</span>241 0.373  525.  0.182</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> m      <span style="text-decoration: underline;">1</span>078 0.590  525.  0.182</span></span></code></pre></div>
 <p>If only a consensus age is available but the ageing CV is known from
 elsewhere, supply it directly with <code>cv_age</code>. This is the more
 common situation when reanalysing published data.</p>
@@ -238,10 +249,10 @@ common situation when reanalysing published data.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>cv_age <span class="op">=</span> <span class="va">cv</span>, Linf_f <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">gg</span><span class="op">)</span><span class="op">$</span><span class="va">Linf</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, K_f <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">gg</span><span class="op">)</span><span class="op">$</span><span class="va">K</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   cv_age Linf_f    K_f</span></span>
-<span><span class="co">#&gt; 1   0.00   1242 0.3799</span></span>
-<span><span class="co">#&gt; 2   0.05   1243 0.3776</span></span>
-<span><span class="co">#&gt; 3   0.10   1247 0.3707</span></span>
-<span><span class="co">#&gt; 4   0.20   1366 0.2695</span></span></code></pre></div>
+<span><span class="co">#&gt; 1   0.00   1241 0.3829</span></span>
+<span><span class="co">#&gt; 2   0.05   1242 0.3806</span></span>
+<span><span class="co">#&gt; 3   0.10   1246 0.3738</span></span>
+<span><span class="co">#&gt; 4   0.20   1249 0.3628</span></span></code></pre></div>
 <p>As the assumed ageing error grows,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_\infty</annotation></semantics></math>
 rises and
@@ -262,21 +273,21 @@ von Bertalanffy fit.</p>
 <code class="sourceCode R"><span><span class="co"># Fixed-effect estimates and standard errors</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">g</span><span class="op">$</span><span class="va">mods</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">sdreport</span>, <span class="st">"fixed"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;          Estimate   Std. Error</span></span>
-<span><span class="co">#&gt; Linf 1.242071e+03 13.190296999</span></span>
-<span><span class="co">#&gt; Linf 1.084039e+03  9.877246698</span></span>
-<span><span class="co">#&gt; K    3.799472e-01  0.016508716</span></span>
-<span><span class="co">#&gt; K    5.756673e-01  0.027280649</span></span>
-<span><span class="co">#&gt; L0   5.214827e+02  7.216221212</span></span>
-<span><span class="co">#&gt; CV_L 3.967731e-02  0.001628208</span></span></code></pre></div>
+<span><span class="co">#&gt; Linf 1.240716e+03 13.098814452</span></span>
+<span><span class="co">#&gt; Linf 1.083294e+03  9.814274998</span></span>
+<span><span class="co">#&gt; K    3.829032e-01  0.016599074</span></span>
+<span><span class="co">#&gt; K    5.796683e-01  0.027395151</span></span>
+<span><span class="co">#&gt; L0   5.191611e+02  7.280696262</span></span>
+<span><span class="co">#&gt; CV_L 3.970768e-02  0.001629402</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">g</span><span class="op">$</span><span class="va">preds</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   group       age      len    lower    upper   plower   pupper</span></span>
-<span><span class="co">#&gt; 1     f 0.0000000 521.4827 507.3389 535.6265 478.5326 564.4327</span></span>
-<span><span class="co">#&gt; 2     f 0.1380505 558.3048 546.0689 570.5406 513.1956 603.4139</span></span>
-<span><span class="co">#&gt; 3     f 0.2761010 593.2452 582.5448 603.9457 545.8854 640.6051</span></span>
-<span><span class="co">#&gt; 4     f 0.4141515 626.4002 616.8757 635.9248 576.7643 676.0362</span></span>
-<span><span class="co">#&gt; 5     f 0.5522020 657.8610 649.1763 666.5458 605.9689 709.7532</span></span>
-<span><span class="co">#&gt; 6     f 0.6902525 687.7142 679.5718 695.8566 633.6161 741.8123</span></span></code></pre></div>
+<span><span class="co">#&gt; 1     f 0.0000000 519.1611 504.8909 533.4312 476.3104 562.0118</span></span>
+<span><span class="co">#&gt; 2     f 0.1380505 556.3119 543.9794 568.6445 511.2936 601.3302</span></span>
+<span><span class="co">#&gt; 3     f 0.2761010 591.5500 580.7770 602.3229 544.2677 638.8322</span></span>
+<span><span class="co">#&gt; 4     f 0.4141515 624.9737 615.3955 634.5519 575.3997 674.5477</span></span>
+<span><span class="co">#&gt; 5     f 0.5522020 656.6765 647.9518 665.4012 604.8300 708.5231</span></span>
+<span><span class="co">#&gt; 6     f 0.6902525 686.7471 678.5738 694.9204 632.6783 740.8159</span></span></code></pre></div>
 <p><code>mods</code> holds the <code>RTMB</code> objective function, the
 <code>nlminb</code> result and the <code>sdreport</code>. Note that the
 objective is an external pointer and will not survive

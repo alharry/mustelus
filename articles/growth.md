@@ -50,7 +50,7 @@ Animals with an unhealed umbilical scar are known to be age zero. Their
 lengths are direct information on $`L_0`$:
 
 ``` math
-L_{0,i} \sim N(L_0, (CV_L L_0)^2)
+L_{0,i} \sim N(L_0, (CV_L L_{0,i})^2)
 ```
 
 These are often available in numbers, and from animals that were never
@@ -59,6 +59,11 @@ aged, so they add information at no cost.
 Fitting is by maximum likelihood with `RTMB`, the random effects
 integrated out by the Laplace approximation. Confidence intervals on the
 curve come from the delta method; prediction intervals add $`CV_L`$.
+
+This is a port of the `TMB` implementation used in Harry et al. (2019),
+and reproduces the published estimates for *Carcharhinus limbatus* to
+within rounding: $`L_{\infty}`$ 263.3 and 241.9 cm, $`K`$ 0.1418 and
+0.1565, $`L_0`$ 72.77 cm and $`CV_L`$ 0.0487.
 
 ## Basic usage
 
@@ -73,8 +78,8 @@ summary(g)
 #> # A tibble: 2 × 17
 #>   group  Linf Linf_lower Linf_upper     K K_lower K_upper    L0 L0_lower
 #>   <chr> <dbl>      <dbl>      <dbl> <dbl>   <dbl>   <dbl> <dbl>    <dbl>
-#> 1 f      1242       1216       1268 0.380   0.348   0.412  522.     507.
-#> 2 m      1084       1065       1103 0.576   0.522   0.629  522.     507.
+#> 1 f      1241       1215       1266 0.383   0.350   0.415  519.     505.
+#> 2 m      1083       1064       1103 0.580   0.526   0.633  519.     505.
 #> # ℹ 8 more variables: L0_upper <dbl>, CV_L <dbl>, n <int>, n0 <int>,
 #> #   cv_age <dbl>, nll <dbl>, AIC <dbl>, convergence <lgl>
 ```
@@ -86,7 +91,7 @@ the number of aged animals per group (`n`), the number of neonates
 whether the fit converged with a positive-definite Hessian.
 
 Female spot-tail sharks reach a larger asymptotic length than males
-(1242 against 1084 mm) and grow more slowly toward it (0.38 against
+(1241 against 1083 mm) and grow more slowly toward it (0.38 against
 0.58). That pattern, females larger and slower, is common in
 carcharhinids.
 
@@ -145,8 +150,8 @@ summary(g_reads)[, c("group", "Linf", "K", "L0", "cv_age")]
 #> # A tibble: 2 × 5
 #>   group  Linf     K    L0 cv_age
 #>   <chr> <dbl> <dbl> <dbl>  <dbl>
-#> 1 f      1243 0.37   528.  0.182
-#> 2 m      1079 0.586  528.  0.182
+#> 1 f      1241 0.373  525.  0.182
+#> 2 m      1078 0.590  525.  0.182
 ```
 
 If only a consensus age is available but the ageing CV is known from
@@ -166,10 +171,10 @@ sapply(c(0, 0.05, 0.10, 0.20), function(cv) {
   c(cv_age = cv, Linf_f = summary(gg)$Linf[1], K_f = summary(gg)$K[1])
 }) |> t() |> as.data.frame()
 #>   cv_age Linf_f    K_f
-#> 1   0.00   1242 0.3799
-#> 2   0.05   1243 0.3776
-#> 3   0.10   1247 0.3707
-#> 4   0.20   1366 0.2695
+#> 1   0.00   1241 0.3829
+#> 2   0.05   1242 0.3806
+#> 3   0.10   1246 0.3738
+#> 4   0.20   1249 0.3628
 ```
 
 As the assumed ageing error grows, $`L_\infty`$ rises and $`K`$ falls.
@@ -188,24 +193,24 @@ error and the model reduces to an ordinary von Bertalanffy fit.
 # Fixed-effect estimates and standard errors
 summary(g$mods[[1]]$sdreport, "fixed")
 #>          Estimate   Std. Error
-#> Linf 1.242071e+03 13.190296999
-#> Linf 1.084039e+03  9.877246698
-#> K    3.799472e-01  0.016508716
-#> K    5.756673e-01  0.027280649
-#> L0   5.214827e+02  7.216221212
-#> CV_L 3.967731e-02  0.001628208
+#> Linf 1.240716e+03 13.098814452
+#> Linf 1.083294e+03  9.814274998
+#> K    3.829032e-01  0.016599074
+#> K    5.796683e-01  0.027395151
+#> L0   5.191611e+02  7.280696262
+#> CV_L 3.970768e-02  0.001629402
 ```
 
 ``` r
 
 head(g$preds[[1]])
 #>   group       age      len    lower    upper   plower   pupper
-#> 1     f 0.0000000 521.4827 507.3389 535.6265 478.5326 564.4327
-#> 2     f 0.1380505 558.3048 546.0689 570.5406 513.1956 603.4139
-#> 3     f 0.2761010 593.2452 582.5448 603.9457 545.8854 640.6051
-#> 4     f 0.4141515 626.4002 616.8757 635.9248 576.7643 676.0362
-#> 5     f 0.5522020 657.8610 649.1763 666.5458 605.9689 709.7532
-#> 6     f 0.6902525 687.7142 679.5718 695.8566 633.6161 741.8123
+#> 1     f 0.0000000 519.1611 504.8909 533.4312 476.3104 562.0118
+#> 2     f 0.1380505 556.3119 543.9794 568.6445 511.2936 601.3302
+#> 3     f 0.2761010 591.5500 580.7770 602.3229 544.2677 638.8322
+#> 4     f 0.4141515 624.9737 615.3955 634.5519 575.3997 674.5477
+#> 5     f 0.5522020 656.6765 647.9518 665.4012 604.8300 708.5231
+#> 6     f 0.6902525 686.7471 678.5738 694.9204 632.6783 740.8159
 ```
 
 `mods` holds the `RTMB` objective function, the `nlminb` result and the

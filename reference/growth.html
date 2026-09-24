@@ -134,7 +134,7 @@ neither argument, age is treated as measured without error.</p>
 <p><strong>Neonates.</strong> Supplying <code>neonate</code>, an indicator for individuals of
 known age zero such as those with an unhealed umbilical scar, adds their
 lengths as direct information on \(L_0\) through
-\(L_{0,i} \sim N(L_0, (CV_L L_0)^2)\). Flagged individuals are used only
+\(L_{0,i} \sim N(L_0, (CV_L L_{0,i})^2)\). Flagged individuals are used only
 for this term: any that also carry an age are removed from the length at age
 data, since an age-zero observation and a length at birth observation carry
 the same information and including both would count it twice.</p>
@@ -171,8 +171,8 @@ demography of a cryptic shark complex. <em>Marine and Freshwater Research</em>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 17</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   group  Linf Linf_lower Linf_upper     K K_lower K_upper    L0 L0_lower</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> f      <span style="text-decoration: underline;">1</span>242       <span style="text-decoration: underline;">1</span>216       <span style="text-decoration: underline;">1</span>268 0.380   0.348   0.412  522.     507.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> m      <span style="text-decoration: underline;">1</span>084       <span style="text-decoration: underline;">1</span>065       <span style="text-decoration: underline;">1</span>103 0.576   0.522   0.629  522.     507.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> f      <span style="text-decoration: underline;">1</span>241       <span style="text-decoration: underline;">1</span>215       <span style="text-decoration: underline;">1</span>266 0.383   0.350   0.415  519.     505.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> m      <span style="text-decoration: underline;">1</span>083       <span style="text-decoration: underline;">1</span>064       <span style="text-decoration: underline;">1</span>103 0.580   0.526   0.633  519.     505.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 8 more variables: L0_upper &lt;dbl&gt;, CV_L &lt;dbl&gt;, n &lt;int&gt;, n0 &lt;int&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   cv_age &lt;dbl&gt;, nll &lt;dbl&gt;, AIC &lt;dbl&gt;, convergence &lt;lgl&gt;</span></span>
 <span class="r-in"><span></span></span>
