@@ -74,7 +74,7 @@ neither argument, age is treated as measured without error.
 \strong{Neonates.} Supplying \code{neonate}, an indicator for individuals of
 known age zero such as those with an unhealed umbilical scar, adds their
 lengths as direct information on \eqn{L_0} through
-\eqn{L_{0,i} \sim N(L_0, (CV_L L_0)^2)}. Flagged individuals are used only
+\eqn{L_{0,i} \sim N(L_0, (CV_L L_{0,i})^2)}. Flagged individuals are used only
 for this term: any that also carry an age are removed from the length at age
 data, since an age-zero observation and a length at birth observation carry
 the same information and including both would count it twice.

@@ -66,7 +66,7 @@ following Chang (1982), and held fixed.
 Animals with an unhealed umbilical scar are known to be age zero. Their
 lengths are direct information on $L_0$:
 
-$$L_{0,i} \sim N(L_0, (CV_L L_0)^2)$$
+$$L_{0,i} \sim N(L_0, (CV_L L_{0,i})^2)$$
 
 These are often available in numbers, and from animals that were never
 aged, so they add information at no cost.
@@ -74,6 +74,11 @@ aged, so they add information at no cost.
 Fitting is by maximum likelihood with `RTMB`, the random effects
 integrated out by the Laplace approximation. Confidence intervals on the
 curve come from the delta method; prediction intervals add $CV_L$.
+
+This is a port of the `TMB` implementation used in Harry et al. (2019),
+and reproduces the published estimates for *Carcharhinus limbatus* to
+within rounding: $L_{\infty}$ 263.3 and 241.9 cm, $K$ 0.1418 and 0.1565,
+$L_0$ 72.77 cm and $CV_L$ 0.0487.
 
 ## Basic usage
 

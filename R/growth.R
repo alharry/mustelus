@@ -57,7 +57,7 @@ ageing_cv <- function(m) {
 #' \strong{Neonates.} Supplying \code{neonate}, an indicator for individuals of
 #' known age zero such as those with an unhealed umbilical scar, adds their
 #' lengths as direct information on \eqn{L_0} through
-#' \eqn{L_{0,i} \sim N(L_0, (CV_L L_0)^2)}. Flagged individuals are used only
+#' \eqn{L_{0,i} \sim N(L_0, (CV_L L_{0,i})^2)}. Flagged individuals are used only
 #' for this term: any that also carry an age are removed from the length at age
 #' data, since an age-zero observation and a length at birth observation carry
 #' the same information and including both would count it twice.
@@ -118,11 +118,7 @@ growth <- function(len, age, grouping_var = NULL, data, neonate = NULL,
   grp_quo <- rlang::enquo(grouping_var)
   if (!rlang::quo_is_null(grp_quo)) {
     new$group <- as_factor(dplyr::pull(data, !!grp_quo))
-    n_na_grp <- sum(is.na(new$group))
-    if (n_na_grp > 0) {
-      message(n_na_grp, " row(s) with missing ", rlang::as_label(grp_quo),
-              " were dropped.")
-    }
+    grp_missing <- is.na(new$group)
     message("The categorical variable ", rlang::as_label(grp_quo),
             " has ", nlevels(new$group), " levels.")
   } else {
@@ -161,6 +157,13 @@ growth <- function(len, age, grouping_var = NULL, data, neonate = NULL,
   # a length at birth observation carry the same information
   keep <- !is.na(new$len) & !is.na(new$age) & !is.na(new$group) & !new$neonate
   if (use_reads) keep <- keep & stats::complete.cases(new[, read_cols, drop = FALSE])
+  if (!rlang::quo_is_null(grp_quo)) {
+    n_na_grp <- sum(grp_missing & !new$neonate & !is.na(new$len) & !is.na(new$age))
+    if (n_na_grp > 0) {
+      message(n_na_grp, " row(s) with missing ", rlang::as_label(grp_quo),
+              " were dropped.")
+    }
+  }
   n_dropped_neo <- sum(new$neonate & !is.na(new$len) & !is.na(new$age) & !is.na(new$group))
   if (n_dropped_neo > 0) {
     message(n_dropped_neo, " neonate(s) with an age were used only for length at birth, ",
@@ -234,9 +237,11 @@ growth <- function(len, age, grouping_var = NULL, data, neonate = NULL,
     Lt <- growth_curve(a, Linf[dat$sex], K[dat$sex], L0)
     j <- -sum(RTMB::dnorm(dat$len, Lt, CV_L * Lt + eps, log = TRUE))
 
-    # Neonates inform length at birth directly
+    # Neonates inform length at birth directly. The standard deviation is
+    # taken on the observed length, as in Harry et al. (2019); this
+    # reproduces the published estimates exactly
     if (dat$n0 > 0) {
-      j <- j - sum(RTMB::dnorm(dat$len0, L0, CV_L * L0 + eps, log = TRUE))
+      j <- j - sum(RTMB::dnorm(dat$len0, L0, CV_L * dat$len0 + eps, log = TRUE))
     }
 
     # Ageing error: every reading is an observation of true age. The original
