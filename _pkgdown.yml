@@ -19,6 +19,8 @@ navbar:
           href: articles/fecundity.html
         - text: Clasper length analysis
           href: articles/clasp-length.html
+        - text: Growth analysis
+          href: articles/growth.html
 
 articles:
   - title: Function guides
@@ -28,4 +30,5 @@ articles:
       - maternity
       - fecundity
       - clasp-length
+      - growth
 

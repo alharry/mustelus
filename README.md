@@ -22,6 +22,9 @@ pak::pak("alharry/mustelus")
   regression, with confidence and prediction intervals.
 - `clasp_length()` — clasper elongation as a function of length or age by
   nonlinear (logistic) regression, with bootstrap confidence intervals.
+- `growth()` — von Bertalanffy growth parameterised by length at birth,
+  with optional ageing error as a random effect and optional neonate data,
+  implemented in RTMB.
 
 Each returns a tibble with list columns holding the data, coefficients,
 predictions and fitted model, and has `summary()` and `plot()` methods.
