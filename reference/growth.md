@@ -106,14 +106,14 @@ prediction intervals add the individual variability \\CV_L\\.
 Cope, J.M. and Punt, A.E. (2007) Admitting ageing error when fitting
 growth curves: an example using the von Bertalanffy growth function with
 random effects. *Canadian Journal of Fisheries and Aquatic Sciences*
-**64**(2), 205–218.
+**64**(2), 205-218.
 [doi:10.1139/f06-179](https://doi.org/10.1139/f06-179)
 
 Harry, A.V., Butcher, P.A., Macbeth, W.G., Morgan, J.A.T., Taylor, S.M.
 and Geraghty, P.T. (2019) Life history of the common blacktip shark,
 *Carcharhinus limbatus*, from central eastern Australia and comparative
 demography of a cryptic shark complex. *Marine and Freshwater Research*
-**70**(6), 834–848.
+**70**(6), 834-848.
 [doi:10.1071/MF18141](https://doi.org/10.1071/MF18141)
 
 ## Examples

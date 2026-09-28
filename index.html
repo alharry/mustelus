@@ -72,19 +72,18 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>Install the pre-built binary from r-universe. This needs no compiler and no development tools on any platform:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"mustelus"</span>,</span>
 <span>  repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://alharry.r-universe.dev"</span>, <span class="st">"https://cloud.r-project.org"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>Or build from source directly off GitHub:</p>
+<p>This installs a pre-built binary from <a href="https://alharry.r-universe.dev" class="external-link">r-universe</a>, which is rebuilt automatically on every change. It needs no compiler and no development tools on any platform, and works with a plain <code><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages()</a></code> call.</p>
+<div class="section level3">
+<h3 id="installing-from-source-instead">Installing from source instead<a class="anchor" aria-label="anchor" href="#installing-from-source-instead"></a>
+</h3>
+<p>Building from GitHub also works, but is rarely necessary:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"alharry/mustelus"</span><span class="op">)</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="a-note-for-windows-users">A note for Windows users<a class="anchor" aria-label="anchor" href="#a-note-for-windows-users"></a>
-</h3>
-<p><code>mustelus</code> contains no compiled code, and every package it depends on — including <code>RTMB</code> and <code>TMB</code> — is available from CRAN as a Windows binary. <strong>A compiler is not needed to install or use it.</strong></p>
-<p>Installing from GitHub nonetheless goes through a source build, and <code>devtools</code>/<code>remotes</code> check for RTools before doing so whether or not the package actually needs it. If that check fails, it can be skipped:</p>
+<p>On Windows this route goes through a source build, and <code>devtools</code>/<code>remotes</code> will check for RTools before starting. That check is not actually required here: <code>mustelus</code> contains no compiled code, and every package it depends on, <code>RTMB</code> and <code>TMB</code> included, is available from CRAN as a Windows binary. If the check blocks you, either install the binary above or skip it:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>buildtools.check <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">action</span><span class="op">)</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"alharry/mustelus"</span><span class="op">)</span></span></code></pre></div>
