@@ -6,6 +6,9 @@
 
 ## Citation
 
+Source:
+[`DESCRIPTION`](https://github.com/alharry/mustelus/blob/main/DESCRIPTION)
+
 Harry A (2026). *mustelus: Chondrichthyan Fisheries Biology*. R package
 version 0.0.0.9000, <https://alharry.github.io/mustelus/>.
 

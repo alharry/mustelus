@@ -16,8 +16,8 @@
 <script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Chondrichthyan Fisheries Biology">
-<meta name="description" content="Tools for chondrichthyan fisheries biology, including length-weight relationships.">
-<meta property="og:description" content="Tools for chondrichthyan fisheries biology, including length-weight relationships.">
+<meta name="description" content="Tools for analysing the life history of chondrichthyan fishes (sharks, rays and chimaeras), covering length-weight relationships, length or age at maturity and maternity, fecundity, clasper elongation, and von Bertalanffy growth.">
+<meta property="og:description" content="Tools for analysing the life history of chondrichthyan fishes (sharks, rays and chimaeras), covering length-weight relationships, length or age at maturity and maternity, fecundity, clasper elongation, and von Bertalanffy growth.">
 <meta property="og:image" content="https://alharry.github.io/mustelus/logo.png">
 </head>
 <body>
@@ -54,6 +54,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/alharry/mustelus/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -71,9 +72,27 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
+<p>Install the pre-built binary from r-universe. This needs no compiler and no development tools on any platform:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"mustelus"</span>,</span>
+<span>  repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://alharry.r-universe.dev"</span>, <span class="st">"https://cloud.r-project.org"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Or build from source directly off GitHub:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"alharry/mustelus"</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="a-note-for-windows-users">A note for Windows users<a class="anchor" aria-label="anchor" href="#a-note-for-windows-users"></a>
+</h3>
+<p><code>mustelus</code> contains no compiled code, and every package it depends on — including <code>RTMB</code> and <code>TMB</code> — is available from CRAN as a Windows binary. <strong>A compiler is not needed to install or use it.</strong></p>
+<p>Installing from GitHub nonetheless goes through a source build, and <code>devtools</code>/<code>remotes</code> check for RTools before doing so whether or not the package actually needs it. If that check fails, it can be skipped:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>buildtools.check <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">action</span><span class="op">)</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"alharry/mustelus"</span><span class="op">)</span></span></code></pre></div>
+<p>If RTools genuinely is not being recognised, the usual cause is a version mismatch. RTools releases are tied to R releases and are not interchangeable: RTools43 works only with R 4.3, RTools44 with R 4.4, RTools45 with R 4.5. R will not recognise a version that does not match, and reinstalling the wrong one will not help. Check with:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">R.version.string</span></span>
+<span><span class="fu">pkgbuild</span><span class="fu">::</span><span class="fu">rtools_path</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a>
@@ -95,7 +114,15 @@
 <p>Each returns a tibble with list columns holding the data, coefficients, predictions and fitted model, and has <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> and <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> methods. <code><a href="reference/len_weight.html">len_weight()</a></code> and <code><a href="reference/maturity.html">maturity()</a></code> accept an optional grouping variable and fit one model per group plus a pooled group. See the <a href="https://alharry.github.io/mustelus/articles/">articles</a> for worked examples.</p>
 </div>
 </div>
-  </main><aside class="col-md-3"><div class="license">
+  </main><aside class="col-md-3"><div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/alharry/mustelus/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/alharry/mustelus/issues" class="external-link">Report a bug</a></li>
+</ul>
+</div>
+
+<div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
