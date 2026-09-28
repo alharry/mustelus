@@ -4,9 +4,45 @@ Tools for chondrichthyan fisheries biology.
 
 ## Installation
 
+Install the pre-built binary from r-universe. This needs no compiler and
+no development tools on any platform:
+
+``` r
+install.packages("mustelus",
+  repos = c("https://alharry.r-universe.dev", "https://cloud.r-project.org"))
+```
+
+Or build from source directly off GitHub:
+
 ``` r
 # install.packages("pak")
 pak::pak("alharry/mustelus")
+```
+
+### A note for Windows users
+
+`mustelus` contains no compiled code, and every package it depends on —
+including `RTMB` and `TMB` — is available from CRAN as a Windows binary.
+**A compiler is not needed to install or use it.**
+
+Installing from GitHub nonetheless goes through a source build, and
+`devtools`/`remotes` check for RTools before doing so whether or not the
+package actually needs it. If that check fails, it can be skipped:
+
+``` r
+options(buildtools.check = function(action) TRUE)
+pak::pak("alharry/mustelus")
+```
+
+If RTools genuinely is not being recognised, the usual cause is a version
+mismatch. RTools releases are tied to R releases and are not
+interchangeable: RTools43 works only with R 4.3, RTools44 with R 4.4,
+RTools45 with R 4.5. R will not recognise a version that does not match,
+and reinstalling the wrong one will not help. Check with:
+
+``` r
+R.version.string
+pkgbuild::rtools_path()
 ```
 
 ## Functions

@@ -35,6 +35,5 @@ po/*~
 rsconnect/
 .Rproj.user
 .DS_Store
-.Rbuildignore
 docs
 inst/doc

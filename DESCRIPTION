@@ -3,15 +3,18 @@ Title: Chondrichthyan Fisheries Biology
 Version: 0.0.0.9000
 Authors@R:
     person("Alastair", "Harry", , "alastair.harry@gmail.com", role = c("aut", "cre"))
-Description: Tools for chondrichthyan fisheries biology, including
-    length-weight relationships.
+Description: Tools for analysing the life history of chondrichthyan fishes
+    (sharks, rays and chimaeras), covering length-weight relationships,
+    length or age at maturity and maternity, fecundity, clasper
+    elongation, and von Bertalanffy growth.
 License: MIT + file LICENSE
-URL: https://alharry.github.io/mustelus/
+URL: https://alharry.github.io/mustelus/, https://github.com/alharry/mustelus
+BugReports: https://github.com/alharry/mustelus/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Depends:
-    R (>= 3.5)
+    R (>= 4.1)
 Imports:
     dplyr,
     forcats,
