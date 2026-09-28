@@ -1,10 +1,12 @@
 #' @keywords internal
 "_PACKAGE"
 
-#' @importFrom dplyr across group_by group_split mutate select transmute
+#' @importFrom dplyr across everything group_by group_split mutate select transmute
 #' @importFrom forcats as_factor
 #' @importFrom ggplot2 aes geom_line geom_point geom_ribbon geom_rug facet_wrap ggplot scale_fill_manual scale_size_area scale_y_continuous theme theme_classic
 #' @importFrom grDevices gray.colors
+#' @importFrom stats approx binomial coef glm lm logLik nlminb nls nls.control
+#' @importFrom stats predict qnorm quantile var vcov
 #' @importFrom purrr map map_dbl map_lgl reduce set_names
 #' @importFrom rsample analysis bootstraps
 #' @importFrom tibble tibble

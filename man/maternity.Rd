@@ -61,7 +61,7 @@ are obtained by bootstrap resampling with \code{rsample}, refitting the
 model to each resample; replicates that fail to converge or contain no
 maternal females are dropped and the number reported.
 
-Harry et al. (2024) found that sample sizes of roughly 100–200 maternal
+Harry et al. (2024) found that sample sizes of roughly 100-200 maternal
 females were typically required to estimate \eqn{P_{Max}} accurately. With
 fewer, fixing \code{pmax} from independent information is likely to be the
 better choice.
@@ -84,10 +84,10 @@ plot(mt) + xlab("Fork length (cm)") + ylab("Proportion in maternal condition")
 \references{
 Harry, A.V., Baremore, I.E. and Piercy, A.N. (2024) Quantifying maternal
 reproductive output of chondrichthyan fishes. \emph{Canadian Journal of
-Fisheries and Aquatic Sciences} \strong{81}(10), 1481–1494.
+Fisheries and Aquatic Sciences} \strong{81}(10), 1481-1494.
 \doi{10.1139/cjfas-2024-0031}
 
 Walker, T.I. (2005) Reproduction in fisheries science. In: Hamlett, W.C.
 (ed) \emph{Reproductive Biology and Phylogeny of Chondrichthyes}.
-Science Publishers, Enfield, NH, pp. 81–127.
+Science Publishers, Enfield, NH, pp. 81-127.
 }

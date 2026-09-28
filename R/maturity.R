@@ -27,7 +27,7 @@ maturity <- function(mat, x, grouping_var = NULL, data, times = 1000) {
 
   # Validate maturity variable
   if (!all(new$mat %in% c(0L, 1L, NA))) {
-    warning("'mat' contains values other than 0 and 1 — ensure it is a binary maturity indicator.")
+    warning("'mat' contains values other than 0 and 1; ensure it is a binary maturity indicator.")
   }
 
   # If grouping_var is provided, add it to data
@@ -157,8 +157,8 @@ maturity <- function(mat, x, grouping_var = NULL, data, times = 1000) {
 }
 
 #' @export
-summary.maturity <- function(x, ...) {
-  x$coefs |> tibble() |> unnest(cols = everything())
+summary.maturity <- function(object, ...) {
+  object$coefs |> tibble() |> unnest(cols = everything())
 }
 
 #' @export

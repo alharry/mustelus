@@ -100,11 +100,11 @@ plot(g) + xlab("Age (years)") + ylab("Total length (mm)")
 Cope, J.M. and Punt, A.E. (2007) Admitting ageing error when fitting growth
 curves: an example using the von Bertalanffy growth function with random
 effects. \emph{Canadian Journal of Fisheries and Aquatic Sciences}
-\strong{64}(2), 205–218. \doi{10.1139/f06-179}
+\strong{64}(2), 205-218. \doi{10.1139/f06-179}
 
 Harry, A.V., Butcher, P.A., Macbeth, W.G., Morgan, J.A.T., Taylor, S.M. and
 Geraghty, P.T. (2019) Life history of the common blacktip shark,
 \emph{Carcharhinus limbatus}, from central eastern Australia and comparative
 demography of a cryptic shark complex. \emph{Marine and Freshwater Research}
-\strong{70}(6), 834–848. \doi{10.1071/MF18141}
+\strong{70}(6), 834-848. \doi{10.1071/MF18141}
 }

@@ -8,12 +8,14 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Tools for chondrichthyan fisheries biology, including length-weight relationships.
+Tools for analysing the life history of chondrichthyan fishes (sharks, rays and chimaeras), covering length-weight relationships, length or age at maturity and maternity, fecundity, clasper elongation, and von Bertalanffy growth.
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://alharry.github.io/mustelus/}
+  \item \url{https://github.com/alharry/mustelus}
+  \item Report bugs at \url{https://github.com/alharry/mustelus/issues}
 }
 
 }

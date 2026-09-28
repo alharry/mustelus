@@ -258,8 +258,8 @@ clasp_length <- function(clasp, x, calc = NULL, data, times = 1000, start = NULL
 }
 
 #' @export
-summary.clasp_length <- function(x, ...) {
-  return(x$coefs |> tibble() |> unnest(cols = everything()))
+summary.clasp_length <- function(object, ...) {
+  return(object$coefs |> tibble() |> unnest(cols = everything()))
 }
 
 #' @export

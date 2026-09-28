@@ -4,30 +4,31 @@ Tools for chondrichthyan fisheries biology.
 
 ## Installation
 
-Install the pre-built binary from r-universe. This needs no compiler and
-no development tools on any platform:
-
 ``` r
 install.packages("mustelus",
   repos = c("https://alharry.r-universe.dev", "https://cloud.r-project.org"))
 ```
 
-Or build from source directly off GitHub:
+This installs a pre-built binary from
+[r-universe](https://alharry.r-universe.dev), which is rebuilt
+automatically on every change. It needs no compiler and no development
+tools on any platform, and works with a plain `install.packages()` call.
+
+### Installing from source instead
+
+Building from GitHub also works, but is rarely necessary:
 
 ``` r
 # install.packages("pak")
 pak::pak("alharry/mustelus")
 ```
 
-### A note for Windows users
-
-`mustelus` contains no compiled code, and every package it depends on —
-including `RTMB` and `TMB` — is available from CRAN as a Windows binary.
-**A compiler is not needed to install or use it.**
-
-Installing from GitHub nonetheless goes through a source build, and
-`devtools`/`remotes` check for RTools before doing so whether or not the
-package actually needs it. If that check fails, it can be skipped:
+On Windows this route goes through a source build, and
+`devtools`/`remotes` will check for RTools before starting. That check is
+not actually required here: `mustelus` contains no compiled code, and
+every package it depends on, `RTMB` and `TMB` included, is available from
+CRAN as a Windows binary. If the check blocks you, either install the
+binary above or skip it:
 
 ``` r
 options(buildtools.check = function(action) TRUE)

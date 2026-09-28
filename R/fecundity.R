@@ -102,8 +102,8 @@ fecundity <- function(fec, x, data) {
 }
 
 #' @export
-summary.fecundity <- function(x, ...) {
-  return(x$coefs |> tibble() |> unnest(cols = everything()))
+summary.fecundity <- function(object, ...) {
+  return(object$coefs |> tibble() |> unnest(cols = everything()))
 }
 
 #' @export

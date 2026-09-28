@@ -96,7 +96,7 @@ maternity_fit <- function(d, start, fixed) {
 #' model to each resample; replicates that fail to converge or contain no
 #' maternal females are dropped and the number reported.
 #'
-#' Harry et al. (2024) found that sample sizes of roughly 100–200 maternal
+#' Harry et al. (2024) found that sample sizes of roughly 100-200 maternal
 #' females were typically required to estimate \eqn{P_{Max}} accurately. With
 #' fewer, fixing \code{pmax} from independent information is likely to be the
 #' better choice.
@@ -120,12 +120,12 @@ maternity_fit <- function(d, start, fixed) {
 #' @references
 #' Harry, A.V., Baremore, I.E. and Piercy, A.N. (2024) Quantifying maternal
 #' reproductive output of chondrichthyan fishes. \emph{Canadian Journal of
-#' Fisheries and Aquatic Sciences} \strong{81}(10), 1481–1494.
+#' Fisheries and Aquatic Sciences} \strong{81}(10), 1481-1494.
 #' \doi{10.1139/cjfas-2024-0031}
 #'
 #' Walker, T.I. (2005) Reproduction in fisheries science. In: Hamlett, W.C.
 #' (ed) \emph{Reproductive Biology and Phylogeny of Chondrichthyes}.
-#' Science Publishers, Enfield, NH, pp. 81–127.
+#' Science Publishers, Enfield, NH, pp. 81-127.
 #' @examples
 #' library(ggplot2)
 #' data(sandbar)
@@ -146,7 +146,7 @@ maternity <- function(matern, x, data, pmax = NULL, times = 1000, start = NULL) 
   new <- data |> transmute(x = {{ x }}, matern = {{ matern }})
 
   if (!all(new$matern %in% c(0L, 1L, NA))) {
-    warning("'matern' contains values other than 0 and 1 — ensure it is a binary maternal condition indicator.")
+    warning("'matern' contains values other than 0 and 1; ensure it is a binary maternal condition indicator.")
   }
 
   new <- new[!is.na(new$x) & !is.na(new$matern), ]
@@ -293,8 +293,8 @@ maternity <- function(matern, x, data, pmax = NULL, times = 1000, start = NULL) 
 }
 
 #' @export
-summary.maternity <- function(x, ...) {
-  return(x$coefs |> tibble() |> unnest(cols = everything()))
+summary.maternity <- function(object, ...) {
+  return(object$coefs |> tibble() |> unnest(cols = everything()))
 }
 
 #' @export

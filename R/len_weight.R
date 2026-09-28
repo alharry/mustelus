@@ -129,12 +129,12 @@ len_weight <- function(weight, length, grouping_var = NULL, data) {
 }
 
 #' @export
-summary.len_weight <- function(x, ...) {
-  return(x$coefs |> tibble() |> unnest(cols = everything()))
+summary.len_weight <- function(object, ...) {
+  return(object$coefs |> tibble() |> unnest(cols = everything()))
 }
 
 #' @export
-plot.len_weight <- function(x) {
+plot.len_weight <- function(x, ...) {
   # Common axis limits across groups, taken from the pooled group. A grouping
   # variable with only one level has no pooled group, so fall back to the
   # combined data rather than indexing an empty selection

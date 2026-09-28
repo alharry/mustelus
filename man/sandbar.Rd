@@ -29,17 +29,17 @@ of Harry et al. (2024).
 \references{
 Baremore, I.E. and Hale, L.F. (2012) Reproduction of the sandbar shark in the
 western North Atlantic Ocean and Gulf of Mexico. \emph{Marine and Coastal
-Fisheries} \strong{4}(1), 560–572. \doi{10.1080/19425120.2012.700904}
+Fisheries} \strong{4}(1), 560-572. \doi{10.1080/19425120.2012.700904}
 
 Harry, A.V., Baremore, I.E. and Piercy, A.N. (2024) Quantifying maternal
 reproductive output of chondrichthyan fishes. \emph{Canadian Journal of
-Fisheries and Aquatic Sciences} \strong{81}(10), 1481–1494.
+Fisheries and Aquatic Sciences} \strong{81}(10), 1481-1494.
 \doi{10.1139/cjfas-2024-0031}
 
 Piercy, A.N., Murie, D.J. and Gelsleichter, J.J. (2016) Histological and
 morphological aspects of reproduction in the sandbar shark
 \emph{Carcharhinus plumbeus} in the U.S. south-eastern Atlantic Ocean and
-Gulf of Mexico. \emph{Journal of Fish Biology} \strong{88}(5), 1708–1730.
+Gulf of Mexico. \emph{Journal of Fish Biology} \strong{88}(5), 1708-1730.
 \doi{10.1111/jfb.12945}
 }
 \keyword{datasets}
