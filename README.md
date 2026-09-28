@@ -23,29 +23,6 @@ Building from GitHub also works, but is rarely necessary:
 pak::pak("alharry/mustelus")
 ```
 
-On Windows this route goes through a source build, and
-`devtools`/`remotes` will check for RTools before starting. That check is
-not actually required here: `mustelus` contains no compiled code, and
-every package it depends on, `RTMB` and `TMB` included, is available from
-CRAN as a Windows binary. If the check blocks you, either install the
-binary above or skip it:
-
-``` r
-options(buildtools.check = function(action) TRUE)
-pak::pak("alharry/mustelus")
-```
-
-If RTools genuinely is not being recognised, the usual cause is a version
-mismatch. RTools releases are tied to R releases and are not
-interchangeable: RTools43 works only with R 4.3, RTools44 with R 4.4,
-RTools45 with R 4.5. R will not recognise a version that does not match,
-and reinstalling the wrong one will not help. Check with:
-
-``` r
-R.version.string
-pkgbuild::rtools_path()
-```
-
 ## Functions
 
 - `len_weight()` — length–weight regression with bias-corrected predictions,
