@@ -11,15 +11,8 @@ install.packages("mustelus",
 ```
 
 This installs a pre-built binary from
-[r-universe](https://alharry.r-universe.dev), which is rebuilt
-automatically on every change. It needs no compiler and no development
-tools on any platform, and works with a plain
-[`install.packages()`](https://rdrr.io/r/utils/install.packages.html)
-call.
-
-### Installing from source instead
-
-Building from GitHub also works, but is rarely necessary:
+[r-universe](https://alharry.r-universe.dev).Installing from source via
+GitHub also works, but shouldn’t be necessary:
 
 ``` r
 
