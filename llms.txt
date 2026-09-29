@@ -11,7 +11,7 @@ install.packages("mustelus",
 ```
 
 This installs a pre-built binary from
-[r-universe](https://alharry.r-universe.dev).Installing from source via
+[r-universe](https://alharry.r-universe.dev). Installing from source via
 GitHub also works, but shouldn’t be necessary:
 
 ``` r
