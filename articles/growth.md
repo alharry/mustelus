@@ -132,16 +132,45 @@ data available for the smallest sizes.
 ## Ageing error
 
 Where replicate readings exist, pass the columns to `reads` and the
-ageing CV is computed from them. `spottail` carries only a consensus
-age, so for illustration here are two simulated readings around it:
+ageing CV is computed from them. The readings need to be on the same
+scale as `age`. A reading is a count of growth zones and so is a whole
+number, but the agreed ages in `spottail` also include a fractional
+adjustment for the time elapsed since the population birth date. That
+adjustment depends on the date of capture rather than on the reader, so
+it is the same for every reading of a given animal and should be added
+to each one.
+
+`spottail` carries only a consensus age, so for illustration two
+readings are simulated from it. The agreed age is split into a whole
+number of growth zones and the birth date adjustment. Integer reading
+error is added to the zone count, with a standard deviation proportional
+to age and the count bounded at zero, and the adjustment is then added
+back:
 
 ``` r
 
 library(dplyr)
 
 sp <- spottail |>
-  mutate(reader1 = pmax(0, round(age_agree + rnorm(n(), 0, 0.3), 2)),
-         reader2 = pmax(0, round(age_agree + rnorm(n(), 0, 0.3), 2)))
+  filter(!is.na(age_agree)) |>
+  mutate(
+    zones   = floor(age_agree),
+    birth   = age_agree - zones,
+    reader1 = pmax(0, zones + round(rnorm(n(), 0, 0.1 * zones))) + birth,
+    reader2 = pmax(0, zones + round(rnorm(n(), 0, 0.1 * zones))) + birth
+  )
+
+table(difference = round(sp$reader2 - sp$reader1))
+#> difference
+#>  -3  -2  -1   0   1   2 
+#>   2   3  24 246  18   6
+```
+
+Most pairs of readings agree, and disagreements are mostly of a single
+zone, becoming more frequent in older animals. This is the usual pattern
+for vertebral ageing.
+
+``` r
 
 g_reads <- growth(length, age_agree, sex, data = sp,
                   neonate = umb_scar %in% c("y", "p"),
@@ -150,9 +179,14 @@ summary(g_reads)[, c("group", "Linf", "K", "L0", "cv_age")]
 #> # A tibble: 2 × 5
 #>   group  Linf     K    L0 cv_age
 #>   <chr> <dbl> <dbl> <dbl>  <dbl>
-#> 1 f      1241 0.373  525.  0.182
-#> 2 m      1078 0.590  525.  0.182
+#> 1 f      1238 0.386  518. 0.0733
+#> 2 m      1079 0.591  518. 0.0733
 ```
+
+If the birth date adjustment is left off the readings, they sit around
+half a year below the ages used elsewhere, the model concludes that
+every animal is younger than it is, and length at birth is overestimated
+substantially.
 
 If only a consensus age is available but the ageing CV is known from
 elsewhere, supply it directly with `cv_age`. This is the more common

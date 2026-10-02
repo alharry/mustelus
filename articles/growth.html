@@ -216,29 +216,56 @@ data available for the smallest sizes.</p>
 <h2 id="ageing-error-1">Ageing error<a class="anchor" aria-label="anchor" href="#ageing-error-1"></a>
 </h2>
 <p>Where replicate readings exist, pass the columns to
-<code>reads</code> and the ageing CV is computed from them.
-<code>spottail</code> carries only a consensus age, so for illustration
-here are two simulated readings around it:</p>
+<code>reads</code> and the ageing CV is computed from them. The readings
+need to be on the same scale as <code>age</code>. A reading is a count
+of growth zones and so is a whole number, but the agreed ages in
+<code>spottail</code> also include a fractional adjustment for the time
+elapsed since the population birth date. That adjustment depends on the
+date of capture rather than on the reader, so it is the same for every
+reading of a given animal and should be added to each one.</p>
+<p><code>spottail</code> carries only a consensus age, so for
+illustration two readings are simulated from it. The agreed age is split
+into a whole number of growth zones and the birth date adjustment.
+Integer reading error is added to the zone count, with a standard
+deviation proportional to age and the count bounded at zero, and the
+adjustment is then added back:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="va">spottail</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>reader1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">age_agree</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="fl">0</span>, <span class="fl">0.3</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>         reader2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">age_agree</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="fl">0</span>, <span class="fl">0.3</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">age_agree</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    zones   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="va">age_agree</span><span class="op">)</span>,</span>
+<span>    birth   <span class="op">=</span> <span class="va">age_agree</span> <span class="op">-</span> <span class="va">zones</span>,</span>
+<span>    reader1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">zones</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="fl">0</span>, <span class="fl">0.1</span> <span class="op">*</span> <span class="va">zones</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="va">birth</span>,</span>
+<span>    reader2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">zones</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="fl">0</span>, <span class="fl">0.1</span> <span class="op">*</span> <span class="va">zones</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="va">birth</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="va">g_reads</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">length</span>, <span class="va">age_agree</span>, <span class="va">sex</span>, data <span class="op">=</span> <span class="va">sp</span>,</span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span>difference <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">sp</span><span class="op">$</span><span class="va">reader2</span> <span class="op">-</span> <span class="va">sp</span><span class="op">$</span><span class="va">reader1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; difference</span></span>
+<span><span class="co">#&gt;  -3  -2  -1   0   1   2 </span></span>
+<span><span class="co">#&gt;   2   3  24 246  18   6</span></span></code></pre></div>
+<p>Most pairs of readings agree, and disagreements are mostly of a
+single zone, becoming more frequent in older animals. This is the usual
+pattern for vertebral ageing.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">g_reads</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">length</span>, <span class="va">age_agree</span>, <span class="va">sex</span>, data <span class="op">=</span> <span class="va">sp</span>,</span>
 <span>                  neonate <span class="op">=</span> <span class="va">umb_scar</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y"</span>, <span class="st">"p"</span><span class="op">)</span>,</span>
 <span>                  reads <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">reader1</span>, <span class="va">reader2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">g_reads</span><span class="op">)</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"group"</span>, <span class="st">"Linf"</span>, <span class="st">"K"</span>, <span class="st">"L0"</span>, <span class="st">"cv_age"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 5</span></span></span>
 <span><span class="co">#&gt;   group  Linf     K    L0 cv_age</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> f      <span style="text-decoration: underline;">1</span>241 0.373  525.  0.182</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> m      <span style="text-decoration: underline;">1</span>078 0.590  525.  0.182</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> f      <span style="text-decoration: underline;">1</span>238 0.386  518. 0.073<span style="text-decoration: underline;">3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> m      <span style="text-decoration: underline;">1</span>079 0.591  518. 0.073<span style="text-decoration: underline;">3</span></span></span></code></pre></div>
+<p>If the birth date adjustment is left off the readings, they sit
+around half a year below the ages used elsewhere, the model concludes
+that every animal is younger than it is, and length at birth is
+overestimated substantially.</p>
 <p>If only a consensus age is available but the ageing CV is known from
 elsewhere, supply it directly with <code>cv_age</code>. This is the more
 common situation when reanalysing published data.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.05</span>, <span class="fl">0.10</span>, <span class="fl">0.20</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">cv</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">gg</span> <span class="op">&lt;-</span> <span class="kw">if</span> <span class="op">(</span><span class="va">cv</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu"><a href="../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">length</span>, <span class="va">age_agree</span>, <span class="va">sex</span>, data <span class="op">=</span> <span class="va">spottail</span>,</span>
@@ -270,7 +297,7 @@ von Bertalanffy fit.</p>
 <div class="section level2">
 <h2 id="output-structure">Output structure<a class="anchor" aria-label="anchor" href="#output-structure"></a>
 </h2>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Fixed-effect estimates and standard errors</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">g</span><span class="op">$</span><span class="va">mods</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">sdreport</span>, <span class="st">"fixed"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;          Estimate   Std. Error</span></span>
@@ -280,7 +307,7 @@ von Bertalanffy fit.</p>
 <span><span class="co">#&gt; K    5.796683e-01  0.027395151</span></span>
 <span><span class="co">#&gt; L0   5.191611e+02  7.280696262</span></span>
 <span><span class="co">#&gt; CV_L 3.970768e-02  0.001629402</span></span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">g</span><span class="op">$</span><span class="va">preds</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   group       age      len    lower    upper   plower   pupper</span></span>
 <span><span class="co">#&gt; 1     f 0.0000000 519.1611 504.8909 533.4312 476.3104 562.0118</span></span>

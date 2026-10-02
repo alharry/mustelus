@@ -94,7 +94,9 @@ coercible to logical, e.g. <code>umb_scar %in% c("y", "p")</code>.</p></dd>
 
 <dt id="arg-reads">reads<a class="anchor" aria-label="anchor" href="#arg-reads"></a></dt>
 <dd><p>Optional replicate age reading columns, e.g.
-<code>c(reader1, reader2)</code>. Switches on ageing error.</p></dd>
+<code>c(reader1, reader2)</code>. Switches on ageing error. Readings must be
+on the same scale as <code>age</code>: where ages include an adjustment for
+birth date, the same adjustment should be added to each reading.</p></dd>
 
 
 <dt id="arg-cv-age">cv_age<a class="anchor" aria-label="anchor" href="#arg-cv-age"></a></dt>

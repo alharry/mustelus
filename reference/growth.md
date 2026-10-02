@@ -47,7 +47,9 @@ growth(
 - reads:
 
   Optional replicate age reading columns, e.g. `c(reader1, reader2)`.
-  Switches on ageing error.
+  Switches on ageing error. Readings must be on the same scale as `age`:
+  where ages include an adjustment for birth date, the same adjustment
+  should be added to each reading.
 
 - cv_age:
 
