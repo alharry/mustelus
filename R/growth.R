@@ -77,7 +77,9 @@ ageing_cv <- function(m) {
 #' @param neonate Optional indicator for individuals of known age zero. Anything
 #'   coercible to logical, e.g. \code{umb_scar \%in\% c("y", "p")}.
 #' @param reads Optional replicate age reading columns, e.g.
-#'   \code{c(reader1, reader2)}. Switches on ageing error.
+#'   \code{c(reader1, reader2)}. Switches on ageing error. Readings must be
+#'   on the same scale as \code{age}: where ages include an adjustment for
+#'   birth date, the same adjustment should be added to each reading.
 #' @param cv_age Optional ageing CV supplied directly. An alternative to
 #'   \code{reads} when only a consensus age is available.
 #' @param start Optional named list of starting values for \code{Linf},
