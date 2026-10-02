@@ -97,6 +97,13 @@ g <- growth(length, age_agree, sex, data = spottail,
 summary(g)
 
 plot(g) + xlab("Age (years)") + ylab("Total length (mm)")
+
+# Ageing error from two readers, as in Harry et al. (2019)
+data(blacktip)
+g2 <- growth(STL, age_agree, sex, data = blacktip, neonate = neonate,
+             reads = c(reader1, reader2))
+
+summary(g2)
 }
 \references{
 Cope, J.M. and Punt, A.E. (2007) Admitting ageing error when fitting growth

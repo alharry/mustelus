@@ -3,7 +3,7 @@
 
 #' @importFrom dplyr across everything group_by group_split mutate select transmute
 #' @importFrom forcats as_factor
-#' @importFrom ggplot2 aes geom_line geom_point geom_ribbon geom_rug facet_wrap ggplot scale_fill_manual scale_size_area scale_y_continuous theme theme_classic
+#' @importFrom ggplot2 aes geom_line geom_path geom_point geom_ribbon geom_rug facet_wrap ggplot scale_fill_manual scale_size_area scale_y_continuous theme theme_classic
 #' @importFrom grDevices gray.colors
 #' @importFrom stats approx binomial coef glm lm logLik nlminb nls nls.control
 #' @importFrom stats predict qnorm quantile var vcov

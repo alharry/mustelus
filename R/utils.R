@@ -6,6 +6,6 @@
 # R CMD check does not report them as undefined global variables.
 utils::globalVariables(c(
   ".fit", "age", "boot_coefs", "calc", "clasp", "clower", "coefs", "cupper",
-  "fec", "len", "lower", "mat", "matern", "mod_b", "mods", "n", "plower",
-  "preds", "pupper", "splits", "upper"
+  "fec", "group", "K", "len", "Linf", "lower", "mat", "matern", "mod_b",
+  "mods", "n", "plower", "preds", "pupper", "splits", "upper"
 ))

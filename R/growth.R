@@ -111,6 +111,13 @@ ageing_cv <- function(m) {
 #' summary(g)
 #'
 #' plot(g) + xlab("Age (years)") + ylab("Total length (mm)")
+#'
+#' # Ageing error from two readers, as in Harry et al. (2019)
+#' data(blacktip)
+#' g2 <- growth(STL, age_agree, sex, data = blacktip, neonate = neonate,
+#'              reads = c(reader1, reader2))
+#'
+#' summary(g2)
 #' @export
 growth <- function(len, age, grouping_var = NULL, data, neonate = NULL,
                    reads = NULL, cv_age = NULL, start = NULL) {
