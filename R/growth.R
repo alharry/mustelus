@@ -240,7 +240,7 @@ growth <- function(len, age, grouping_var = NULL, data, neonate = NULL,
   # Starting values
   if (is.null(start)) {
     start <- list(
-      Linf = rep(max(aged$len) * 1.05, n_grp),
+      Linf = as.vector(tapply(aged$len, aged$group, max)) * 1.05,
       K = rep(0.2, n_grp),
       L0 = if (base::length(len0) > 0) mean(len0) else min(aged$len),
       CV_L = 0.1
@@ -281,10 +281,22 @@ growth <- function(len, age, grouping_var = NULL, data, neonate = NULL,
                          random = if (use_err) "age_re" else NULL,
                          silent = TRUE)
   n_fixed <- base::length(obj$par)
-  opt <- try(nlminb(obj$par, obj$fn, obj$gr,
-                    lower = rep(eps, n_fixed),
-                    upper = c(rep(Inf, 2 * n_grp + 1), 1)),
-             silent = TRUE)
+  fit <- function(par) {
+    nlminb(par, obj$fn, obj$gr,
+           lower = rep(eps, n_fixed),
+           upper = c(rep(Inf, 2 * n_grp + 1), 1),
+           control = list(iter.max = 1000, eval.max = 2000))
+  }
+  opt <- try(fit(obj$par), silent = TRUE)
+  # Linf and K are strongly correlated, and the optimiser can stall on the
+  # ridge between them. A second run from where the first stopped usually
+  # completes the fit
+  if (!inherits(opt, "try-error") && opt$convergence != 0) {
+    opt2 <- try(fit(opt$par), silent = TRUE)
+    if (!inherits(opt2, "try-error") && opt2$objective <= opt$objective) {
+      opt <- opt2
+    }
+  }
   if (inherits(opt, "try-error")) {
     stop("Model failed to fit. Try supplying starting values via 'start'.\n  ",
          attr(opt, "condition")$message)

@@ -82,6 +82,14 @@ growth_region <- function(x, level = 0.95, profile_L0 = FALSE, n_steps = 50) {
   i_k <- which(names(est) == "K")
   i_nuis <- which(names(est) %in% if (profile_L0) c("L0", "CV_L") else "CV_L")
 
+  # The search for the boundary is scaled by the standard errors, so it needs
+  # a fit at a proper optimum
+  v <- diag(V)[c(i_linf, i_k)]
+  if (mod$opt$convergence != 0 || any(!is.finite(v) | v <= 0)) {
+    stop("growth_region() needs a fit that converged with finite standard ",
+         "errors for Linf and K. Check the warnings from growth().")
+  }
+
   # Negative log-likelihood with Linf and K of group k set to new values and
   # the nuisance parameters re-estimated. Failed evaluations count as outside
   nll_at <- function(k, Linf, K) {
