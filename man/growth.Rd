@@ -33,7 +33,8 @@ coercible to logical, e.g. \code{umb_scar \%in\% c("y", "p")}.}
 \item{reads}{Optional replicate age reading columns, e.g.
 \code{c(reader1, reader2)}. Switches on ageing error. Readings must be
 on the same scale as \code{age}: where ages include an adjustment for
-birth date, the same adjustment should be added to each reading.}
+birth date, the same adjustment should be added to each reading.
+Readings must be greater than zero.}
 
 \item{cv_age}{Optional ageing CV supplied directly. An alternative to
 \code{reads} when only a consensus age is available.}

@@ -286,23 +286,23 @@ rounding: $L_{\infty}$ 263.3 and 241.9 cm, $K$ 0.1418 and 0.1565, $L_0$
 72.77 cm and $CV_L$ 0.0487.
 
 Leaving the birth date adjustment off the readings is an easy mistake to
-make, and it is not a harmless one:
+make. Here it gives the youngest sharks readings of zero, and `growth()`
+stops:
 
-```{r}
+```{r, error = TRUE}
 no_adj <- blacktip |>
   mutate(reader1 = floor(reader1), reader2 = floor(reader2))
 
-g_no_adj <- growth(STL, age_agree, sex, data = no_adj, neonate = neonate,
-                   reads = c(reader1, reader2))
-summary(g_no_adj)[, c("group", "Linf", "K", "L0", "cv_age")]
+growth(STL, age_agree, sex, data = no_adj, neonate = neonate,
+       reads = c(reader1, reader2))
 ```
 
-The readings now sit around half a year below the true ages, and the
-model concludes that every shark is younger than it is. Because the
-neonates hold $L_0$ in place, the error goes into the rest of the curve
-instead: for females $K$ rises from `r round(summary(g_reads)$K[1], 3)` to
-`r round(summary(g_no_adj)$K[1], 3)`, and $L_\infty$ falls by
-`r round(summary(g_reads)$Linf[1] - summary(g_no_adj)$Linf[1])` cm.
+Because the standard deviation of a reading is proportional to age, a
+reading of zero can be explained exactly by a true age of zero, and the
+likelihood has no maximum. Where no readings are zero the model will fit,
+but the readings then sit below the true ages by the missing fraction,
+around half a year on average here, and the model treats every animal as
+younger than it is.
 
 If only a consensus age is available but the ageing CV is known from
 elsewhere, supply it directly with `cv_age`. This is the more common

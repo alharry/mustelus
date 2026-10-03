@@ -80,6 +80,7 @@ ageing_cv <- function(m) {
 #'   \code{c(reader1, reader2)}. Switches on ageing error. Readings must be
 #'   on the same scale as \code{age}: where ages include an adjustment for
 #'   birth date, the same adjustment should be added to each reading.
+#'   Readings must be greater than zero.
 #' @param cv_age Optional ageing CV supplied directly. An alternative to
 #'   \code{reads} when only a consensus age is available.
 #' @param start Optional named list of starting values for \code{Linf},
@@ -224,6 +225,15 @@ growth <- function(len, age, grouping_var = NULL, data, neonate = NULL,
       as.matrix(aged[, read_cols, drop = FALSE])
     } else {
       matrix(aged$age, ncol = 1)
+    }
+    # The standard deviation of a reading is proportional to true age, so a
+    # reading of zero can be explained exactly by a true age of zero and the
+    # likelihood has no maximum
+    if (any(dat$reads <= 0)) {
+      stop("Ageing error needs every reading to be greater than zero. A reading ",
+           "of zero makes the likelihood unbounded, because the standard deviation ",
+           "of a reading is proportional to age. Add the birth date adjustment to ",
+           "each reading, and supply animals of known age zero through 'neonate'.")
     }
   }
 
