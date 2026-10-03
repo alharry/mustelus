@@ -42,6 +42,11 @@ pak::pak("alharry/mustelus")
   von Bertalanffy growth parameterised by length at birth, with optional
   ageing error as a random effect and optional neonate data, implemented
   in RTMB.
+- [`growth_region()`](https://alharry.github.io/mustelus/reference/growth_region.md)
+  — likelihood-based joint confidence regions for $`L_\infty`$ and $`K`$
+  from a
+  [`growth()`](https://alharry.github.io/mustelus/reference/growth.md)
+  fit, following Kimura (1980).
 
 Each returns a tibble with list columns holding the data, coefficients,
 predictions and fitted model, and has

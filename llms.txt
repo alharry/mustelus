@@ -42,6 +42,11 @@ pak::pak("alharry/mustelus")
   von Bertalanffy growth parameterised by length at birth, with optional
   ageing error as a random effect and optional neonate data, implemented
   in RTMB.
+- [`growth_region()`](https://alharry.github.io/mustelus/reference/growth_region.md)
+  — likelihood-based joint confidence regions for $`L_\infty`$ and $`K`$
+  from a
+  [`growth()`](https://alharry.github.io/mustelus/reference/growth.md)
+  fit, following Kimura (1980).
 
 Each returns a tibble with list columns holding the data, coefficients,
 predictions and fitted model, and has
@@ -59,12 +64,16 @@ examples.
 
 ## All functions
 
+- [`blacktip`](https://alharry.github.io/mustelus/reference/blacktip.md)
+  : Common blacktip shark data
 - [`clasp_length()`](https://alharry.github.io/mustelus/reference/clasp_length.md)
   : Analyse clasper length as a function of length or age
 - [`fecundity()`](https://alharry.github.io/mustelus/reference/fecundity.md)
   : Analyse fecundity as a function of length or age
 - [`growth()`](https://alharry.github.io/mustelus/reference/growth.md) :
   Analyse growth from length at age data
+- [`growth_region()`](https://alharry.github.io/mustelus/reference/growth_region.md)
+  : Likelihood confidence regions for growth parameters
 - [`len_weight()`](https://alharry.github.io/mustelus/reference/len_weight.md)
   : Analyse weight-length relationship
 - [`maternity()`](https://alharry.github.io/mustelus/reference/maternity.md)

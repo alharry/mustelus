@@ -96,7 +96,8 @@ coercible to logical, e.g. <code>umb_scar %in% c("y", "p")</code>.</p></dd>
 <dd><p>Optional replicate age reading columns, e.g.
 <code>c(reader1, reader2)</code>. Switches on ageing error. Readings must be
 on the same scale as <code>age</code>: where ages include an adjustment for
-birth date, the same adjustment should be added to each reading.</p></dd>
+birth date, the same adjustment should be added to each reading.
+Readings must be greater than zero.</p></dd>
 
 
 <dt id="arg-cv-age">cv_age<a class="anchor" aria-label="anchor" href="#arg-cv-age"></a></dt>
@@ -181,6 +182,22 @@ demography of a cryptic shark complex. <em>Marine and Freshwater Research</em>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Age (years)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Total length (mm)"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="growth-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Ageing error from two readers, as in Harry et al. (2019)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">blacktip</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu">growth</span><span class="op">(</span><span class="va">STL</span>, <span class="va">age_agree</span>, <span class="va">sex</span>, data <span class="op">=</span> <span class="va">blacktip</span>, neonate <span class="op">=</span> <span class="va">neonate</span>,</span></span>
+<span class="r-in"><span>             reads <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">reader1</span>, <span class="va">reader2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The categorical variable sex has 2 levels.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Ageing CV computed from 2 readings: 0.0812.</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 17</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   group  Linf Linf_lower Linf_upper     K K_lower K_upper    L0 L0_lower</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> f      264.       252.       276. 0.142   0.120   0.164  72.8     72.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> m      242.       236.       249. 0.159   0.143   0.175  72.8     72.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 8 more variables: L0_upper &lt;dbl&gt;, CV_L &lt;dbl&gt;, n &lt;int&gt;, n0 &lt;int&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   cv_age &lt;dbl&gt;, nll &lt;dbl&gt;, AIC &lt;dbl&gt;, convergence &lt;lgl&gt;</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

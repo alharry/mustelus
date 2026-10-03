@@ -32,10 +32,10 @@ used independently.
 ### Ageing error
 
 Ages read from vertebrae are estimates, not measurements. Treating them
-as exact biases growth estimates: the usual consequence is that $`K`$
-comes out too high and $`L_\infty`$ too low, because reading error
-flattens the apparent relationship at the top end. The model treats true
-age as a random effect, with each reading an observation of it:
+as exact can bias growth estimates, by an amount that depends on how
+imprecise the readings are and where in the age range the error falls.
+The model treats true age as a random effect, with each reading an
+observation of it:
 
 ``` math
 A_{i,j} = a_i + \epsilon_{a,ij}, \qquad \epsilon_{a,ij} \sim N(0, (CV_a a_i)^2)
@@ -60,26 +60,36 @@ Fitting is by maximum likelihood with `RTMB`, the random effects
 integrated out by the Laplace approximation. Confidence intervals on the
 curve come from the delta method; prediction intervals add $`CV_L`$.
 
-This is a port of the `TMB` implementation used in Harry et al. (2019),
-and reproduces the published estimates for *Carcharhinus limbatus* to
-within rounding: $`L_{\infty}`$ 263.3 and 241.9 cm, $`K`$ 0.1418 and
-0.1565, $`L_0`$ 72.77 cm and $`CV_L`$ 0.0487.
+This is a port of the `TMB` implementation used in Harry et al. (2019).
+The examples below use the data from that study.
+
+## Data
+
+``` r
+
+library(mustelus)
+data(blacktip)
+```
+
+`blacktip` contains 475 common blacktip sharks, *Carcharhinus limbatus*,
+from south-east Queensland and northern New South Wales. Vertebrae were
+read by two readers for 102 sharks, all of them from New South Wales,
+where most sharks were caught on demersal setlines. A further 136
+neonates with open or partially healed umbilical scars were sampled in
+Moreton Bay, Queensland. None of the neonates were aged. Length is
+stretched total length in cm.
 
 ## Basic usage
 
 ``` r
 
-library(mustelus)
-data(spottail)
-
-g <- growth(length, age_agree, sex, data = spottail,
-            neonate = umb_scar %in% c("y", "p"))
+g <- growth(STL, age_agree, sex, data = blacktip, neonate = neonate)
 summary(g)
 #> # A tibble: 2 × 17
 #>   group  Linf Linf_lower Linf_upper     K K_lower K_upper    L0 L0_lower
 #>   <chr> <dbl>      <dbl>      <dbl> <dbl>   <dbl>   <dbl> <dbl>    <dbl>
-#> 1 f      1241       1215       1266 0.383   0.350   0.415  519.     505.
-#> 2 m      1083       1064       1103 0.580   0.526   0.633  519.     505.
+#> 1 f      265.       253.       276. 0.144   0.123   0.165  72.8     72.2
+#> 2 m      242.       236.       248. 0.163   0.148   0.179  72.8     72.2
 #> # ℹ 8 more variables: L0_upper <dbl>, CV_L <dbl>, n <int>, n0 <int>,
 #> #   cv_age <dbl>, nll <dbl>, AIC <dbl>, convergence <lgl>
 ```
@@ -90,24 +100,113 @@ the number of aged animals per group (`n`), the number of neonates
 (`n0`), the ageing CV if used, the negative log-likelihood, AIC, and
 whether the fit converged with a positive-definite Hessian.
 
-Female spot-tail sharks reach a larger asymptotic length than males
-(1241 against 1083 mm) and grow more slowly toward it (0.38 against
-0.58). That pattern, females larger and slower, is common in
-carcharhinids.
+Female blacktip sharks reach a larger asymptotic length than males (265
+against 242 cm) and grow more slowly toward it (0.14 against 0.16). That
+pattern, females larger and slower, is common in carcharhinids.
 
 ## Plotting
 
 ``` r
 
-plot(g) + xlab("Age (years)") + ylab("Total length (mm)")
+plot(g) + xlab("Age (years)") + ylab("Stretched total length (cm)")
 ```
 
-![](growth_files/figure-html/unnamed-chunk-2-1.png)
+![](growth_files/figure-html/unnamed-chunk-3-1.png)
 
 The solid line is the fitted curve, the dashed ribbon the 95% confidence
 interval on it, and the dotted ribbon the 95% prediction interval for
 individual animals. The prediction interval widens with size, which is
 the $`CV_L`$ assumption at work.
+
+## Comparing growth between sexes
+
+$`L_\infty`$ and $`K`$ are estimated from the same data and are strongly
+correlated, -0.90 for females and -0.88 for males. A larger asymptote
+can be traded against slower growth toward it with little change in the
+fit. The confidence intervals reported for each parameter separately are
+therefore not a good basis for comparing groups, and a joint confidence
+region showing the combinations of the two that are consistent with the
+data is more informative.
+
+Kimura (1980) constructed these regions from contours of the residual
+sum of squares, $`S`$, which for normally distributed errors are
+contours of equal likelihood. A combination of parameters lies inside
+the approximate 95% region if
+
+``` math
+S(L_\infty, K, t_0) \le \hat{S}\left(1 + \frac{p}{N - p} F_{p, N-p}(0.95)\right)
+```
+
+where $`\hat{S}`$ is the minimum, $`N`$ is the number of observations
+and $`p = 3`$ is the number of parameters. A region in three dimensions
+is hard to display, so Kimura conditioned on $`t_0`$ at its estimate and
+drew the two-dimensional cross-section for $`L_\infty`$ and $`K`$.
+
+[`growth()`](https://alharry.github.io/mustelus/reference/growth.md)
+maximises a likelihood rather than minimising a sum of squares, because
+the standard deviation changes with length. The same criterion in terms
+of the log-likelihood $`\ell`$ is
+
+``` math
+2\left[\hat{\ell} - \ell(L_\infty, K)\right] \le N \log\left(1 + \frac{p}{N - p} F_{p, N-p}(0.95)\right)
+```
+
+which for a single group with constant variance is identical to
+Kimura’s.
+[`growth_region()`](https://alharry.github.io/mustelus/reference/growth_region.md)
+applies this criterion to a
+[`growth()`](https://alharry.github.io/mustelus/reference/growth.md)
+fit. $`L_0`$ takes the place of $`t_0`$ and is held at its estimate, and
+$`CV_L`$ is re-estimated at each point, as $`\sigma`$ effectively is in
+the ratio of sums of squares. $`N`$ is the number of aged sharks of that
+sex. As in Kimura (1980), the boundary is found by stepping through
+values of $`K`$ and solving for the two values of $`L_\infty`$ at which
+the likelihood reaches the critical value.
+
+``` r
+
+r <- growth_region(g)
+summary(r)
+#> # A tibble: 2 × 9
+#>   group  Linf Linf_min Linf_max     K K_min K_max     n level
+#>   <chr> <dbl>    <dbl>    <dbl> <dbl> <dbl> <dbl> <int> <dbl>
+#> 1 f      265.     250.     285. 0.144 0.116 0.178    33  0.95
+#> 2 m      242.     233.     252. 0.163 0.142 0.187    69  0.95
+```
+
+[`summary()`](https://rdrr.io/r/base/summary.html) gives the estimates
+and the range of each parameter within the region.
+
+``` r
+
+plot(r) + labs(x = "Linf (cm)", y = "K (per year)", linetype = "Sex")
+```
+
+![](growth_files/figure-html/unnamed-chunk-6-1.png)
+
+The regions are not symmetrical about the estimates, as an ellipse drawn
+from the covariance matrix would be. Each follows the curved ridge in
+the likelihood surface along which $`L_\infty`$ is traded against $`K`$,
+and extends further above the estimates than below them. For females the
+region reaches about 20 cm above the estimate of $`L_\infty`$ but only
+15 cm below it. The intervals on $`K`$ alone overlap between the sexes
+(0.123 to 0.165 for females, 0.148 to 0.179 for males), but the two
+regions do not. Taken together, the two parameters describe clearly
+different growth curves for females and males.
+
+As Kimura noted for $`t_0`$, holding $`L_0`$ fixed means these are
+cross-sections rather than true confidence regions, since more extreme
+values of $`L_\infty`$ and $`K`$ may occur at a different $`L_0`$.
+Setting `profile_L0 = TRUE` re-estimates $`L_0`$ at each point as well,
+giving the projection of the full three-parameter region. Here that
+makes almost no difference, because $`L_0`$ is closely determined by the
+neonates. Without neonates or young animals $`L_0`$ is poorly
+determined, and the projection can be noticeably wider, mainly in $`K`$.
+
+[`growth_region()`](https://alharry.github.io/mustelus/reference/growth_region.md)
+also works on models fitted with ageing error. Each evaluation of the
+likelihood then includes the Laplace approximation, so the calculation
+takes noticeably longer.
 
 ## Length at birth
 
@@ -117,76 +216,107 @@ as length at age data: an age-zero observation and a length at birth
 observation say exactly the same thing, so counting both would double
 the weight. The function reports how many were moved.
 
+In `blacktip` the neonates come from a separate sample, and the aged
+sharks include only 9 under two years old. Fitting the model without the
+neonates shows what they contribute:
+
 ``` r
 
-g$neonates[[1]]
-#> [1] 478 550 545 540 505
+g_no_neo <- growth(STL, age_agree, sex, data = blacktip)
+
+rbind(
+  with_neonates    = summary(g)[1, c("L0", "L0_lower", "L0_upper")],
+  without_neonates = summary(g_no_neo)[1, c("L0", "L0_lower", "L0_upper")]
+)
+#> # A tibble: 2 × 3
+#>      L0 L0_lower L0_upper
+#> * <dbl>    <dbl>    <dbl>
+#> 1  72.8     72.2     73.3
+#> 2  72.6     69.8     75.4
 ```
 
-Here all five neonates were also aged, at exactly age zero, so the two
-formulations are mathematically identical and removing them changes
-nothing. Where neonates come from separate sampling, as in Harry et al.
-(2019), they add genuinely new information, and are frequently the only
-data available for the smallest sizes.
+The estimate of $`L_0`$ hardly changes, but the confidence interval is
+about five times narrower with the neonates included. Neonates are
+frequently the only data available for the smallest sizes.
 
 ## Ageing error
 
 Where replicate readings exist, pass the columns to `reads` and the
 ageing CV is computed from them. The readings need to be on the same
 scale as `age`. A reading is a count of growth zones and so is a whole
-number, but the agreed ages in `spottail` also include a fractional
-adjustment for the time elapsed since the population birth date. That
+number, but the ages in `blacktip` also include a fractional adjustment
+for the time elapsed since the population birth date of 1 November. That
 adjustment depends on the date of capture rather than on the reader, so
-it is the same for every reading of a given animal and should be added
-to each one.
-
-`spottail` carries only a consensus age, so for illustration two
-readings are simulated from it. The agreed age is split into a whole
-number of growth zones and the birth date adjustment. Integer reading
-error is added to the zone count, with a standard deviation proportional
-to age and the count bounded at zero, and the adjustment is then added
-back:
+it is the same for every reading of a given animal and is added to each
+one.
 
 ``` r
 
 library(dplyr)
 
-sp <- spottail |>
-  filter(!is.na(age_agree)) |>
-  mutate(
-    zones   = floor(age_agree),
-    birth   = age_agree - zones,
-    reader1 = pmax(0, zones + round(rnorm(n(), 0, 0.1 * zones))) + birth,
-    reader2 = pmax(0, zones + round(rnorm(n(), 0, 0.1 * zones))) + birth
-  )
-
-table(difference = round(sp$reader2 - sp$reader1))
+aged <- filter(blacktip, !is.na(age_agree))
+table(difference = round(aged$reader2 - aged$reader1))
 #> difference
-#>  -3  -2  -1   0   1   2 
-#>   2   3  24 246  18   6
+#> -3 -2 -1  0  1  2  3  4 
+#>  1  6 16 48 16  9  3  3
 ```
 
-Most pairs of readings agree, and disagreements are mostly of a single
-zone, becoming more frequent in older animals. This is the usual pattern
-for vertebral ageing.
+The two readers agreed on 48 of the 102 sharks. Most disagreements were
+of a single zone, and disagreement was far more common in sharks older
+than ten years. This is the usual pattern for vertebral ageing.
 
 ``` r
 
-g_reads <- growth(length, age_agree, sex, data = sp,
-                  neonate = umb_scar %in% c("y", "p"),
+g_reads <- growth(STL, age_agree, sex, data = blacktip, neonate = neonate,
                   reads = c(reader1, reader2))
 summary(g_reads)[, c("group", "Linf", "K", "L0", "cv_age")]
 #> # A tibble: 2 × 5
 #>   group  Linf     K    L0 cv_age
 #>   <chr> <dbl> <dbl> <dbl>  <dbl>
-#> 1 f      1238 0.386  518. 0.0733
-#> 2 m      1079 0.591  518. 0.0733
+#> 1 f      264. 0.142  72.8 0.0812
+#> 2 m      242. 0.159  72.8 0.0812
 ```
 
-If the birth date adjustment is left off the readings, they sit around
-half a year below the ages used elsewhere, the model concludes that
-every animal is younger than it is, and length at birth is overestimated
-substantially.
+The ageing CV is 8.1%. Compared with the fit that treats age as exact,
+$`K`$ falls by 1.5% for females and 2.6% for males, and $`L_\infty`$
+moves by less than 1 cm. Both shifts are well inside the confidence
+intervals. Most of the disagreement between readers is in older sharks,
+where the curve is nearly flat and length says little about which
+reading is closer to the truth. The model treats the ages of those
+sharks as more uncertain, but does not move them much. With less precise
+ageing the effect can be considerably larger.
+
+These estimates differ slightly from those published in Harry et al.
+(2019). The loop over readings in the original code started at the
+second reader, so the first reader’s counts were never used. Fitted to
+the second reader alone,
+[`growth()`](https://alharry.github.io/mustelus/reference/growth.md)
+reproduces the published estimates to within rounding: $`L_{\infty}`$
+263.3 and 241.9 cm, $`K`$ 0.1418 and 0.1565, $`L_0`$ 72.77 cm and
+$`CV_L`$ 0.0487.
+
+Leaving the birth date adjustment off the readings is an easy mistake to
+make. Here it gives the youngest sharks readings of zero, and
+[`growth()`](https://alharry.github.io/mustelus/reference/growth.md)
+stops:
+
+``` r
+
+no_adj <- blacktip |>
+  mutate(reader1 = floor(reader1), reader2 = floor(reader2))
+
+growth(STL, age_agree, sex, data = no_adj, neonate = neonate,
+       reads = c(reader1, reader2))
+#> Error in `growth()`:
+#> ! Ageing error needs every reading to be greater than zero. A reading of zero makes the likelihood unbounded, because the standard deviation of a reading is proportional to age. Add the birth date adjustment to each reading, and supply animals of known age zero through 'neonate'.
+```
+
+Because the standard deviation of a reading is proportional to age, a
+reading of zero can be explained exactly by a true age of zero, and the
+likelihood has no maximum. Where no readings are zero the model will
+fit, but the readings then sit below the true ages by the missing
+fraction, around half a year on average here, and the model treats every
+animal as younger than it is.
 
 If only a consensus age is available but the ageing CV is known from
 elsewhere, supply it directly with `cv_age`. This is the more common
@@ -194,28 +324,20 @@ situation when reanalysing published data.
 
 ``` r
 
-sapply(c(0, 0.05, 0.10, 0.20), function(cv) {
-  gg <- if (cv == 0) {
-    growth(length, age_agree, sex, data = spottail,
-           neonate = umb_scar %in% c("y", "p"))
-  } else {
-    growth(length, age_agree, sex, data = spottail,
-           neonate = umb_scar %in% c("y", "p"), cv_age = cv)
-  }
-  c(cv_age = cv, Linf_f = summary(gg)$Linf[1], K_f = summary(gg)$K[1])
-}) |> t() |> as.data.frame()
-#>   cv_age Linf_f    K_f
-#> 1   0.00   1241 0.3829
-#> 2   0.05   1242 0.3806
-#> 3   0.10   1246 0.3738
-#> 4   0.20   1249 0.3628
+g_cv <- growth(STL, age_agree, sex, data = blacktip, neonate = neonate,
+               cv_age = 0.08)
+summary(g_cv)[, c("group", "Linf", "K", "L0", "cv_age")]
+#> # A tibble: 2 × 5
+#>   group  Linf     K    L0 cv_age
+#>   <chr> <dbl> <dbl> <dbl>  <dbl>
+#> 1 f      280. 0.121  73.0   0.08
+#> 2 m      265. 0.123  73.0   0.08
 ```
 
-As the assumed ageing error grows, $`L_\infty`$ rises and $`K`$ falls.
-That is the expected direction: ignoring ageing error makes growth look
-faster and the asymptote smaller than it is. The size of the shift
-depends on how much error there is, which is why estimating $`CV_a`$
-from replicate readings is worth doing where the readings exist.
+$`K`$ falls, as it did with the two readings, though by less. The two
+analyses are not equivalent, because the data going in are not the same.
+The consensus age matches the first reader’s count for 84 of the 102
+sharks, and differs from the mean of the two readings for 46.
 
 With neither `reads` nor `cv_age`, age is treated as measured without
 error and the model reduces to an ordinary von Bertalanffy fit.
@@ -226,25 +348,25 @@ error and the model reduces to an ordinary von Bertalanffy fit.
 
 # Fixed-effect estimates and standard errors
 summary(g$mods[[1]]$sdreport, "fixed")
-#>          Estimate   Std. Error
-#> Linf 1.240716e+03 13.098814452
-#> Linf 1.083294e+03  9.814274998
-#> K    3.829032e-01  0.016599074
-#> K    5.796683e-01  0.027395151
-#> L0   5.191611e+02  7.280696262
-#> CV_L 3.970768e-02  0.001629402
+#>          Estimate  Std. Error
+#> Linf 264.84868596 5.928013298
+#> Linf 241.86909868 3.274932763
+#> K      0.14416127 0.010614934
+#> K      0.16322060 0.007855840
+#> L0    72.76498022 0.289193552
+#> CV_L   0.04729473 0.002167525
 ```
 
 ``` r
 
 head(g$preds[[1]])
-#>   group       age      len    lower    upper   plower   pupper
-#> 1     f 0.0000000 519.1611 504.8909 533.4312 476.3104 562.0118
-#> 2     f 0.1380505 556.3119 543.9794 568.6445 511.2936 601.3302
-#> 3     f 0.2761010 591.5500 580.7770 602.3229 544.2677 638.8322
-#> 4     f 0.4141515 624.9737 615.3955 634.5519 575.3997 674.5477
-#> 5     f 0.5522020 656.6765 647.9518 665.4012 604.8300 708.5231
-#> 6     f 0.6902525 686.7471 678.5738 694.9204 632.6783 740.8159
+#>   group       age       len    lower     upper   plower    pupper
+#> 1     f 0.0000000  72.76498 72.19816  73.33180 65.99606  79.53390
+#> 2     f 0.2180135  78.70811 77.96658  79.44965 71.37447  86.04176
+#> 3     f 0.4360269  84.46737 83.33357  85.60117 76.55578  92.37896
+#> 4     f 0.6540404  90.04843 88.49652  91.60033 81.55811  98.53874
+#> 5     f 0.8720539  95.45680 93.50329  97.41032 86.39511 104.51850
+#> 6     f 1.0900673 100.69785 98.36932 103.02638 91.07734 110.31835
 ```
 
 `mods` holds the `RTMB` objective function, the `nlminb` result and the
@@ -271,3 +393,6 @@ and Geraghty, P.T. (2019) Life history of the common blacktip shark,
 demography of a cryptic shark complex. *Marine and Freshwater Research*
 **70**(6), 834–848.
 [doi:10.1071/MF18141](https://doi.org/10.1071/MF18141)
+
+Kimura, D.K. (1980) Likelihood methods for the von Bertalanffy growth
+curve. *Fishery Bulletin* **77**(4), 765–776.

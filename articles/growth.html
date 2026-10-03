@@ -110,12 +110,9 @@ be used independently.</p>
 <h3 id="ageing-error">Ageing error<a class="anchor" aria-label="anchor" href="#ageing-error"></a>
 </h3>
 <p>Ages read from vertebrae are estimates, not measurements. Treating
-them as exact biases growth estimates: the usual consequence is that
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
-comes out too high and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_\infty</annotation></semantics></math>
-too low, because reading error flattens the apparent relationship at the
-top end. The model treats true age as a random effect, with each reading
+them as exact can bias growth estimates, by an amount that depends on
+how imprecise the readings are and where in the age range the error
+falls. The model treats true age as a random effect, with each reading
 an observation of it:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>A</mi><mrow><mi>i</mi><mo>,</mo><mi>j</mi></mrow></msub><mo>=</mo><msub><mi>a</mi><mi>i</mi></msub><mo>+</mo><msub><mi>ϵ</mi><mrow><mi>a</mi><mo>,</mo><mi>i</mi><mi>j</mi></mrow></msub><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>ϵ</mi><mrow><mi>a</mi><mo>,</mo><mi>i</mi><mi>j</mi></mrow></msub><mo>∼</mo><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><mo stretchy="false" form="prefix">(</mo><mi>C</mi><msub><mi>V</mi><mi>a</mi></msub><msub><mi>a</mi><mi>i</mi></msub><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">A_{i,j} = a_i + \epsilon_{a,ij}, \qquad \epsilon_{a,ij} \sim N(0, (CV_a a_i)^2)</annotation></semantics></math></p>
 <p>The ageing CV is computed outside the likelihood from replicate
@@ -136,33 +133,34 @@ intervals on the curve come from the delta method; prediction intervals
 add
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><msub><mi>V</mi><mi>L</mi></msub></mrow><annotation encoding="application/x-tex">CV_L</annotation></semantics></math>.</p>
 <p>This is a port of the <code>TMB</code> implementation used in Harry
-et al. (2019), and reproduces the published estimates for
-<em>Carcharhinus limbatus</em> to within rounding:
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_{\infty}</annotation></semantics></math>
-263.3 and 241.9 cm,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
-0.1418 and 0.1565,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>
-72.77 cm and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><msub><mi>V</mi><mi>L</mi></msub></mrow><annotation encoding="application/x-tex">CV_L</annotation></semantics></math>
-0.0487.</p>
+et al. (2019). The examples below use the data from that study.</p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
+</h2>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://alharry.github.io/mustelus/">mustelus</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">blacktip</span><span class="op">)</span></span></code></pre></div>
+<p><code>blacktip</code> contains 475 common blacktip sharks,
+<em>Carcharhinus limbatus</em>, from south-east Queensland and northern
+New South Wales. Vertebrae were read by two readers for 102 sharks, all
+of them from New South Wales, where most sharks were caught on demersal
+setlines. A further 136 neonates with open or partially healed umbilical
+scars were sampled in Moreton Bay, Queensland. None of the neonates were
+aged. Length is stretched total length in cm.</p>
 </div>
 <div class="section level2">
 <h2 id="basic-usage">Basic usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
 </h2>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://alharry.github.io/mustelus/">mustelus</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">spottail</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">length</span>, <span class="va">age_agree</span>, <span class="va">sex</span>, data <span class="op">=</span> <span class="va">spottail</span>,</span>
-<span>            neonate <span class="op">=</span> <span class="va">umb_scar</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y"</span>, <span class="st">"p"</span><span class="op">)</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">STL</span>, <span class="va">age_agree</span>, <span class="va">sex</span>, data <span class="op">=</span> <span class="va">blacktip</span>, neonate <span class="op">=</span> <span class="va">neonate</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 17</span></span></span>
 <span><span class="co">#&gt;   group  Linf Linf_lower Linf_upper     K K_lower K_upper    L0 L0_lower</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> f      <span style="text-decoration: underline;">1</span>241       <span style="text-decoration: underline;">1</span>215       <span style="text-decoration: underline;">1</span>266 0.383   0.350   0.415  519.     505.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> m      <span style="text-decoration: underline;">1</span>083       <span style="text-decoration: underline;">1</span>064       <span style="text-decoration: underline;">1</span>103 0.580   0.526   0.633  519.     505.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> f      265.       253.       276. 0.144   0.123   0.165  72.8     72.2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> m      242.       236.       248. 0.163   0.148   0.179  72.8     72.2</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 8 more variables: L0_upper &lt;dbl&gt;, CV_L &lt;dbl&gt;, n &lt;int&gt;, n0 &lt;int&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   cv_age &lt;dbl&gt;, nll &lt;dbl&gt;, AIC &lt;dbl&gt;, convergence &lt;lgl&gt;</span></span></span></code></pre></div>
 <p>The summary has one row per group.
@@ -177,23 +175,132 @@ are shared and so repeat. Also reported are the number of aged animals
 per group (<code>n</code>), the number of neonates (<code>n0</code>),
 the ageing CV if used, the negative log-likelihood, AIC, and whether the
 fit converged with a positive-definite Hessian.</p>
-<p>Female spot-tail sharks reach a larger asymptotic length than males
-(1241 against 1083 mm) and grow more slowly toward it (0.38 against
-0.58). That pattern, females larger and slower, is common in
-carcharhinids.</p>
+<p>Female blacktip sharks reach a larger asymptotic length than males
+(265 against 242 cm) and grow more slowly toward it (0.14 against 0.16).
+That pattern, females larger and slower, is common in carcharhinids.</p>
 </div>
 <div class="section level2">
 <h2 id="plotting">Plotting<a class="anchor" aria-label="anchor" href="#plotting"></a>
 </h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Age (years)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Total length (mm)"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="growth_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" alt="" width="672"></p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Age (years)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Stretched total length (cm)"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="growth_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="672"></p>
 <p>The solid line is the fitted curve, the dashed ribbon the 95%
 confidence interval on it, and the dotted ribbon the 95% prediction
 interval for individual animals. The prediction interval widens with
 size, which is the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><msub><mi>V</mi><mi>L</mi></msub></mrow><annotation encoding="application/x-tex">CV_L</annotation></semantics></math>
 assumption at work.</p>
+</div>
+<div class="section level2">
+<h2 id="comparing-growth-between-sexes">Comparing growth between sexes<a class="anchor" aria-label="anchor" href="#comparing-growth-between-sexes"></a>
+</h2>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_\infty</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
+are estimated from the same data and are strongly correlated, -0.90 for
+females and -0.88 for males. A larger asymptote can be traded against
+slower growth toward it with little change in the fit. The confidence
+intervals reported for each parameter separately are therefore not a
+good basis for comparing groups, and a joint confidence region showing
+the combinations of the two that are consistent with the data is more
+informative.</p>
+<p>Kimura (1980) constructed these regions from contours of the residual
+sum of squares,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>S</mi><annotation encoding="application/x-tex">S</annotation></semantics></math>,
+which for normally distributed errors are contours of equal likelihood.
+A combination of parameters lies inside the approximate 95% region
+if</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>L</mi><mi>∞</mi></msub><mo>,</mo><mi>K</mi><mo>,</mo><msub><mi>t</mi><mn>0</mn></msub><mo stretchy="false" form="postfix">)</mo><mo>≤</mo><mover><mi>S</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mfrac><mi>p</mi><mrow><mi>N</mi><mo>−</mo><mi>p</mi></mrow></mfrac><msub><mi>F</mi><mrow><mi>p</mi><mo>,</mo><mi>N</mi><mo>−</mo><mi>p</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mn>0.95</mn><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">S(L_\infty, K, t_0) \le \hat{S}\left(1 + \frac{p}{N - p} F_{p, N-p}(0.95)\right)</annotation></semantics></math></p>
+<p>where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>S</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat{S}</annotation></semantics></math>
+is the minimum,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>
+is the number of observations and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">p = 3</annotation></semantics></math>
+is the number of parameters. A region in three dimensions is hard to
+display, so Kimura conditioned on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mn>0</mn></msub><annotation encoding="application/x-tex">t_0</annotation></semantics></math>
+at its estimate and drew the two-dimensional cross-section for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_\infty</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>.</p>
+<p><code><a href="../reference/growth.html">growth()</a></code> maximises a likelihood rather than minimising a
+sum of squares, because the standard deviation changes with length. The
+same criterion in terms of the log-likelihood
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ℓ</mi><annotation encoding="application/x-tex">\ell</annotation></semantics></math>
+is</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mrow><mo stretchy="true" form="prefix">[</mo><mover><mi>ℓ</mi><mo accent="true">̂</mo></mover><mo>−</mo><mi>ℓ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>L</mi><mi>∞</mi></msub><mo>,</mo><mi>K</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow><mo>≤</mo><mi>N</mi><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mfrac><mi>p</mi><mrow><mi>N</mi><mo>−</mo><mi>p</mi></mrow></mfrac><msub><mi>F</mi><mrow><mi>p</mi><mo>,</mo><mi>N</mi><mo>−</mo><mi>p</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mn>0.95</mn><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">2\left[\hat{\ell} - \ell(L_\infty, K)\right] \le N \log\left(1 + \frac{p}{N - p} F_{p, N-p}(0.95)\right)</annotation></semantics></math></p>
+<p>which for a single group with constant variance is identical to
+Kimura’s. <code><a href="../reference/growth_region.html">growth_region()</a></code> applies this criterion to a
+<code><a href="../reference/growth.html">growth()</a></code> fit.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>
+takes the place of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mn>0</mn></msub><annotation encoding="application/x-tex">t_0</annotation></semantics></math>
+and is held at its estimate, and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><msub><mi>V</mi><mi>L</mi></msub></mrow><annotation encoding="application/x-tex">CV_L</annotation></semantics></math>
+is re-estimated at each point, as
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>
+effectively is in the ratio of sums of squares.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>
+is the number of aged sharks of that sex. As in Kimura (1980), the
+boundary is found by stepping through values of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
+and solving for the two values of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_\infty</annotation></semantics></math>
+at which the likelihood reaches the critical value.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">r</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/growth_region.html">growth_region</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 9</span></span></span>
+<span><span class="co">#&gt;   group  Linf Linf_min Linf_max     K K_min K_max     n level</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> f      265.     250.     285. 0.144 0.116 0.178    33  0.95</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> m      242.     233.     252. 0.163 0.142 0.187    69  0.95</span></span></code></pre></div>
+<p><code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> gives the estimates and the range of each
+parameter within the region.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Linf (cm)"</span>, y <span class="op">=</span> <span class="st">"K (per year)"</span>, linetype <span class="op">=</span> <span class="st">"Sex"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="growth_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="672"></p>
+<p>The regions are not symmetrical about the estimates, as an ellipse
+drawn from the covariance matrix would be. Each follows the curved ridge
+in the likelihood surface along which
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_\infty</annotation></semantics></math>
+is traded against
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>,
+and extends further above the estimates than below them. For females the
+region reaches about 20 cm above the estimate of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_\infty</annotation></semantics></math>
+but only 15 cm below it. The intervals on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
+alone overlap between the sexes (0.123 to 0.165 for females, 0.148 to
+0.179 for males), but the two regions do not. Taken together, the two
+parameters describe clearly different growth curves for females and
+males.</p>
+<p>As Kimura noted for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mn>0</mn></msub><annotation encoding="application/x-tex">t_0</annotation></semantics></math>,
+holding
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>
+fixed means these are cross-sections rather than true confidence
+regions, since more extreme values of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_\infty</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
+may occur at a different
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>.
+Setting <code>profile_L0 = TRUE</code> re-estimates
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>
+at each point as well, giving the projection of the full three-parameter
+region. Here that makes almost no difference, because
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>
+is closely determined by the neonates. Without neonates or young animals
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>
+is poorly determined, and the projection can be noticeably wider, mainly
+in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>.</p>
+<p><code><a href="../reference/growth_region.html">growth_region()</a></code> also works on models fitted with ageing
+error. Each evaluation of the likelihood then includes the Laplace
+approximation, so the calculation takes noticeably longer.</p>
 </div>
 <div class="section level2">
 <h2 id="length-at-birth">Length at birth<a class="anchor" aria-label="anchor" href="#length-at-birth"></a>
@@ -203,14 +310,26 @@ flagged animal that also carries an age is used only for the length at
 birth term, not as length at age data: an age-zero observation and a
 length at birth observation say exactly the same thing, so counting both
 would double the weight. The function reports how many were moved.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">g</span><span class="op">$</span><span class="va">neonates</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt; [1] 478 550 545 540 505</span></span></code></pre></div>
-<p>Here all five neonates were also aged, at exactly age zero, so the
-two formulations are mathematically identical and removing them changes
-nothing. Where neonates come from separate sampling, as in Harry et al.
-(2019), they add genuinely new information, and are frequently the only
-data available for the smallest sizes.</p>
+<p>In <code>blacktip</code> the neonates come from a separate sample,
+and the aged sharks include only 9 under two years old. Fitting the
+model without the neonates shows what they contribute:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">g_no_neo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">STL</span>, <span class="va">age_agree</span>, <span class="va">sex</span>, data <span class="op">=</span> <span class="va">blacktip</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
+<span>  with_neonates    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"L0"</span>, <span class="st">"L0_lower"</span>, <span class="st">"L0_upper"</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>  without_neonates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">g_no_neo</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"L0"</span>, <span class="st">"L0_lower"</span>, <span class="st">"L0_upper"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 3</span></span></span>
+<span><span class="co">#&gt;      L0 L0_lower L0_upper</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  72.8     72.2     73.3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>  72.6     69.8     75.4</span></span></code></pre></div>
+<p>The estimate of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>
+hardly changes, but the confidence interval is about five times narrower
+with the neonates included. Neonates are frequently the only data
+available for the smallest sizes.</p>
 </div>
 <div class="section level2">
 <h2 id="ageing-error-1">Ageing error<a class="anchor" aria-label="anchor" href="#ageing-error-1"></a>
@@ -218,78 +337,90 @@ data available for the smallest sizes.</p>
 <p>Where replicate readings exist, pass the columns to
 <code>reads</code> and the ageing CV is computed from them. The readings
 need to be on the same scale as <code>age</code>. A reading is a count
-of growth zones and so is a whole number, but the agreed ages in
-<code>spottail</code> also include a fractional adjustment for the time
-elapsed since the population birth date. That adjustment depends on the
-date of capture rather than on the reader, so it is the same for every
-reading of a given animal and should be added to each one.</p>
-<p><code>spottail</code> carries only a consensus age, so for
-illustration two readings are simulated from it. The agreed age is split
-into a whole number of growth zones and the birth date adjustment.
-Integer reading error is added to the zone count, with a standard
-deviation proportional to age and the count bounded at zero, and the
-adjustment is then added back:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+of growth zones and so is a whole number, but the ages in
+<code>blacktip</code> also include a fractional adjustment for the time
+elapsed since the population birth date of 1 November. That adjustment
+depends on the date of capture rather than on the reader, so it is the
+same for every reading of a given animal and is added to each one.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="va">spottail</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">age_agree</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    zones   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="va">age_agree</span><span class="op">)</span>,</span>
-<span>    birth   <span class="op">=</span> <span class="va">age_agree</span> <span class="op">-</span> <span class="va">zones</span>,</span>
-<span>    reader1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">zones</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="fl">0</span>, <span class="fl">0.1</span> <span class="op">*</span> <span class="va">zones</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="va">birth</span>,</span>
-<span>    reader2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">zones</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, <span class="fl">0</span>, <span class="fl">0.1</span> <span class="op">*</span> <span class="va">zones</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="va">birth</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span>difference <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">sp</span><span class="op">$</span><span class="va">reader2</span> <span class="op">-</span> <span class="va">sp</span><span class="op">$</span><span class="va">reader1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">aged</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">blacktip</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">age_agree</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span>difference <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">aged</span><span class="op">$</span><span class="va">reader2</span> <span class="op">-</span> <span class="va">aged</span><span class="op">$</span><span class="va">reader1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; difference</span></span>
-<span><span class="co">#&gt;  -3  -2  -1   0   1   2 </span></span>
-<span><span class="co">#&gt;   2   3  24 246  18   6</span></span></code></pre></div>
-<p>Most pairs of readings agree, and disagreements are mostly of a
-single zone, becoming more frequent in older animals. This is the usual
-pattern for vertebral ageing.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">g_reads</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">length</span>, <span class="va">age_agree</span>, <span class="va">sex</span>, data <span class="op">=</span> <span class="va">sp</span>,</span>
-<span>                  neonate <span class="op">=</span> <span class="va">umb_scar</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y"</span>, <span class="st">"p"</span><span class="op">)</span>,</span>
+<span><span class="co">#&gt; -3 -2 -1  0  1  2  3  4 </span></span>
+<span><span class="co">#&gt;  1  6 16 48 16  9  3  3</span></span></code></pre></div>
+<p>The two readers agreed on 48 of the 102 sharks. Most disagreements
+were of a single zone, and disagreement was far more common in sharks
+older than ten years. This is the usual pattern for vertebral
+ageing.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">g_reads</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">STL</span>, <span class="va">age_agree</span>, <span class="va">sex</span>, data <span class="op">=</span> <span class="va">blacktip</span>, neonate <span class="op">=</span> <span class="va">neonate</span>,</span>
 <span>                  reads <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">reader1</span>, <span class="va">reader2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">g_reads</span><span class="op">)</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"group"</span>, <span class="st">"Linf"</span>, <span class="st">"K"</span>, <span class="st">"L0"</span>, <span class="st">"cv_age"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 5</span></span></span>
 <span><span class="co">#&gt;   group  Linf     K    L0 cv_age</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> f      <span style="text-decoration: underline;">1</span>238 0.386  518. 0.073<span style="text-decoration: underline;">3</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> m      <span style="text-decoration: underline;">1</span>079 0.591  518. 0.073<span style="text-decoration: underline;">3</span></span></span></code></pre></div>
-<p>If the birth date adjustment is left off the readings, they sit
-around half a year below the ages used elsewhere, the model concludes
-that every animal is younger than it is, and length at birth is
-overestimated substantially.</p>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> f      264. 0.142  72.8 0.081<span style="text-decoration: underline;">2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> m      242. 0.159  72.8 0.081<span style="text-decoration: underline;">2</span></span></span></code></pre></div>
+<p>The ageing CV is 8.1%. Compared with the fit that treats age as
+exact,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
+falls by 1.5% for females and 2.6% for males, and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_\infty</annotation></semantics></math>
+moves by less than 1 cm. Both shifts are well inside the confidence
+intervals. Most of the disagreement between readers is in older sharks,
+where the curve is nearly flat and length says little about which
+reading is closer to the truth. The model treats the ages of those
+sharks as more uncertain, but does not move them much. With less precise
+ageing the effect can be considerably larger.</p>
+<p>These estimates differ slightly from those published in Harry et al.
+(2019). The loop over readings in the original code started at the
+second reader, so the first reader’s counts were never used. Fitted to
+the second reader alone, <code><a href="../reference/growth.html">growth()</a></code> reproduces the published
+estimates to within rounding:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_{\infty}</annotation></semantics></math>
+263.3 and 241.9 cm,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
+0.1418 and 0.1565,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>
+72.77 cm and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><msub><mi>V</mi><mi>L</mi></msub></mrow><annotation encoding="application/x-tex">CV_L</annotation></semantics></math>
+0.0487.</p>
+<p>Leaving the birth date adjustment off the readings is an easy mistake
+to make. Here it gives the youngest sharks readings of zero, and
+<code><a href="../reference/growth.html">growth()</a></code> stops:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">no_adj</span> <span class="op">&lt;-</span> <span class="va">blacktip</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>reader1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="va">reader1</span><span class="op">)</span>, reader2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="va">reader2</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">STL</span>, <span class="va">age_agree</span>, <span class="va">sex</span>, data <span class="op">=</span> <span class="va">no_adj</span>, neonate <span class="op">=</span> <span class="va">neonate</span>,</span>
+<span>       reads <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">reader1</span>, <span class="va">reader2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `growth()`:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Ageing error needs every reading to be greater than zero. A reading of zero makes the likelihood unbounded, because the standard deviation of a reading is proportional to age. Add the birth date adjustment to each reading, and supply animals of known age zero through 'neonate'.</span></span></code></pre></div>
+<p>Because the standard deviation of a reading is proportional to age, a
+reading of zero can be explained exactly by a true age of zero, and the
+likelihood has no maximum. Where no readings are zero the model will
+fit, but the readings then sit below the true ages by the missing
+fraction, around half a year on average here, and the model treats every
+animal as younger than it is.</p>
 <p>If only a consensus age is available but the ageing CV is known from
 elsewhere, supply it directly with <code>cv_age</code>. This is the more
 common situation when reanalysing published data.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.05</span>, <span class="fl">0.10</span>, <span class="fl">0.20</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">cv</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">gg</span> <span class="op">&lt;-</span> <span class="kw">if</span> <span class="op">(</span><span class="va">cv</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="fu"><a href="../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">length</span>, <span class="va">age_agree</span>, <span class="va">sex</span>, data <span class="op">=</span> <span class="va">spottail</span>,</span>
-<span>           neonate <span class="op">=</span> <span class="va">umb_scar</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y"</span>, <span class="st">"p"</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>    <span class="fu"><a href="../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">length</span>, <span class="va">age_agree</span>, <span class="va">sex</span>, data <span class="op">=</span> <span class="va">spottail</span>,</span>
-<span>           neonate <span class="op">=</span> <span class="va">umb_scar</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y"</span>, <span class="st">"p"</span><span class="op">)</span>, cv_age <span class="op">=</span> <span class="va">cv</span><span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>cv_age <span class="op">=</span> <span class="va">cv</span>, Linf_f <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">gg</span><span class="op">)</span><span class="op">$</span><span class="va">Linf</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, K_f <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">gg</span><span class="op">)</span><span class="op">$</span><span class="va">K</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="op">}</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   cv_age Linf_f    K_f</span></span>
-<span><span class="co">#&gt; 1   0.00   1241 0.3829</span></span>
-<span><span class="co">#&gt; 2   0.05   1242 0.3806</span></span>
-<span><span class="co">#&gt; 3   0.10   1246 0.3738</span></span>
-<span><span class="co">#&gt; 4   0.20   1249 0.3628</span></span></code></pre></div>
-<p>As the assumed ageing error grows,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_\infty</annotation></semantics></math>
-rises and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
-falls. That is the expected direction: ignoring ageing error makes
-growth look faster and the asymptote smaller than it is. The size of the
-shift depends on how much error there is, which is why estimating
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><msub><mi>V</mi><mi>a</mi></msub></mrow><annotation encoding="application/x-tex">CV_a</annotation></semantics></math>
-from replicate readings is worth doing where the readings exist.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">g_cv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">STL</span>, <span class="va">age_agree</span>, <span class="va">sex</span>, data <span class="op">=</span> <span class="va">blacktip</span>, neonate <span class="op">=</span> <span class="va">neonate</span>,</span>
+<span>               cv_age <span class="op">=</span> <span class="fl">0.08</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">g_cv</span><span class="op">)</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"group"</span>, <span class="st">"Linf"</span>, <span class="st">"K"</span>, <span class="st">"L0"</span>, <span class="st">"cv_age"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 5</span></span></span>
+<span><span class="co">#&gt;   group  Linf     K    L0 cv_age</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> f      280. 0.121  73.0   0.08</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> m      265. 0.123  73.0   0.08</span></span></code></pre></div>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
+falls, as it did with the two readings, though by less. The two analyses
+are not equivalent, because the data going in are not the same. The
+consensus age matches the first reader’s count for 84 of the 102 sharks,
+and differs from the mean of the two readings for 46.</p>
 <p>With neither <code>reads</code> nor <code>cv_age</code>, age is
 treated as measured without error and the model reduces to an ordinary
 von Bertalanffy fit.</p>
@@ -297,25 +428,25 @@ von Bertalanffy fit.</p>
 <div class="section level2">
 <h2 id="output-structure">Output structure<a class="anchor" aria-label="anchor" href="#output-structure"></a>
 </h2>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Fixed-effect estimates and standard errors</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">g</span><span class="op">$</span><span class="va">mods</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">sdreport</span>, <span class="st">"fixed"</span><span class="op">)</span></span>
-<span><span class="co">#&gt;          Estimate   Std. Error</span></span>
-<span><span class="co">#&gt; Linf 1.240716e+03 13.098814452</span></span>
-<span><span class="co">#&gt; Linf 1.083294e+03  9.814274998</span></span>
-<span><span class="co">#&gt; K    3.829032e-01  0.016599074</span></span>
-<span><span class="co">#&gt; K    5.796683e-01  0.027395151</span></span>
-<span><span class="co">#&gt; L0   5.191611e+02  7.280696262</span></span>
-<span><span class="co">#&gt; CV_L 3.970768e-02  0.001629402</span></span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<span><span class="co">#&gt;          Estimate  Std. Error</span></span>
+<span><span class="co">#&gt; Linf 264.84868596 5.928013298</span></span>
+<span><span class="co">#&gt; Linf 241.86909868 3.274932763</span></span>
+<span><span class="co">#&gt; K      0.14416127 0.010614934</span></span>
+<span><span class="co">#&gt; K      0.16322060 0.007855840</span></span>
+<span><span class="co">#&gt; L0    72.76498022 0.289193552</span></span>
+<span><span class="co">#&gt; CV_L   0.04729473 0.002167525</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">g</span><span class="op">$</span><span class="va">preds</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   group       age      len    lower    upper   plower   pupper</span></span>
-<span><span class="co">#&gt; 1     f 0.0000000 519.1611 504.8909 533.4312 476.3104 562.0118</span></span>
-<span><span class="co">#&gt; 2     f 0.1380505 556.3119 543.9794 568.6445 511.2936 601.3302</span></span>
-<span><span class="co">#&gt; 3     f 0.2761010 591.5500 580.7770 602.3229 544.2677 638.8322</span></span>
-<span><span class="co">#&gt; 4     f 0.4141515 624.9737 615.3955 634.5519 575.3997 674.5477</span></span>
-<span><span class="co">#&gt; 5     f 0.5522020 656.6765 647.9518 665.4012 604.8300 708.5231</span></span>
-<span><span class="co">#&gt; 6     f 0.6902525 686.7471 678.5738 694.9204 632.6783 740.8159</span></span></code></pre></div>
+<span><span class="co">#&gt;   group       age       len    lower     upper   plower    pupper</span></span>
+<span><span class="co">#&gt; 1     f 0.0000000  72.76498 72.19816  73.33180 65.99606  79.53390</span></span>
+<span><span class="co">#&gt; 2     f 0.2180135  78.70811 77.96658  79.44965 71.37447  86.04176</span></span>
+<span><span class="co">#&gt; 3     f 0.4360269  84.46737 83.33357  85.60117 76.55578  92.37896</span></span>
+<span><span class="co">#&gt; 4     f 0.6540404  90.04843 88.49652  91.60033 81.55811  98.53874</span></span>
+<span><span class="co">#&gt; 5     f 0.8720539  95.45680 93.50329  97.41032 86.39511 104.51850</span></span>
+<span><span class="co">#&gt; 6     f 1.0900673 100.69785 98.36932 103.02638 91.07734 110.31835</span></span></code></pre></div>
 <p><code>mods</code> holds the <code>RTMB</code> objective function, the
 <code>nlminb</code> result and the <code>sdreport</code>. Note that the
 objective is an external pointer and will not survive
@@ -336,6 +467,8 @@ S.M. and Geraghty, P.T. (2019) Life history of the common blacktip
 shark, <em>Carcharhinus limbatus</em>, from central eastern Australia
 and comparative demography of a cryptic shark complex. <em>Marine and
 Freshwater Research</em> <strong>70</strong>(6), 834–848. <a href="https://doi.org/10.1071/MF18141" class="external-link">doi:10.1071/MF18141</a></p>
+<p>Kimura, D.K. (1980) Likelihood methods for the von Bertalanffy growth
+curve. <em>Fishery Bulletin</em> <strong>77</strong>(4), 765–776.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

@@ -49,7 +49,7 @@ growth(
   Optional replicate age reading columns, e.g. `c(reader1, reader2)`.
   Switches on ageing error. Readings must be on the same scale as `age`:
   where ages include an adjustment for birth date, the same adjustment
-  should be added to each reading.
+  should be added to each reading. Readings must be greater than zero.
 
 - cv_age:
 
@@ -140,4 +140,21 @@ summary(g)
 #> #   cv_age <dbl>, nll <dbl>, AIC <dbl>, convergence <lgl>
 
 plot(g) + xlab("Age (years)") + ylab("Total length (mm)")
+
+
+# Ageing error from two readers, as in Harry et al. (2019)
+data(blacktip)
+g2 <- growth(STL, age_agree, sex, data = blacktip, neonate = neonate,
+             reads = c(reader1, reader2))
+#> The categorical variable sex has 2 levels.
+#> Ageing CV computed from 2 readings: 0.0812.
+
+summary(g2)
+#> # A tibble: 2 × 17
+#>   group  Linf Linf_lower Linf_upper     K K_lower K_upper    L0 L0_lower
+#>   <chr> <dbl>      <dbl>      <dbl> <dbl>   <dbl>   <dbl> <dbl>    <dbl>
+#> 1 f      264.       252.       276. 0.142   0.120   0.164  72.8     72.2
+#> 2 m      242.       236.       249. 0.159   0.143   0.175  72.8     72.2
+#> # ℹ 8 more variables: L0_upper <dbl>, CV_L <dbl>, n <int>, n0 <int>,
+#> #   cv_age <dbl>, nll <dbl>, AIC <dbl>, convergence <lgl>
 ```

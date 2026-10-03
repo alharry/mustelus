@@ -96,6 +96,8 @@
 <code><a href="reference/clasp_length.html">clasp_length()</a></code> — clasper elongation as a function of length or age by nonlinear (logistic) regression, with bootstrap confidence intervals.</li>
 <li>
 <code><a href="reference/growth.html">growth()</a></code> — von Bertalanffy growth parameterised by length at birth, with optional ageing error as a random effect and optional neonate data, implemented in RTMB.</li>
+<li>
+<code><a href="reference/growth_region.html">growth_region()</a></code> — likelihood-based joint confidence regions for <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_\infty</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math> from a <code><a href="reference/growth.html">growth()</a></code> fit, following Kimura (1980).</li>
 </ul>
 <p>Each returns a tibble with list columns holding the data, coefficients, predictions and fitted model, and has <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> and <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> methods. <code><a href="reference/len_weight.html">len_weight()</a></code> and <code><a href="reference/maturity.html">maturity()</a></code> accept an optional grouping variable and fit one model per group plus a pooled group. See the <a href="https://alharry.github.io/mustelus/articles/">articles</a> for worked examples.</p>
 </div>
