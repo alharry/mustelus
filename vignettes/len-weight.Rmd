@@ -18,6 +18,29 @@ knitr::opts_chunk$set(
   fig.height = 4
 )
 library(ggplot2)
+
+# Figures are numbered in the order listed in figs. fig() gives a linked
+# reference for the text and fig_cap() a numbered caption. Each captioned
+# figure is anchored by its chunk label, which is the link target
+figs <- c("lw-f", "lw-m")
+fig <- function(id) sprintf("[Figure %d](#%s)", match(id, figs), id)
+fig_cap <- function(text) {
+  sprintf("**Figure %d.** %s", match(knitr::opts_current$get("label"), figs), text)
+}
+knitr::knit_hooks$set(fig.cap = function(before, options) {
+  if (before) sprintf('\n\n<div id="%s"></div>\n\n', options$label)
+})
+```
+
+```{css, echo = FALSE}
+/* Set figure captions apart from the body text. The first selector is used
+   by rmarkdown::html_vignette and the second by pkgdown */
+.figcaption, p.caption {
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 0.25em;
+  margin-bottom: 1.5em;
+}
 ```
 
 ## Background
@@ -166,14 +189,15 @@ summary(lw_sex)
 `plot()` returns a named list of ggplot objects — one per group — which
 can be customised with standard ggplot2 calls. The solid line is the
 predicted mean, the dashed ribbon the 95% confidence interval, and the
-dotted ribbon the 95% prediction interval.
+dotted ribbon the 95% prediction interval. The fits for females and males
+are shown in `r fig("lw-f")` and `r fig("lw-m")`.
 
-```{r}
+```{r lw-f, fig.cap = fig_cap("Weight against total length for female spot-tail sharks. The solid line is the predicted mean weight, corrected for back-transformation bias, the dashed ribbon the 95% confidence interval and the dotted ribbon the 95% prediction interval.")}
 p <- plot(lw_sex)
 p$f + xlab("Total length (mm)") + ylab("Weight (kg)")
 ```
 
-```{r}
+```{r lw-m, fig.cap = fig_cap(sprintf("Weight against total length for male spot-tail sharks, with lines as in %s.", fig("lw-f")))}
 p$m + xlab("Total length (mm)") + ylab("Weight (kg)")
 ```
 

@@ -16,6 +16,29 @@ knitr::opts_chunk$set(
 )
 library(ggplot2)
 set.seed(42)
+
+# Figures are numbered in the order listed in figs. fig() gives a linked
+# reference for the text and fig_cap() a numbered caption. Each captioned
+# figure is anchored by its chunk label, which is the link target
+figs <- c("cl-length", "cl-age")
+fig <- function(id) sprintf("[Figure %d](#%s)", match(id, figs), id)
+fig_cap <- function(text) {
+  sprintf("**Figure %d.** %s", match(knitr::opts_current$get("label"), figs), text)
+}
+knitr::knit_hooks$set(fig.cap = function(before, options) {
+  if (before) sprintf('\n\n<div id="%s"></div>\n\n', options$label)
+})
+```
+
+```{css, echo = FALSE}
+/* Set figure captions apart from the body text. The first selector is used
+   by rmarkdown::html_vignette and the second by pkgdown */
+.figcaption, p.caption {
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 0.25em;
+  margin-bottom: 1.5em;
+}
 ```
 
 ## Background
@@ -56,11 +79,11 @@ Claspers are around `r round(summary(cl)$b)` mm in juveniles and asymptote near
 
 ## Plotting
 
-```{r}
+```{r cl-length, fig.cap = fig_cap("Clasper length against total length for male spot-tail sharks. The solid line is the fitted median, the dashed ribbon the 95% confidence interval and the dotted ribbon the 95% prediction interval. Points are shaded by calcification stage: white, uncalcified; grey, partially calcified; black, fully calcified.")}
 plot(cl) + xlab("Total length (mm)") + ylab("Clasper length (mm)")
 ```
 
-The solid line is the fitted median, the dashed ribbon the 95% confidence
+In `r fig("cl-length")` the solid line is the fitted median, the dashed ribbon the 95% confidence
 interval and the dotted ribbon the 95% prediction interval. Both are obtained by
 bootstrap: the confidence interval from the percentiles of the resampled curves,
 and the prediction interval by combining that bootstrap variance with the
@@ -81,7 +104,9 @@ cl_age <- clasp_length(clasp_length, age_agree, clasp_calc, data = spottail, tim
 summary(cl_age)
 ```
 
-```{r}
+The fitted curve is shown in `r fig("cl-age")`.
+
+```{r cl-age, fig.cap = fig_cap(sprintf("Clasper length against age for male spot-tail sharks, with lines and shading as in %s.", fig("cl-length")))}
 plot(cl_age) + xlab("Age (years)") + ylab("Clasper length (mm)")
 ```
 

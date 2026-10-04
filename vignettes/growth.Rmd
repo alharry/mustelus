@@ -20,45 +20,169 @@ knitr::opts_chunk$set(
   warning = FALSE
 )
 library(ggplot2)
+
+# Figures are numbered in the order listed in figs. fig() gives a linked
+# reference for the text and fig_cap() a numbered caption. Each captioned
+# figure is anchored by its chunk label, which is the link target
+figs <- c("vb-rate", "vb-curve", "growth-fit", "growth-region")
+fig <- function(id) sprintf("[Figure %d](#%s)", match(id, figs), id)
+fig_cap <- function(text) {
+  sprintf("**Figure %d.** %s", match(knitr::opts_current$get("label"), figs), text)
+}
+knitr::knit_hooks$set(fig.cap = function(before, options) {
+  if (before) sprintf('\n\n<div id="%s"></div>\n\n', options$label)
+})
+```
+
+```{css, echo = FALSE}
+/* Set figure captions apart from the body text. The first selector is used
+   by rmarkdown::html_vignette and the second by pkgdown */
+.figcaption, p.caption {
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 0.25em;
+  margin-bottom: 1.5em;
+}
 ```
 
 ## Background
 
-Growth is usually described with a von Bertalanffy function, and usually
-parameterised by $L_\infty$, $K$ and $t_0$. The third parameter is the
-hypothetical age at zero length, which has no biological meaning and is
-often estimated at implausible values when there are few young animals in
-the sample. `growth()` uses the reparameterisation of Harry et al. (2019),
-replacing $t_0$ with length at birth:
+Growth in fishes is usually described with the von Bertalanffy growth
+function (von Bertalanffy 1938). Von Bertalanffy derived it from the
+balance between the synthesis and breakdown of body tissue, and in the
+form used for length it assumes that growth rate declines linearly as
+length increases:
 
-$$L_{i,g}(a) = L_0 + (L_{\infty,g} - L_0)\left(1 - e^{-K_g a_{i,g}}\right)$$
+$$\frac{dL}{dt} = K(L_\infty - L)$$
 
-$L_0$ is interpretable, can be measured directly, and anchors the curve at
-the left-hand end where age data are usually weakest. $L_\infty$ and $K$
-are estimated separately for each group, typically sex, while $L_0$ is
-shared.
+Here $L$ is length and $dL/dt$ is growth rate, the change in length
+over time, $t$. Growth is fastest in the smallest animals and slows as
+they approach $L_\infty$, the asymptotic length, at which growth rate
+reaches zero (`r fig("vb-rate")`). $L_\infty$ is usually interpreted as the
+average maximum length of individuals in the population. $K$ is the
+growth coefficient, with units of $\text{year}^{-1}$, and is the slope
+of the relationship between growth rate and length. It is not itself a
+growth rate. Rather, it describes how quickly length approaches the
+asymptote: an animal takes $\ln(2)/K$ years to grow half of the
+remaining distance to $L_\infty$, whatever its current length.
 
-Observed length is normally distributed about the curve with a standard
-deviation proportional to expected length, $\sigma_L = CV_L L_{i,g}$,
-following Cope and Punt (2007). Individual variability in length at age
-therefore grows with size, which is what length at age data normally look
-like.
+```{r vb-rate, echo = FALSE, fig.height = 3.5, fig.cap = fig_cap("Growth rate, $dL/dt$, as a function of length, $L$, for values similar to those estimated for female blacktip sharks below ($L_0$ = 73 cm, $L_\\infty$ = 265 cm, $K$ = 0.14). The dotted line extends the relationship below length at birth.")}
+L0 <- 73
+Linf <- 265
+K <- 0.14
+t0 <- log(1 - L0 / Linf) / K
+
+rate <- data.frame(L = seq(0, Linf, length.out = 200))
+rate$dLdt <- K * (Linf - rate$L)
+
+ggplot(rate, aes(L, dLdt)) +
+  geom_line(data = rate[rate$L >= L0, ]) +
+  geom_line(data = rate[rate$L <= L0, ], linetype = "dotted") +
+  geom_vline(xintercept = c(L0, Linf), linetype = "dashed") +
+  annotate("text", x = c(L0, Linf), y = K * Linf * 1.08,
+           label = c("italic(L)[0]", "italic(L)['∞']"), parse = TRUE, hjust = -0.2) +
+  annotate("text", x = (L0 + Linf) / 2, y = K * (Linf - (L0 + Linf) / 2),
+           label = "slope == -italic(K)", parse = TRUE, hjust = -0.2, vjust = -0.6) +
+  scale_y_continuous(limits = c(0, K * Linf * 1.12)) +
+  labs(x = expression(italic(L)), y = expression(italic(dL/dt))) +
+  theme_classic()
+```
+
+The solution to this equation most often used in fisheries science,
+popularised by Beverton and Holt (1957), gives length as a function of
+age, $a$:
+
+$$L(a) = L_\infty\left(1 - e^{-K(a - t_0)}\right)$$
+
+The third parameter, $t_0$, is the hypothetical age at which length
+would be zero. Many teleost fishes hatch as small larvae, and for these
+$t_0$ has no biological meaning. Chondrichthyans are born live or hatch
+from egg cases at a relatively large size, and for them length at age
+zero is meaningful: it is length at birth. The curve can be recast with
+length at birth, $L_0$, the y-intercept, in place of $t_0$, the
+x-intercept (`r fig("vb-curve")`):
+
+$$L(a) = L_0 + (L_\infty - L_0)\left(1 - e^{-Ka}\right)$$
+
+The two forms give identical lengths at age, and either intercept can be
+calculated from the other, since $L_0 = L_\infty(1 - e^{K t_0})$ (Harry
+et al. 2022). For the curve in `r fig("vb-curve")`, a length at birth of 73 cm
+corresponds to a $t_0$ of `r round(t0, 1)` years, a little over two
+years before birth. Holden (1974) suggested that $-t_0$ could be taken
+as the gestation period, on the assumption that embryos grow along the
+same curve as animals after birth, which gave a way of estimating $K$
+for species that had not been aged (e.g. Francis 1981). Later
+comparisons with $K$ from age and growth studies showed little
+agreement, and the assumption about embryonic growth is unsupported for
+most species (Pratt and Casey 1990).
+
+```{r vb-curve, echo = FALSE, fig.height = 3.5, fig.cap = fig_cap(sprintf("The relationship in %s expressed as length at age. The first form of the equation defines the curve by where it would cross zero length, $t_0$; the second by where it starts, at length at birth, $L_0$.", fig("vb-rate")))}
+len_age <- data.frame(a = seq(t0, 25, length.out = 300))
+len_age$L <- Linf * (1 - exp(-K * (len_age$a - t0)))
+
+ggplot(len_age, aes(a, L)) +
+  geom_hline(yintercept = Linf, linetype = "dashed") +
+  geom_vline(xintercept = 0, colour = "grey70") +
+  geom_line(data = len_age[len_age$a >= 0, ]) +
+  geom_line(data = len_age[len_age$a <= 0, ], linetype = "dotted") +
+  geom_point(data = data.frame(a = c(t0, 0), L = c(0, L0))) +
+  annotate("text", x = c(t0, 0, 25), y = c(0, L0, Linf),
+           label = c("italic(t)[0]", "italic(L)[0]", "italic(L)['∞']"), parse = TRUE,
+           hjust = c(-0.4, -0.4, 1), vjust = c(-0.6, 1.4, -0.6)) +
+  scale_y_continuous(limits = c(0, Linf * 1.1)) +
+  labs(x = "Age (years)", y = "Length (cm)") +
+  theme_classic()
+```
+
+`growth()` uses the second form, as in Harry et al. (2019). $L_\infty$
+and $K$ are estimated separately for each group, typically sex, while
+$L_0$ is shared:
+
+$$L_g(a) = L_0 + (L_{\infty,g} - L_0)\left(1 - e^{-K_g a}\right)$$
+
+$L_0$ can be measured directly from neonates, and anchors the curve at
+the left-hand end, where age data are usually weakest.
+
+The equations above are deterministic. They describe the average length
+at age, not the lengths of individual animals, and fitting them to data
+requires some model of how individuals vary about the average. Growth
+curves are commonly fitted by nonlinear least squares regression of
+length on age (Harry et al. 2022). This implicitly assumes that the
+observed length of animal $i$ is normally distributed about the curve
+with a constant standard deviation, $\sigma$:
+
+$$l_i = L(a_i) + \epsilon_i, \qquad \epsilon_i \sim N(0, \sigma^2)$$
+
+Under this assumption a newborn and a 20 year old animal are equally
+likely to differ from the average length for their age by any given
+amount. In practice length at age usually becomes more variable as
+animals get older and larger. A more realistic, but still simple,
+alternative is for the coefficient of variation to be constant, so that
+the standard deviation is proportional to expected length (Cope and Punt
+2007; Restrepo et al. 2010):
+
+$$\epsilon_i \sim N\left(0, (CV_L L(a_i))^2\right)$$
+
+Restrepo et al. (2010) arrived at this form by allowing asymptotic
+length to vary among individuals, following Kirkwood and Somers (1984).
+It is the form used by `growth()`, with a single $CV_L$ shared between
+groups and estimated along with the growth parameters.
 
 Two further components from Harry et al. (2019) are optional, and can be
 used independently.
 
 ### Ageing error
 
-Ages read from vertebrae are estimates, not measurements. Treating them as
-exact can bias growth estimates, by an amount that depends on how
+Ages read from vertebrae are estimates, not measurements. Treating them
+as exact can bias growth estimates, by an amount that depends on how
 imprecise the readings are and where in the age range the error falls.
 The model treats true age as a random effect, with each reading an
 observation of it:
 
 $$A_{i,j} = a_i + \epsilon_{a,ij}, \qquad \epsilon_{a,ij} \sim N(0, (CV_a a_i)^2)$$
 
-The ageing CV is computed outside the likelihood from replicate readings,
-following Chang (1982), and held fixed.
+The ageing CV is computed outside the likelihood from replicate
+readings, following Chang (1982), and held fixed.
 
 ### Neonates
 
@@ -85,13 +209,13 @@ data(blacktip)
 ```
 
 `blacktip` contains `r nrow(blacktip)` common blacktip sharks,
-*Carcharhinus limbatus*, from south-east Queensland and northern New South
-Wales. Vertebrae were read by two readers for
+*Carcharhinus limbatus*, from south-east Queensland and northern New
+South Wales. Vertebrae were read by two readers for
 `r sum(!is.na(blacktip$age_agree))` sharks, all of them from New South
 Wales, where most sharks were caught on demersal setlines. A further
-`r sum(blacktip$neonate)` neonates with open or partially healed umbilical
-scars were sampled in Moreton Bay, Queensland. None of the neonates were
-aged. Length is stretched total length in cm.
+`r sum(blacktip$neonate)` neonates with open or partially healed
+umbilical scars were sampled in Moreton Bay, Queensland. None of the
+neonates were aged. Length is stretched total length in cm.
 
 ## Basic usage
 
@@ -100,11 +224,11 @@ g <- growth(STL, age_agree, sex, data = blacktip, neonate = neonate)
 summary(g)
 ```
 
-The summary has one row per group. $L_\infty$ and $K$ differ between them;
-$L_0$ and $CV_L$ are shared and so repeat. Also reported are the number of
-aged animals per group (`n`), the number of neonates (`n0`), the ageing CV
-if used, the negative log-likelihood, AIC, and whether the fit converged
-with a positive-definite Hessian.
+The summary has one row per group. $L_\infty$ and $K$ differ between
+them; $L_0$ and $CV_L$ are shared and so repeat. Also reported are the
+number of aged animals per group (`n`), the number of neonates (`n0`),
+the ageing CV if used, the negative log-likelihood, AIC, and whether the
+fit converged with a positive-definite Hessian.
 
 Female blacktip sharks reach a larger asymptotic length than males
 (`r round(summary(g)$Linf[1])` against `r round(summary(g)$Linf[2])` cm)
@@ -114,14 +238,14 @@ is common in carcharhinids.
 
 ## Plotting
 
-```{r}
+```{r growth-fit, fig.cap = fig_cap("Length at age of female (f) and male (m) blacktip sharks with the fitted growth curves. The solid line is the fitted curve, the dashed ribbon the 95% confidence interval and the dotted ribbon the 95% prediction interval. Neonates, which inform $L_0$, are not shown.")}
 plot(g) + xlab("Age (years)") + ylab("Stretched total length (cm)")
 ```
 
-The solid line is the fitted curve, the dashed ribbon the 95% confidence
+In `r fig("growth-fit")` the solid line is the fitted curve, the dashed ribbon the 95% confidence
 interval on it, and the dotted ribbon the 95% prediction interval for
-individual animals. The prediction interval widens with size, which is the
-$CV_L$ assumption at work.
+individual animals. The prediction interval widens with size, which is
+the $CV_L$ assumption at work.
 
 ## Comparing growth between sexes
 
@@ -134,47 +258,48 @@ k_ci <- sprintf("%.3f", c(summary(g)$K_lower, summary(g)$K_upper))
 
 $L_\infty$ and $K$ are estimated from the same data and are strongly
 correlated, `r r_lk[1]` for females and `r r_lk[2]` for males. A larger
-asymptote can be traded against slower growth toward it with little change
-in the fit. The confidence intervals reported for each parameter
+asymptote can be traded against slower growth toward it with little
+change in the fit. The confidence intervals reported for each parameter
 separately are therefore not a good basis for comparing groups, and a
 joint confidence region showing the combinations of the two that are
 consistent with the data is more informative.
 
-Kimura (1980) constructed these regions from contours of the residual sum
-of squares, $S$, which for normally distributed errors are contours of
-equal likelihood. A combination of parameters lies inside the approximate
-95% region if
+Kimura (1980) constructed these regions from contours of the residual
+sum of squares, $S$, which for normally distributed errors are contours
+of equal likelihood. A combination of parameters lies inside the
+approximate 95% region if
 
 $$S(L_\infty, K, t_0) \le \hat{S}\left(1 + \frac{p}{N - p} F_{p, N-p}(0.95)\right)$$
 
 where $\hat{S}$ is the minimum, $N$ is the number of observations and
-$p = 3$ is the number of parameters. A region in three dimensions is hard
-to display, so Kimura conditioned on $t_0$ at its estimate and drew the
-two-dimensional cross-section for $L_\infty$ and $K$.
+$p = 3$ is the number of parameters. A region in three dimensions is
+hard to display, so Kimura conditioned on $t_0$ at its estimate and drew
+the two-dimensional cross-section for $L_\infty$ and $K$.
 
-`growth()` maximises a likelihood rather than minimising a sum of squares,
-because the standard deviation changes with length. The same criterion in
-terms of the log-likelihood $\ell$ is
+`growth()` maximises a likelihood rather than minimising a sum of
+squares, because the standard deviation changes with length. The same
+criterion in terms of the log-likelihood $\ell$ is
 
 $$2\left[\hat{\ell} - \ell(L_\infty, K)\right] \le N \log\left(1 + \frac{p}{N - p} F_{p, N-p}(0.95)\right)$$
 
-which for a single group with constant variance is identical to Kimura's.
-`growth_region()` applies this criterion to a `growth()` fit. $L_0$ takes
-the place of $t_0$ and is held at its estimate, and $CV_L$ is re-estimated
-at each point, as $\sigma$ effectively is in the ratio of sums of squares.
-$N$ is the number of aged sharks of that sex. As in Kimura (1980), the
-boundary is found by stepping through values of $K$ and solving for the two
-values of $L_\infty$ at which the likelihood reaches the critical value.
+which for a single group with constant variance is identical to
+Kimura's. `growth_region()` applies this criterion to a `growth()` fit.
+$L_0$ takes the place of $t_0$ and is held at its estimate, and $CV_L$
+is re-estimated at each point, as $\sigma$ effectively is in the ratio
+of sums of squares. $N$ is the number of aged sharks of that sex. As in
+Kimura (1980), the boundary is found by stepping through values of $K$
+and solving for the two values of $L_\infty$ at which the likelihood
+reaches the critical value.
 
 ```{r}
 r <- growth_region(g)
 summary(r)
 ```
 
-`summary()` gives the estimates and the range of each parameter within the
-region.
+`summary()` gives the estimates and the range of each parameter within
+the region.
 
-```{r}
+```{r growth-region, fig.cap = fig_cap("Approximate 95% joint confidence regions for $L_\\infty$ and $K$ for female (f) and male (m) blacktip sharks, following Kimura (1980). Points are the maximum likelihood estimates.")}
 plot(r) + labs(x = "Linf (cm)", y = "K (per year)", linetype = "Sex")
 ```
 
@@ -184,15 +309,15 @@ above <- round(sr_f$Linf_max - sr_f$Linf)
 below <- round(sr_f$Linf - sr_f$Linf_min)
 ```
 
-The regions are not symmetrical about the estimates, as an ellipse drawn
-from the covariance matrix would be. Each follows the curved ridge in the
-likelihood surface along which $L_\infty$ is traded against $K$, and
+The regions in `r fig("growth-region")` are not symmetrical about the estimates, as an ellipse drawn
+from the covariance matrix would be. Each follows the curved ridge in
+the likelihood surface along which $L_\infty$ is traded against $K$, and
 extends further above the estimates than below them. For females the
 region reaches about `r above` cm above the estimate of $L_\infty$ but
-only `r below` cm below it. The intervals on $K$ alone overlap between the
-sexes (`r k_ci[1]` to `r k_ci[3]` for females, `r k_ci[2]` to `r k_ci[4]`
-for males), but the two regions do not. Taken together, the two
-parameters describe clearly different growth curves for females and
+only `r below` cm below it. The intervals on $K$ alone overlap between
+the sexes (`r k_ci[1]` to `r k_ci[3]` for females, `r k_ci[2]` to
+`r k_ci[4]` for males), but the two regions do not. Taken together, the
+two parameters describe clearly different growth curves for females and
 males.
 
 As Kimura noted for $t_0$, holding $L_0$ fixed means these are
@@ -211,14 +336,14 @@ the calculation takes noticeably longer.
 ## Length at birth
 
 Supplying `neonate` flags animals of known age zero. Any flagged animal
-that also carries an age is used only for the length at birth term, not as
-length at age data: an age-zero observation and a length at birth
-observation say exactly the same thing, so counting both would double the
-weight. The function reports how many were moved.
+that also carries an age is used only for the length at birth term, not
+as length at age data: an age-zero observation and a length at birth
+observation say exactly the same thing, so counting both would double
+the weight. The function reports how many were moved.
 
-In `blacktip` the neonates come from a separate sample, and the aged sharks
-include only `r sum(g$data[[1]]$age < 2)` under two years old. Fitting the
-model without the neonates shows what they contribute:
+In `blacktip` the neonates come from a separate sample, and the aged
+sharks include only `r sum(g$data[[1]]$age < 2)` under two years old.
+Fitting the model without the neonates shows what they contribute:
 
 ```{r}
 g_no_neo <- growth(STL, age_agree, sex, data = blacktip)
@@ -229,19 +354,20 @@ rbind(
 )
 ```
 
-The estimate of $L_0$ hardly changes, but the confidence interval is about
-five times narrower with the neonates included. Neonates are frequently
-the only data available for the smallest sizes.
+The estimate of $L_0$ hardly changes, but the confidence interval is
+about five times narrower with the neonates included. Neonates are
+frequently the only data available for the smallest sizes.
 
 ## Ageing error
 
-Where replicate readings exist, pass the columns to `reads` and the ageing
-CV is computed from them. The readings need to be on the same scale as
-`age`. A reading is a count of growth zones and so is a whole number, but
-the ages in `blacktip` also include a fractional adjustment for the time
-elapsed since the population birth date of 1 November. That adjustment
-depends on the date of capture rather than on the reader, so it is the
-same for every reading of a given animal and is added to each one.
+Where replicate readings exist, pass the columns to `reads` and the
+ageing CV is computed from them. The readings need to be on the same
+scale as `age`. A reading is a count of growth zones and so is a whole
+number, but the ages in `blacktip` also include a fractional adjustment
+for the time elapsed since the population birth date of 1 November. That
+adjustment depends on the date of capture rather than on the reader, so
+it is the same for every reading of a given animal and is added to each
+one.
 
 ```{r}
 library(dplyr)
@@ -268,22 +394,22 @@ k_change <- round(100 * (sr$K - s0$K) / s0$K, 1)
 linf_change <- round(abs(sr$Linf - s0$Linf), 1)
 ```
 
-The ageing CV is `r round(100 * sr$cv_age[1], 1)`%. Compared with the fit
-that treats age as exact, $K$ falls by `r abs(k_change[1])`% for females
-and `r abs(k_change[2])`% for males, and $L_\infty$ moves by less than
-`r ceiling(max(linf_change))` cm. Both shifts are well inside the
-confidence intervals. Most of the disagreement between readers is in older
-sharks, where the curve is nearly flat and length says little about which
-reading is closer to the truth. The model treats the ages of those sharks
-as more uncertain, but does not move them much. With less precise ageing
-the effect can be considerably larger.
+The ageing CV is `r round(100 * sr$cv_age[1], 1)`%. Compared with the
+fit that treats age as exact, $K$ falls by `r abs(k_change[1])`% for
+females and `r abs(k_change[2])`% for males, and $L_\infty$ moves by
+less than `r ceiling(max(linf_change))` cm. Both shifts are well inside
+the confidence intervals. Most of the disagreement between readers is in
+older sharks, where the curve is nearly flat and length says little
+about which reading is closer to the truth. The model treats the ages of
+those sharks as more uncertain, but does not move them much. With less
+precise ageing the effect can be considerably larger.
 
 These estimates differ slightly from those published in Harry et al.
-(2019). The loop over readings in the original code started at the second
-reader, so the first reader's counts were never used. Fitted to the second
-reader alone, `growth()` reproduces the published estimates to within
-rounding: $L_{\infty}$ 263.3 and 241.9 cm, $K$ 0.1418 and 0.1565, $L_0$
-72.77 cm and $CV_L$ 0.0487.
+(2019). The loop over readings in the original code started at the
+second reader, so the first reader's counts were never used. Fitted to
+the second reader alone, `growth()` reproduces the published estimates
+to within rounding: $L_{\infty}$ 263.3 and 241.9 cm, $K$ 0.1418 and
+0.1565, $L_0$ 72.77 cm and $CV_L$ 0.0487.
 
 Leaving the birth date adjustment off the readings is an easy mistake to
 make. Here it gives the youngest sharks readings of zero, and `growth()`
@@ -299,10 +425,10 @@ growth(STL, age_agree, sex, data = no_adj, neonate = neonate,
 
 Because the standard deviation of a reading is proportional to age, a
 reading of zero can be explained exactly by a true age of zero, and the
-likelihood has no maximum. Where no readings are zero the model will fit,
-but the readings then sit below the true ages by the missing fraction,
-around half a year on average here, and the model treats every animal as
-younger than it is.
+likelihood has no maximum. Where no readings are zero the model will
+fit, but the readings then sit below the true ages by the missing
+fraction, around half a year on average here, and the model treats every
+animal as younger than it is.
 
 If only a consensus age is available but the ageing CV is known from
 elsewhere, supply it directly with `cv_age`. This is the more common
@@ -317,8 +443,8 @@ summary(g_cv)[, c("group", "Linf", "K", "L0", "cv_age")]
 $K$ falls, as it did with the two readings, though by less. The two
 analyses are not equivalent, because the data going in are not the same.
 The consensus age matches the first reader's count for
-`r sum(aged$age_agree == aged$reader1)` of the `r nrow(aged)` sharks, and
-differs from the mean of the two readings for
+`r sum(aged$age_agree == aged$reader1)` of the `r nrow(aged)` sharks,
+and differs from the mean of the two readings for
 `r sum(abs((aged$reader1 + aged$reader2) / 2 - aged$age_agree) > 1e-9)`.
 
 With neither `reads` nor `cv_age`, age is treated as measured without
@@ -341,6 +467,10 @@ survive `saveRDS()`; the rest of the object is ordinary R data.
 
 ## References
 
+Beverton, R.J.H. and Holt, S.J. (1957) *On the Dynamics of Exploited
+Fish Populations*. Fishery Investigations Series II, Volume 19. Ministry
+of Agriculture, Fisheries and Food, London.
+
 Chang, W.Y.B. (1982) A statistical method for evaluating the
 reproducibility of age determination. *Canadian Journal of Fisheries and
 Aquatic Sciences* **39**(8), 1208–1210.
@@ -352,6 +482,10 @@ random effects. *Canadian Journal of Fisheries and Aquatic Sciences*
 **64**(2), 205–218.
 [doi:10.1139/f06-179](https://doi.org/10.1139/f06-179)
 
+Francis, M.P. (1981) Von Bertalanffy growth rates in species of
+*Mustelus* (Elasmobranchii: Triakidae). *Copeia* **1981**(1), 189–192.
+[doi:10.2307/1444053](https://doi.org/10.2307/1444053)
+
 Harry, A.V., Butcher, P.A., Macbeth, W.G., Morgan, J.A.T., Taylor, S.M.
 and Geraghty, P.T. (2019) Life history of the common blacktip shark,
 *Carcharhinus limbatus*, from central eastern Australia and comparative
@@ -359,5 +493,39 @@ demography of a cryptic shark complex. *Marine and Freshwater Research*
 **70**(6), 834–848.
 [doi:10.1071/MF18141](https://doi.org/10.1071/MF18141)
 
+Harry, A.V., Smart, J.J. and Pardo, S.A. (2022) Understanding the age
+and growth of chondrichthyan fishes. In: Carrier, J.C., Simpfendorfer,
+C.A., Heithaus, M.R. and Yopak, K.E. (eds) *Biology of Sharks and Their
+Relatives*, 3rd edn. CRC Press, Boca Raton, FL, pp. 177–202.
+[doi:10.1201/9781003262190-6](https://doi.org/10.1201/9781003262190-6)
+
+Holden, M.J. (1974) Problems in the rational exploitation of
+elasmobranch populations and some suggested solutions. In: Harden Jones,
+F.R. (ed) *Sea Fisheries Research*. Halsted Press, John Wiley & Sons,
+New York, pp. 117–137.
+
 Kimura, D.K. (1980) Likelihood methods for the von Bertalanffy growth
 curve. *Fishery Bulletin* **77**(4), 765–776.
+
+Kirkwood, G.P. and Somers, I.F. (1984) Growth of two species of tiger
+prawn, *Penaeus esculentus* and *P. semisulcatus*, in the western Gulf
+of Carpentaria. *Australian Journal of Marine and Freshwater Research*
+**35**(6), 703–712.
+[doi:10.1071/MF9840703](https://doi.org/10.1071/MF9840703)
+
+Pratt, H.L., Jr. and Casey, J.G. (1990) Shark reproductive strategies as
+a limiting factor in directed fisheries, with a review of Holden's
+method of estimating growth-parameters. In: Pratt, H.L., Jr., Gruber,
+S.H. and Taniuchi, T. (eds) *Elasmobranchs as Living Resources: Advances
+in the Biology, Ecology, Systematics, and the Status of the Fisheries*.
+NOAA Technical Report NMFS 90, pp. 97–109.
+[NOAA Technical Report NMFS 90](https://spo.nmfs.noaa.gov/content/tr-90-elasmobranchs-living-resources-advances-biology-ecology-systematics-and-status)
+
+Restrepo, V.R., Diaz, G.A., Walter, J.F., Neilson, J.D., Campana, S.E.,
+Secor, D. and Wingate, R.L. (2010) Updated estimate of the growth curve
+of Western Atlantic bluefin tuna. *Aquatic Living Resources* **23**(4),
+335–342.
+[doi:10.1051/alr/2011004](https://doi.org/10.1051/alr/2011004)
+
+von Bertalanffy, L. (1938) A quantitative theory of organic growth
+(inquiries on growth laws. II). *Human Biology* **10**, 181–213.

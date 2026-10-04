@@ -15,6 +15,29 @@ knitr::opts_chunk$set(
   fig.height = 4
 )
 library(ggplot2)
+
+# Figures are numbered in the order listed in figs. fig() gives a linked
+# reference for the text and fig_cap() a numbered caption. Each captioned
+# figure is anchored by its chunk label, which is the link target
+figs <- c("fec-length", "fec-age")
+fig <- function(id) sprintf("[Figure %d](#%s)", match(id, figs), id)
+fig_cap <- function(text) {
+  sprintf("**Figure %d.** %s", match(knitr::opts_current$get("label"), figs), text)
+}
+knitr::knit_hooks$set(fig.cap = function(before, options) {
+  if (before) sprintf('\n\n<div id="%s"></div>\n\n', options$label)
+})
+```
+
+```{css, echo = FALSE}
+/* Set figure captions apart from the body text. The first selector is used
+   by rmarkdown::html_vignette and the second by pkgdown */
+.figcaption, p.caption {
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 0.25em;
+  margin-bottom: 1.5em;
+}
 ```
 
 ## Background
@@ -55,11 +78,11 @@ and the predictor range over which the model applies.
 ## Plotting
 
 `plot()` returns a ggplot object, which can be customised with standard ggplot2
-calls. The solid line is the fitted mean, the dashed ribbon the 95% confidence
-interval, and the dotted ribbon the 95% prediction interval — the presentation
-used by Walker (2005).
+calls. In `r fig("fec-length")` the solid line is the fitted mean, the dashed
+ribbon the 95% confidence interval, and the dotted ribbon the 95% prediction
+interval — the presentation used by Walker (2005).
 
-```{r}
+```{r fec-length, fig.cap = fig_cap("Number of embryos against maternal total length for gravid spot-tail sharks. The solid line is the fitted mean, the dashed ribbon the 95% confidence interval and the dotted ribbon the 95% prediction interval.")}
 plot(fec) + xlab("Total length (mm)") + ylab("Number of embryos")
 ```
 
@@ -79,7 +102,9 @@ fec_age <- fecundity(emb, age_agree, data = spottail)
 summary(fec_age)
 ```
 
-```{r}
+The fitted relationship is shown in `r fig("fec-age")`.
+
+```{r fec-age, fig.cap = fig_cap(sprintf("Number of embryos against maternal age for gravid spot-tail sharks, with lines as in %s.", fig("fec-length")))}
 plot(fec_age) + xlab("Age (years)") + ylab("Number of embryos")
 ```
 

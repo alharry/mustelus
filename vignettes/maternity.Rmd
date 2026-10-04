@@ -21,6 +21,29 @@ knitr::opts_chunk$set(
 )
 library(ggplot2)
 set.seed(42)
+
+# Figures are numbered in the order listed in figs. fig() gives a linked
+# reference for the text and fig_cap() a numbered caption. Each captioned
+# figure is anchored by its chunk label, which is the link target
+figs <- c("mt-fit", "mt-rug", "mt-triennial", "mt-age")
+fig <- function(id) sprintf("[Figure %d](#%s)", match(id, figs), id)
+fig_cap <- function(text) {
+  sprintf("**Figure %d.** %s", match(knitr::opts_current$get("label"), figs), text)
+}
+knitr::knit_hooks$set(fig.cap = function(before, options) {
+  if (before) sprintf('\n\n<div id="%s"></div>\n\n', options$label)
+})
+```
+
+```{css, echo = FALSE}
+/* Set figure captions apart from the body text. The first selector is used
+   by rmarkdown::html_vignette and the second by pkgdown */
+.figcaption, p.caption {
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 0.25em;
+  margin-bottom: 1.5em;
+}
 ```
 
 ## Background
@@ -119,19 +142,20 @@ reached at `r round(summary(mt)$m50, 1)` cm.
 proportions scaled by sample size, with the fitted curve and a bootstrap
 95% confidence ribbon:
 
-```{r}
+```{r mt-fit, fig.cap = fig_cap("Proportion of female sandbar sharks in maternal condition against fork length, with the three-parameter logistic function fitted with $P_{Max}$ estimated. Points are observed proportions in length bins, sized by the number of females in each bin, and the grey ribbon is the bootstrap 95% confidence interval.")}
 plot(mt) + xlab("Fork length (cm)") + ylab("Proportion in maternal condition")
 ```
 
-The curve levels off well short of one, which is the whole point of the
+The curve in `r fig("mt-fit")` levels off well short of one, which is the whole point of the
 third parameter. A two-parameter ogive forced through an asymptote of
 one could not describe these data.
 
 The same `raw_data` options as `maturity()` are available:
 `"proportions"`, `"point"`, `"rug"`, `"bootstrap"` (a subsample of the
-resampled curves in place of the ribbon) and `"none"`.
+resampled curves in place of the ribbon) and `"none"`. The rug option
+is shown in `r fig("mt-rug")`.
 
-```{r}
+```{r mt-rug, fig.cap = fig_cap(sprintf("The fit in %s with individual females shown as a rug, maternal females along the top axis and non-maternal females along the bottom.", fig("mt-fit")))}
 plot(mt, raw_data = "rug") + xlab("Fork length (cm)") + ylab("Proportion in maternal condition")
 ```
 
@@ -171,11 +195,11 @@ equally well, because the confidence interval on $P_{Max}$ shows what
 the data can and cannot resolve. Here it excludes 1/3 but comfortably
 includes 0.5.
 
-```{r}
+```{r mt-triennial, fig.cap = fig_cap(sprintf("Maternity ogive for female sandbar sharks with $P_{Max}$ fixed at 1/3, corresponding to a triennial cycle. Points and ribbon as in %s.", fig("mt-fit")))}
 plot(mt_triennial) + xlab("Fork length (cm)") + ylab("Proportion in maternal condition")
 ```
 
-Forcing the asymptote down to 1/3 pulls the curve below the observed
+Forcing the asymptote down to 1/3 (`r fig("mt-triennial")`) pulls the curve below the observed
 proportions at large sizes, which is the source of the AIC penalty.
 
 ## Comparison with maturity
@@ -223,12 +247,12 @@ mt_age <- maternity(maternity_stage, age_agree, data = spottail, times = 500)
 summary(mt_age)[, c("m50", "m50_lower", "m50_upper", "m95", "pmax", "n", "N")]
 ```
 
-```{r}
+```{r mt-age, fig.cap = fig_cap(sprintf("Proportion of female spot-tail sharks in maternal condition against age, in 1 year bins, with $P_{Max}$ estimated. Points and ribbon as in %s.", fig("mt-fit")))}
 plot(mt_age, binwidth = 1) + xlab("Age (years)") + ylab("Proportion in maternal condition")
 ```
 
 Spot-tail sharks reproduce annually, so $P_{Max}$ is estimated close to
-one and the maternity curve is nearly the same as a maturity ogive.
+one (`r fig("mt-age")`) and the maternity curve is nearly the same as a maturity ogive.
 
 ## Sample size
 
