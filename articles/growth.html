@@ -151,10 +151,11 @@ the y-intercept, in place of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mn>0</mn></msub><annotation encoding="application/x-tex">t_0</annotation></semantics></math>,
 the x-intercept (<a href="#vb-curve">Figure 2</a>):</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>L</mi><mn>0</mn></msub><mo>+</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>L</mi><mi>∞</mi></msub><mo>−</mo><msub><mi>L</mi><mn>0</mn></msub><mo stretchy="false" form="postfix">)</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msup><mi>e</mi><mrow><mi>−</mi><mi>K</mi><mi>a</mi></mrow></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">L(a) = L_0 + (L_\infty - L_0)\left(1 - e^{-Ka}\right)</annotation></semantics></math></p>
-<p>The two forms give identical lengths at age, and either intercept can
-be calculated from the other, since
+<p><code><a href="../reference/growth.html">growth()</a></code> uses this form, as did Harry et al. (2019). The
+two forms give identical lengths at age, and either intercept can be
+calculated from the other, since
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mn>0</mn></msub><mo>=</mo><msub><mi>L</mi><mi>∞</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msup><mi>e</mi><mrow><mi>K</mi><msub><mi>t</mi><mn>0</mn></msub></mrow></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">L_0 = L_\infty(1 - e^{K t_0})</annotation></semantics></math>
-(Harry et al. 2022). For the curve in <a href="#vb-curve">Figure 2</a>,
+(Harry et al. 2022). For the curve in <a href="#vb-curve">Figure 2</a>,
 a length at birth of 73 cm corresponds to a
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mn>0</mn></msub><annotation encoding="application/x-tex">t_0</annotation></semantics></math>
 of -2.3 years, a little over two years before birth. Holden (1974)
@@ -183,24 +184,18 @@ the second by where it starts, at length at birth,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>.
 </p>
 </div>
-<p><code><a href="../reference/growth.html">growth()</a></code> uses the second form, as in Harry et
-al. (2019).
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_\infty</annotation></semantics></math>
-and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
-are estimated separately for each group, typically sex, while
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>
-is shared:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mi>g</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>L</mi><mn>0</mn></msub><mo>+</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>L</mi><mrow><mi>∞</mi><mo>,</mo><mi>g</mi></mrow></msub><mo>−</mo><msub><mi>L</mi><mn>0</mn></msub><mo stretchy="false" form="postfix">)</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msup><mi>e</mi><mrow><mi>−</mi><msub><mi>K</mi><mi>g</mi></msub><mi>a</mi></mrow></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">L_g(a) = L_0 + (L_{\infty,g} - L_0)\left(1 - e^{-K_g a}\right)</annotation></semantics></math></p>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>
-can be measured directly from neonates, and anchors the curve at the
-left-hand end, where age data are usually weakest.</p>
 <p>The equations above are deterministic. They describe the average
-length at age, not the lengths of individual animals, and fitting them
-to data requires some model of how individuals vary about the average.
-Growth curves are commonly fitted by nonlinear least squares regression
-of length on age (Harry et al. 2022). This implicitly assumes that the
-observed length of animal
+length at age, not the lengths of individual animals. Estimating
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_\infty</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>
+means confronting the model with paired length at age data, and that
+requires some model of how individuals vary about the average. Growth
+curves are commonly fitted by nonlinear least squares regression of
+length on age (Harry et al. 2022). This has largely been a matter of
+statistical convenience, and it implicitly assumes that the observed
+length of animal
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
 is normally distributed about the curve with a constant standard
 deviation,
@@ -213,15 +208,52 @@ animals get older and larger. A more realistic, but still simple,
 alternative is for the coefficient of variation to be constant, so that
 the standard deviation is proportional to expected length (Cope and Punt
 2007; Restrepo et al. 2010):</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ϵ</mi><mi>i</mi></msub><mo>∼</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mo stretchy="false" form="prefix">(</mo><mi>C</mi><msub><mi>V</mi><mi>L</mi></msub><mi>L</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\epsilon_i \sim N\left(0, (CV_L L(a_i))^2\right)</annotation></semantics></math></p>
-<p>Restrepo et al. (2010) arrived at this form by allowing asymptotic
-length to vary among individuals, following Kirkwood and Somers (1984).
-It is the form used by <code><a href="../reference/growth.html">growth()</a></code>, with a single
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>l</mi><mi>i</mi></msub><mo>=</mo><mi>L</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>+</mo><msub><mi>ϵ</mi><mi>i</mi></msub><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>ϵ</mi><mi>i</mi></msub><mo>∼</mo><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><msubsup><mi>σ</mi><mi>i</mi><mn>2</mn></msubsup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">l_i = L(a_i) + \epsilon_i, \qquad \epsilon_i \sim N(0, \sigma_i^2)</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>σ</mi><mi>i</mi></msub><mo>=</mo><mi>C</mi><msub><mi>V</mi><mi>L</mi></msub><mspace width="0.167em"></mspace><mi>L</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\sigma_i = CV_L \, L(a_i)</annotation></semantics></math></p>
+<p>The standard deviation,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>σ</mi><mi>i</mi></msub><annotation encoding="application/x-tex">\sigma_i</annotation></semantics></math>,
+now differs between animals, and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><msub><mi>V</mi><mi>L</mi></msub></mrow><annotation encoding="application/x-tex">CV_L</annotation></semantics></math>
-shared between groups and estimated along with the growth
-parameters.</p>
-<p>Two further components from Harry et al. (2019) are optional, and can
-be used independently.</p>
+is the coefficient of variation of length at age. Restrepo et al. (2010)
+arrived at this form by allowing asymptotic length to vary among
+individuals, following Kirkwood and Somers (1984). It is the form used
+by <code><a href="../reference/growth.html">growth()</a></code>, with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><msub><mi>V</mi><mi>L</mi></msub></mrow><annotation encoding="application/x-tex">CV_L</annotation></semantics></math>
+estimated along with the growth parameters.</p>
+<p>Harry et al. (2019) extended this model in three ways, each of which
+is optional in <code><a href="../reference/growth.html">growth()</a></code> and can be used independently of
+the others.</p>
+<div class="section level3">
+<h3 id="sexual-dimorphism">Sexual dimorphism<a class="anchor" aria-label="anchor" href="#sexual-dimorphism"></a>
+</h3>
+<p>Growth often differs between the sexes in fishes, and in sharks
+females are generally the larger sex. Cortés (2000) found that, on
+average, the maximum size of males was about 10% smaller than that of
+females, and that males had higher values of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>,
+approaching their maximum size more quickly. This has been explained in
+part by the need for females to reach a larger size to carry their young
+(Cortés 2000), and the difference is most pronounced in live-bearing
+species (Gayford and Sternes 2024).</p>
+<p>Differences in growth between the sexes are usually accommodated by
+fitting separate models to males and females. For data-limited species
+such as many elasmobranchs, this means that parameters such as
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>
+are estimated separately when they could reasonably be shared.
+<code><a href="../reference/growth.html">growth()</a></code> is more parsimonious. It fits both sexes in a
+single model, with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_\infty</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
+estimated separately for each group, typically sex, while
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><msub><mi>V</mi><mi>L</mi></msub></mrow><annotation encoding="application/x-tex">CV_L</annotation></semantics></math>
+are shared:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mi>g</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>L</mi><mn>0</mn></msub><mo>+</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>L</mi><mrow><mi>∞</mi><mo>,</mo><mi>g</mi></mrow></msub><mo>−</mo><msub><mi>L</mi><mn>0</mn></msub><mo stretchy="false" form="postfix">)</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msup><mi>e</mi><mrow><mi>−</mi><msub><mi>K</mi><mi>g</mi></msub><mi>a</mi></mrow></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">L_g(a) = L_0 + (L_{\infty,g} - L_0)\left(1 - e^{-K_g a}\right)</annotation></semantics></math></p>
+</div>
 <div class="section level3">
 <h3 id="ageing-error">Ageing error<a class="anchor" aria-label="anchor" href="#ageing-error"></a>
 </h3>
@@ -606,9 +638,14 @@ and Aquatic Sciences</em> <strong>39</strong>(8), 1208–1210. <a href="https://
 growth curves: an example using the von Bertalanffy growth function with
 random effects. <em>Canadian Journal of Fisheries and Aquatic
 Sciences</em> <strong>64</strong>(2), 205–218. <a href="https://doi.org/10.1139/f06-179" class="external-link">doi:10.1139/f06-179</a></p>
+<p>Cortés, E. (2000) Life history patterns and correlations in sharks.
+<em>Reviews in Fisheries Science</em> <strong>8</strong>(4), 299–344. <a href="https://doi.org/10.1080/10641260008951115" class="external-link">doi:10.1080/10641260008951115</a></p>
 <p>Francis, M.P. (1981) Von Bertalanffy growth rates in species of
 <em>Mustelus</em> (Elasmobranchii: Triakidae). <em>Copeia</em>
 <strong>1981</strong>(1), 189–192. <a href="https://doi.org/10.2307/1444053" class="external-link">doi:10.2307/1444053</a></p>
+<p>Gayford, J.H. and Sternes, P.C. (2024) The origins and drivers of
+sexual size dimorphism in sharks. <em>Ecology and Evolution</em>
+<strong>14</strong>(3), e11163. <a href="https://doi.org/10.1002/ece3.11163" class="external-link">doi:10.1002/ece3.11163</a></p>
 <p>Harry, A.V., Butcher, P.A., Macbeth, W.G., Morgan, J.A.T., Taylor,
 S.M. and Geraghty, P.T. (2019) Life history of the common blacktip
 shark, <em>Carcharhinus limbatus</em>, from central eastern Australia

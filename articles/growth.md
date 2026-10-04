@@ -54,17 +54,18 @@ x-intercept ([Figure 2](#vb-curve)):
 L(a) = L_0 + (L_\infty - L_0)\left(1 - e^{-Ka}\right)
 ```
 
-The two forms give identical lengths at age, and either intercept can be
-calculated from the other, since $`L_0 = L_\infty(1 - e^{K t_0})`$
-(Harry et al. 2022). For the curve in [Figure 2](#vb-curve), a length at
-birth of 73 cm corresponds to a $`t_0`$ of -2.3 years, a little over two
-years before birth. Holden (1974) suggested that $`-t_0`$ could be taken
-as the gestation period, on the assumption that embryos grow along the
-same curve as animals after birth, which gave a way of estimating $`K`$
-for species that had not been aged (e.g. Francis 1981). Later
-comparisons with $`K`$ from age and growth studies showed little
-agreement, and the assumption about embryonic growth is unsupported for
-most species (Pratt and Casey 1990).
+[`growth()`](https://alharry.github.io/mustelus/reference/growth.md)
+uses this form, as did Harry et al. (2019). The two forms give identical
+lengths at age, and either intercept can be calculated from the other,
+since $`L_0 = L_\infty(1 - e^{K t_0})`$ (Harry et al. 2022). For the
+curve in [Figure 2](#vb-curve), a length at birth of 73 cm corresponds
+to a $`t_0`$ of -2.3 years, a little over two years before birth. Holden
+(1974) suggested that $`-t_0`$ could be taken as the gestation period,
+on the assumption that embryos grow along the same curve as animals
+after birth, which gave a way of estimating $`K`$ for species that had
+not been aged (e.g. Francis 1981). Later comparisons with $`K`$ from age
+and growth studies showed little agreement, and the assumption about
+embryonic growth is unsupported for most species (Pratt and Casey 1990).
 
 ![\*\*Figure 2.\*\* The relationship in \[Figure 1\](#vb-rate) expressed
 as length at age. The first form of the equation defines the curve by
@@ -77,23 +78,13 @@ length at age. The first form of the equation defines the curve by where
 it would cross zero length, $`t_0`$; the second by where it starts, at
 length at birth, $`L_0`$.
 
-[`growth()`](https://alharry.github.io/mustelus/reference/growth.md)
-uses the second form, as in Harry et al. (2019). $`L_\infty`$ and $`K`$
-are estimated separately for each group, typically sex, while $`L_0`$ is
-shared:
-
-``` math
-L_g(a) = L_0 + (L_{\infty,g} - L_0)\left(1 - e^{-K_g a}\right)
-```
-
-$`L_0`$ can be measured directly from neonates, and anchors the curve at
-the left-hand end, where age data are usually weakest.
-
 The equations above are deterministic. They describe the average length
-at age, not the lengths of individual animals, and fitting them to data
-requires some model of how individuals vary about the average. Growth
-curves are commonly fitted by nonlinear least squares regression of
-length on age (Harry et al. 2022). This implicitly assumes that the
+at age, not the lengths of individual animals. Estimating $`L_\infty`$,
+$`K`$ and $`L_0`$ means confronting the model with paired length at age
+data, and that requires some model of how individuals vary about the
+average. Growth curves are commonly fitted by nonlinear least squares
+regression of length on age (Harry et al. 2022). This has largely been a
+matter of statistical convenience, and it implicitly assumes that the
 observed length of animal $`i`$ is normally distributed about the curve
 with a constant standard deviation, $`\sigma`$:
 
@@ -110,18 +101,50 @@ the standard deviation is proportional to expected length (Cope and Punt
 2007; Restrepo et al. 2010):
 
 ``` math
-\epsilon_i \sim N\left(0, (CV_L L(a_i))^2\right)
+l_i = L(a_i) + \epsilon_i, \qquad \epsilon_i \sim N(0, \sigma_i^2)
 ```
 
-Restrepo et al. (2010) arrived at this form by allowing asymptotic
-length to vary among individuals, following Kirkwood and Somers (1984).
-It is the form used by
-[`growth()`](https://alharry.github.io/mustelus/reference/growth.md),
-with a single $`CV_L`$ shared between groups and estimated along with
-the growth parameters.
+``` math
+\sigma_i = CV_L \, L(a_i)
+```
 
-Two further components from Harry et al. (2019) are optional, and can be
-used independently.
+The standard deviation, $`\sigma_i`$, now differs between animals, and
+$`CV_L`$ is the coefficient of variation of length at age. Restrepo et
+al. (2010) arrived at this form by allowing asymptotic length to vary
+among individuals, following Kirkwood and Somers (1984). It is the form
+used by
+[`growth()`](https://alharry.github.io/mustelus/reference/growth.md),
+with $`CV_L`$ estimated along with the growth parameters.
+
+Harry et al. (2019) extended this model in three ways, each of which is
+optional in
+[`growth()`](https://alharry.github.io/mustelus/reference/growth.md) and
+can be used independently of the others.
+
+### Sexual dimorphism
+
+Growth often differs between the sexes in fishes, and in sharks females
+are generally the larger sex. Cortés (2000) found that, on average, the
+maximum size of males was about 10% smaller than that of females, and
+that males had higher values of $`K`$, approaching their maximum size
+more quickly. This has been explained in part by the need for females to
+reach a larger size to carry their young (Cortés 2000), and the
+difference is most pronounced in live-bearing species (Gayford and
+Sternes 2024).
+
+Differences in growth between the sexes are usually accommodated by
+fitting separate models to males and females. For data-limited species
+such as many elasmobranchs, this means that parameters such as $`L_0`$
+and $`\sigma`$ are estimated separately when they could reasonably be
+shared.
+[`growth()`](https://alharry.github.io/mustelus/reference/growth.md) is
+more parsimonious. It fits both sexes in a single model, with
+$`L_\infty`$ and $`K`$ estimated separately for each group, typically
+sex, while $`L_0`$ and $`CV_L`$ are shared:
+
+``` math
+L_g(a) = L_0 + (L_{\infty,g} - L_0)\left(1 - e^{-K_g a}\right)
+```
 
 ### Ageing error
 
@@ -502,9 +525,17 @@ random effects. *Canadian Journal of Fisheries and Aquatic Sciences*
 **64**(2), 205–218.
 [doi:10.1139/f06-179](https://doi.org/10.1139/f06-179)
 
+Cortés, E. (2000) Life history patterns and correlations in sharks.
+*Reviews in Fisheries Science* **8**(4), 299–344.
+[doi:10.1080/10641260008951115](https://doi.org/10.1080/10641260008951115)
+
 Francis, M.P. (1981) Von Bertalanffy growth rates in species of
 *Mustelus* (Elasmobranchii: Triakidae). *Copeia* **1981**(1), 189–192.
 [doi:10.2307/1444053](https://doi.org/10.2307/1444053)
+
+Gayford, J.H. and Sternes, P.C. (2024) The origins and drivers of sexual
+size dimorphism in sharks. *Ecology and Evolution* **14**(3), e11163.
+[doi:10.1002/ece3.11163](https://doi.org/10.1002/ece3.11163)
 
 Harry, A.V., Butcher, P.A., Macbeth, W.G., Morgan, J.A.T., Taylor, S.M.
 and Geraghty, P.T. (2019) Life history of the common blacktip shark,
