@@ -73,6 +73,16 @@
 
     
     
+<style type="text/css">
+/* Set figure captions apart from the body text. The first selector is used
+   by rmarkdown::html_vignette and the second by pkgdown */
+.figcaption, p.caption {
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 0.25em;
+  margin-bottom: 1.5em;
+}
+</style>
 <div class="section level2">
 <h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
 </h2>
@@ -268,14 +278,33 @@ model across all groups is automatically included.</p>
 <p><code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> returns a named list of ggplot objects — one per
 group — which can be customised with standard ggplot2 calls. The solid
 line is the predicted mean, the dashed ribbon the 95% confidence
-interval, and the dotted ribbon the 95% prediction interval.</p>
+interval, and the dotted ribbon the 95% prediction interval. The fits
+for females and males are shown in <a href="#lw-f">Figure 1</a> and <a href="#lw-m">Figure 2</a>.</p>
+<div id="lw-f">
+
+</div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">lw_sex</span><span class="op">)</span></span>
 <span><span class="va">p</span><span class="op">$</span><span class="va">f</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Total length (mm)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Weight (kg)"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="len-weight_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="576"></p>
+<div class="figure">
+<img src="len-weight_files/figure-html/lw-f-1.png" class="r-plt" alt="**Figure 1.** Weight against total length for female spot-tail sharks. The solid line is the predicted mean weight, corrected for back-transformation bias, the dashed ribbon the 95% confidence interval and the dotted ribbon the 95% prediction interval." width="576"><p class="caption">
+<strong>Figure 1.</strong> Weight against total length for female
+spot-tail sharks. The solid line is the predicted mean weight, corrected
+for back-transformation bias, the dashed ribbon the 95% confidence
+interval and the dotted ribbon the 95% prediction interval.
+</p>
+</div>
+<div id="lw-m">
+
+</div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span><span class="op">$</span><span class="va">m</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Total length (mm)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Weight (kg)"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="len-weight_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="576"></p>
+<div class="figure">
+<img src="len-weight_files/figure-html/lw-m-1.png" class="r-plt" alt="**Figure 2.** Weight against total length for male spot-tail sharks, with lines as in [Figure 1](#lw-f)." width="576"><p class="caption">
+<strong>Figure 2.</strong> Weight against total length for male
+spot-tail sharks, with lines as in <a href="#lw-f">Figure 1</a>.
+</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="confidence-vs-prediction-intervals">Confidence vs prediction intervals<a class="anchor" aria-label="anchor" href="#confidence-vs-prediction-intervals"></a>

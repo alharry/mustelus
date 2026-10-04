@@ -122,23 +122,42 @@ ribbon:
 plot(mt) + xlab("Fork length (cm)") + ylab("Proportion in maternal condition")
 ```
 
-![](maternity_files/figure-html/unnamed-chunk-4-1.png)
+![\*\*Figure 1.\*\* Proportion of female sandbar sharks in maternal
+condition against fork length, with the three-parameter logistic
+function fitted with \$P\_{Max}\$ estimated. Points are observed
+proportions in length bins, sized by the number of females in each bin,
+and the grey ribbon is the bootstrap 95% confidence
+interval.](maternity_files/figure-html/mt-fit-1.png)
 
-The curve levels off well short of one, which is the whole point of the
-third parameter. A two-parameter ogive forced through an asymptote of
-one could not describe these data.
+**Figure 1.** Proportion of female sandbar sharks in maternal condition
+against fork length, with the three-parameter logistic function fitted
+with $`P_{Max}`$ estimated. Points are observed proportions in length
+bins, sized by the number of females in each bin, and the grey ribbon is
+the bootstrap 95% confidence interval.
+
+The curve in [Figure 1](#mt-fit) levels off well short of one, which is
+the whole point of the third parameter. A two-parameter ogive forced
+through an asymptote of one could not describe these data.
 
 The same `raw_data` options as
 [`maturity()`](https://alharry.github.io/mustelus/reference/maturity.md)
 are available: `"proportions"`, `"point"`, `"rug"`, `"bootstrap"` (a
 subsample of the resampled curves in place of the ribbon) and `"none"`.
+The rug option is shown in [Figure 2](#mt-rug).
 
 ``` r
 
 plot(mt, raw_data = "rug") + xlab("Fork length (cm)") + ylab("Proportion in maternal condition")
 ```
 
-![](maternity_files/figure-html/unnamed-chunk-5-1.png)
+![\*\*Figure 2.\*\* The fit in \[Figure 1\](#mt-fit) with individual
+females shown as a rug, maternal females along the top axis and
+non-maternal females along the
+bottom.](maternity_files/figure-html/mt-rug-1.png)
+
+**Figure 2.** The fit in [Figure 1](#mt-fit) with individual females
+shown as a rug, maternal females along the top axis and non-maternal
+females along the bottom.
 
 ## Fixing the asymptote and testing reproductive periodicity
 
@@ -186,10 +205,18 @@ includes 0.5.
 plot(mt_triennial) + xlab("Fork length (cm)") + ylab("Proportion in maternal condition")
 ```
 
-![](maternity_files/figure-html/unnamed-chunk-7-1.png)
+![\*\*Figure 3.\*\* Maternity ogive for female sandbar sharks with
+\$P\_{Max}\$ fixed at 1/3, corresponding to a triennial cycle. Points
+and ribbon as in \[Figure
+1\](#mt-fit).](maternity_files/figure-html/mt-triennial-1.png)
 
-Forcing the asymptote down to 1/3 pulls the curve below the observed
-proportions at large sizes, which is the source of the AIC penalty.
+**Figure 3.** Maternity ogive for female sandbar sharks with $`P_{Max}`$
+fixed at 1/3, corresponding to a triennial cycle. Points and ribbon as
+in [Figure 1](#mt-fit).
+
+Forcing the asymptote down to 1/3 ([Figure 3](#mt-triennial)) pulls the
+curve below the observed proportions at large sizes, which is the source
+of the AIC penalty.
 
 ## Comparison with maturity
 
@@ -248,10 +275,18 @@ summary(mt_age)[, c("m50", "m50_lower", "m50_upper", "m95", "pmax", "n", "N")]
 plot(mt_age, binwidth = 1) + xlab("Age (years)") + ylab("Proportion in maternal condition")
 ```
 
-![](maternity_files/figure-html/unnamed-chunk-10-1.png)
+![\*\*Figure 4.\*\* Proportion of female spot-tail sharks in maternal
+condition against age, in 1 year bins, with \$P\_{Max}\$ estimated.
+Points and ribbon as in \[Figure
+1\](#mt-fit).](maternity_files/figure-html/mt-age-1.png)
+
+**Figure 4.** Proportion of female spot-tail sharks in maternal
+condition against age, in 1 year bins, with $`P_{Max}`$ estimated.
+Points and ribbon as in [Figure 1](#mt-fit).
 
 Spot-tail sharks reproduce annually, so $`P_{Max}`$ is estimated close
-to one and the maternity curve is nearly the same as a maturity ogive.
+to one ([Figure 4](#mt-age)) and the maternity curve is nearly the same
+as a maturity ogive.
 
 ## Sample size
 

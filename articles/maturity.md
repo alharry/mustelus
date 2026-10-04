@@ -53,7 +53,7 @@ summary(lm50_sex)
 
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) returns a named
 list of ggplot objects. The default shows binned observed proportions
-scaled by sample size.
+scaled by sample size, as for females in [Figure 1](#mat-female).
 
 ``` r
 
@@ -61,11 +61,21 @@ p <- plot(lm50_sex)
 p$f + xlab("Total length (mm)") + ylab("Proportion mature")
 ```
 
-![](maturity_files/figure-html/unnamed-chunk-3-1.png)
+![\*\*Figure 1.\*\* Proportion mature against total length for female
+spot-tail sharks, with the fitted logistic curve and its bootstrap 95%
+confidence interval (grey ribbon). Points are observed proportions in
+length bins, sized by the number of animals in each
+bin.](maturity_files/figure-html/mat-female-1.png)
+
+**Figure 1.** Proportion mature against total length for female
+spot-tail sharks, with the fitted logistic curve and its bootstrap 95%
+confidence interval (grey ribbon). Points are observed proportions in
+length bins, sized by the number of animals in each bin.
 
 ### Plot styles
 
-Three styles for raw data display are available:
+Three styles for raw data display are available, shown for both sexes
+combined in [Figure 2](#mat-proportions) to [Figure 4](#mat-rug):
 
 ``` r
 
@@ -74,7 +84,15 @@ plot(lm50, raw_data = "proportions")$Unspecified +
   xlab("Total length (mm)") + ylab("Proportion mature")
 ```
 
-![](maturity_files/figure-html/unnamed-chunk-4-1.png)
+![\*\*Figure 2.\*\* Proportion mature against total length for spot-tail
+sharks of both sexes combined, with points sized by the number of
+animals in each bin (the default). Curve and ribbon as in \[Figure
+1\](#mat-female).](maturity_files/figure-html/mat-proportions-1.png)
+
+**Figure 2.** Proportion mature against total length for spot-tail
+sharks of both sexes combined, with points sized by the number of
+animals in each bin (the default). Curve and ribbon as in [Figure
+1](#mat-female).
 
 ``` r
 
@@ -83,7 +101,11 @@ plot(lm50, raw_data = "point")$Unspecified +
   xlab("Total length (mm)") + ylab("Proportion mature")
 ```
 
-![](maturity_files/figure-html/unnamed-chunk-5-1.png)
+![\*\*Figure 3.\*\* As \[Figure 2\](#mat-proportions), with points of
+uniform size.](maturity_files/figure-html/mat-point-1.png)
+
+**Figure 3.** As [Figure 2](#mat-proportions), with points of uniform
+size.
 
 ``` r
 
@@ -92,12 +114,18 @@ plot(lm50, raw_data = "rug")$Unspecified +
   xlab("Total length (mm)") + ylab("Proportion mature")
 ```
 
-![](maturity_files/figure-html/unnamed-chunk-6-1.png)
+![\*\*Figure 4.\*\* As \[Figure 2\](#mat-proportions), with individual
+animals shown as a rug, mature animals along the top axis and immature
+animals along the bottom.](maturity_files/figure-html/mat-rug-1.png)
+
+**Figure 4.** As [Figure 2](#mat-proportions), with individual animals
+shown as a rug, mature animals along the top axis and immature animals
+along the bottom.
 
 ### Adjusting bin width
 
 The `binwidth` argument controls the width of bins in data units
-(default is range/10):
+(default is range/10). [Figure 5](#mat-binwidth) uses 50 mm bins:
 
 ``` r
 
@@ -105,7 +133,10 @@ plot(lm50, binwidth = 50)$Unspecified +
   xlab("Total length (mm)") + ylab("Proportion mature")
 ```
 
-![](maturity_files/figure-html/unnamed-chunk-7-1.png)
+![\*\*Figure 5.\*\* As \[Figure 2\](#mat-proportions), with 50 mm
+bins.](maturity_files/figure-html/mat-binwidth-1.png)
+
+**Figure 5.** As [Figure 2](#mat-proportions), with 50 mm bins.
 
 ## Using age as the predictor
 
@@ -127,13 +158,21 @@ summary(am50)
 #> 1 -9.50  4.05  2.35      2.19      2.48  3.07      2.62      3.38   211   153
 ```
 
+The fitted ogive is shown in [Figure 6](#mat-age).
+
 ``` r
 
 plot(am50, binwidth = 1)$Unspecified +
   xlab("Age (years)") + ylab("Proportion mature")
 ```
 
-![](maturity_files/figure-html/unnamed-chunk-9-1.png)
+![\*\*Figure 6.\*\* Proportion mature against age for spot-tail sharks
+of both sexes combined, in 1 year bins. Curve and ribbon as in \[Figure
+1\](#mat-female).](maturity_files/figure-html/mat-age-1.png)
+
+**Figure 6.** Proportion mature against age for spot-tail sharks of both
+sexes combined, in 1 year bins. Curve and ribbon as in [Figure
+1](#mat-female).
 
 ## Output structure
 

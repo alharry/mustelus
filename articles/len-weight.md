@@ -172,7 +172,8 @@ summary(lw_sex)
 list of ggplot objects — one per group — which can be customised with
 standard ggplot2 calls. The solid line is the predicted mean, the dashed
 ribbon the 95% confidence interval, and the dotted ribbon the 95%
-prediction interval.
+prediction interval. The fits for females and males are shown in [Figure
+1](#lw-f) and [Figure 2](#lw-m).
 
 ``` r
 
@@ -180,14 +181,28 @@ p <- plot(lw_sex)
 p$f + xlab("Total length (mm)") + ylab("Weight (kg)")
 ```
 
-![](len-weight_files/figure-html/unnamed-chunk-3-1.png)
+![\*\*Figure 1.\*\* Weight against total length for female spot-tail
+sharks. The solid line is the predicted mean weight, corrected for
+back-transformation bias, the dashed ribbon the 95% confidence interval
+and the dotted ribbon the 95% prediction
+interval.](len-weight_files/figure-html/lw-f-1.png)
+
+**Figure 1.** Weight against total length for female spot-tail sharks.
+The solid line is the predicted mean weight, corrected for
+back-transformation bias, the dashed ribbon the 95% confidence interval
+and the dotted ribbon the 95% prediction interval.
 
 ``` r
 
 p$m + xlab("Total length (mm)") + ylab("Weight (kg)")
 ```
 
-![](len-weight_files/figure-html/unnamed-chunk-4-1.png)
+![\*\*Figure 2.\*\* Weight against total length for male spot-tail
+sharks, with lines as in \[Figure
+1\](#lw-f).](len-weight_files/figure-html/lw-m-1.png)
+
+**Figure 2.** Weight against total length for male spot-tail sharks,
+with lines as in [Figure 1](#lw-f).
 
 ## Confidence vs prediction intervals
 

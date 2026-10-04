@@ -2,29 +2,123 @@
 
 ## Background
 
-Growth is usually described with a von Bertalanffy function, and usually
-parameterised by $`L_\infty`$, $`K`$ and $`t_0`$. The third parameter is
-the hypothetical age at zero length, which has no biological meaning and
-is often estimated at implausible values when there are few young
-animals in the sample.
-[`growth()`](https://alharry.github.io/mustelus/reference/growth.md)
-uses the reparameterisation of Harry et al. (2019), replacing $`t_0`$
-with length at birth:
+Growth in fishes is usually described with the von Bertalanffy growth
+function (von Bertalanffy 1938). Von Bertalanffy derived it from the
+balance between the synthesis and breakdown of body tissue, and in the
+form used for length it assumes that growth rate declines linearly as
+length increases:
 
 ``` math
-L_{i,g}(a) = L_0 + (L_{\infty,g} - L_0)\left(1 - e^{-K_g a_{i,g}}\right)
+\frac{dL}{dt} = K(L_\infty - L)
 ```
 
-$`L_0`$ is interpretable, can be measured directly, and anchors the
-curve at the left-hand end where age data are usually weakest.
-$`L_\infty`$ and $`K`$ are estimated separately for each group,
-typically sex, while $`L_0`$ is shared.
+Here $`L`$ is length and $`dL/dt`$ is growth rate, the change in length
+over time, $`t`$. Growth is fastest in the smallest animals and slows as
+they approach $`L_\infty`$, the asymptotic length, at which growth rate
+reaches zero ([Figure 1](#vb-rate)). $`L_\infty`$ is usually interpreted
+as the average maximum length of individuals in the population. $`K`$ is
+the growth coefficient, with units of $`\text{year}^{-1}`$, and is the
+slope of the relationship between growth rate and length. It is not
+itself a growth rate. Rather, it describes how quickly length approaches
+the asymptote: an animal takes $`\ln(2)/K`$ years to grow half of the
+remaining distance to $`L_\infty`$, whatever its current length.
 
-Observed length is normally distributed about the curve with a standard
-deviation proportional to expected length, $`\sigma_L = CV_L L_{i,g}`$,
-following Cope and Punt (2007). Individual variability in length at age
-therefore grows with size, which is what length at age data normally
-look like.
+![\*\*Figure 1.\*\* Growth rate, \$dL/dt\$, as a function of length,
+\$L\$, for values similar to those estimated for female blacktip sharks
+below (\$L_0\$ = 73 cm, \$L\_\infty\$ = 265 cm, \$K\$ = 0.14). The
+dotted line extends the relationship below length at
+birth.](growth_files/figure-html/vb-rate-1.png)
+
+**Figure 1.** Growth rate, $`dL/dt`$, as a function of length, $`L`$,
+for values similar to those estimated for female blacktip sharks below
+($`L_0`$ = 73 cm, $`L_\infty`$ = 265 cm, $`K`$ = 0.14). The dotted line
+extends the relationship below length at birth.
+
+The solution to this equation most often used in fisheries science,
+popularised by Beverton and Holt (1957), gives length as a function of
+age, $`a`$:
+
+``` math
+L(a) = L_\infty\left(1 - e^{-K(a - t_0)}\right)
+```
+
+The third parameter, $`t_0`$, is the hypothetical age at which length
+would be zero. Many teleost fishes hatch as small larvae, and for these
+$`t_0`$ has no biological meaning. Chondrichthyans are born live or
+hatch from egg cases at a relatively large size, and for them length at
+age zero is meaningful: it is length at birth. The curve can be recast
+with length at birth, $`L_0`$, the y-intercept, in place of $`t_0`$, the
+x-intercept ([Figure 2](#vb-curve)):
+
+``` math
+L(a) = L_0 + (L_\infty - L_0)\left(1 - e^{-Ka}\right)
+```
+
+The two forms give identical lengths at age, and either intercept can be
+calculated from the other, since $`L_0 = L_\infty(1 - e^{K t_0})`$
+(Harry et al. 2022). For the curve in [Figure 2](#vb-curve), a length at
+birth of 73 cm corresponds to a $`t_0`$ of -2.3 years, a little over two
+years before birth. Holden (1974) suggested that $`-t_0`$ could be taken
+as the gestation period, on the assumption that embryos grow along the
+same curve as animals after birth, which gave a way of estimating $`K`$
+for species that had not been aged (e.g. Francis 1981). Later
+comparisons with $`K`$ from age and growth studies showed little
+agreement, and the assumption about embryonic growth is unsupported for
+most species (Pratt and Casey 1990).
+
+![\*\*Figure 2.\*\* The relationship in \[Figure 1\](#vb-rate) expressed
+as length at age. The first form of the equation defines the curve by
+where it would cross zero length, \$t_0\$; the second by where it
+starts, at length at birth,
+\$L_0\$.](growth_files/figure-html/vb-curve-1.png)
+
+**Figure 2.** The relationship in [Figure 1](#vb-rate) expressed as
+length at age. The first form of the equation defines the curve by where
+it would cross zero length, $`t_0`$; the second by where it starts, at
+length at birth, $`L_0`$.
+
+[`growth()`](https://alharry.github.io/mustelus/reference/growth.md)
+uses the second form, as in Harry et al. (2019). $`L_\infty`$ and $`K`$
+are estimated separately for each group, typically sex, while $`L_0`$ is
+shared:
+
+``` math
+L_g(a) = L_0 + (L_{\infty,g} - L_0)\left(1 - e^{-K_g a}\right)
+```
+
+$`L_0`$ can be measured directly from neonates, and anchors the curve at
+the left-hand end, where age data are usually weakest.
+
+The equations above are deterministic. They describe the average length
+at age, not the lengths of individual animals, and fitting them to data
+requires some model of how individuals vary about the average. Growth
+curves are commonly fitted by nonlinear least squares regression of
+length on age (Harry et al. 2022). This implicitly assumes that the
+observed length of animal $`i`$ is normally distributed about the curve
+with a constant standard deviation, $`\sigma`$:
+
+``` math
+l_i = L(a_i) + \epsilon_i, \qquad \epsilon_i \sim N(0, \sigma^2)
+```
+
+Under this assumption a newborn and a 20 year old animal are equally
+likely to differ from the average length for their age by any given
+amount. In practice length at age usually becomes more variable as
+animals get older and larger. A more realistic, but still simple,
+alternative is for the coefficient of variation to be constant, so that
+the standard deviation is proportional to expected length (Cope and Punt
+2007; Restrepo et al. 2010):
+
+``` math
+\epsilon_i \sim N\left(0, (CV_L L(a_i))^2\right)
+```
+
+Restrepo et al. (2010) arrived at this form by allowing asymptotic
+length to vary among individuals, following Kirkwood and Somers (1984).
+It is the form used by
+[`growth()`](https://alharry.github.io/mustelus/reference/growth.md),
+with a single $`CV_L`$ shared between groups and estimated along with
+the growth parameters.
 
 Two further components from Harry et al. (2019) are optional, and can be
 used independently.
@@ -111,12 +205,21 @@ pattern, females larger and slower, is common in carcharhinids.
 plot(g) + xlab("Age (years)") + ylab("Stretched total length (cm)")
 ```
 
-![](growth_files/figure-html/unnamed-chunk-3-1.png)
+![\*\*Figure 3.\*\* Length at age of female (f) and male (m) blacktip
+sharks with the fitted growth curves. The solid line is the fitted
+curve, the dashed ribbon the 95% confidence interval and the dotted
+ribbon the 95% prediction interval. Neonates, which inform \$L_0\$, are
+not shown.](growth_files/figure-html/growth-fit-1.png)
 
-The solid line is the fitted curve, the dashed ribbon the 95% confidence
-interval on it, and the dotted ribbon the 95% prediction interval for
-individual animals. The prediction interval widens with size, which is
-the $`CV_L`$ assumption at work.
+**Figure 3.** Length at age of female (f) and male (m) blacktip sharks
+with the fitted growth curves. The solid line is the fitted curve, the
+dashed ribbon the 95% confidence interval and the dotted ribbon the 95%
+prediction interval. Neonates, which inform $`L_0`$, are not shown.
+
+In [Figure 3](#growth-fit) the solid line is the fitted curve, the
+dashed ribbon the 95% confidence interval on it, and the dotted ribbon
+the 95% prediction interval for individual animals. The prediction
+interval widens with size, which is the $`CV_L`$ assumption at work.
 
 ## Comparing growth between sexes
 
@@ -182,17 +285,25 @@ and the range of each parameter within the region.
 plot(r) + labs(x = "Linf (cm)", y = "K (per year)", linetype = "Sex")
 ```
 
-![](growth_files/figure-html/unnamed-chunk-6-1.png)
+![\*\*Figure 4.\*\* Approximate 95% joint confidence regions for
+\$L\_\infty\$ and \$K\$ for female (f) and male (m) blacktip sharks,
+following Kimura (1980). Points are the maximum likelihood
+estimates.](growth_files/figure-html/growth-region-1.png)
 
-The regions are not symmetrical about the estimates, as an ellipse drawn
-from the covariance matrix would be. Each follows the curved ridge in
-the likelihood surface along which $`L_\infty`$ is traded against $`K`$,
-and extends further above the estimates than below them. For females the
-region reaches about 20 cm above the estimate of $`L_\infty`$ but only
-15 cm below it. The intervals on $`K`$ alone overlap between the sexes
-(0.123 to 0.165 for females, 0.148 to 0.179 for males), but the two
-regions do not. Taken together, the two parameters describe clearly
-different growth curves for females and males.
+**Figure 4.** Approximate 95% joint confidence regions for $`L_\infty`$
+and $`K`$ for female (f) and male (m) blacktip sharks, following Kimura
+(1980). Points are the maximum likelihood estimates.
+
+The regions in [Figure 4](#growth-region) are not symmetrical about the
+estimates, as an ellipse drawn from the covariance matrix would be. Each
+follows the curved ridge in the likelihood surface along which
+$`L_\infty`$ is traded against $`K`$, and extends further above the
+estimates than below them. For females the region reaches about 20 cm
+above the estimate of $`L_\infty`$ but only 15 cm below it. The
+intervals on $`K`$ alone overlap between the sexes (0.123 to 0.165 for
+females, 0.148 to 0.179 for males), but the two regions do not. Taken
+together, the two parameters describe clearly different growth curves
+for females and males.
 
 As Kimura noted for $`t_0`$, holding $`L_0`$ fixed means these are
 cross-sections rather than true confidence regions, since more extreme
@@ -376,6 +487,10 @@ the object is ordinary R data.
 
 ## References
 
+Beverton, R.J.H. and Holt, S.J. (1957) *On the Dynamics of Exploited
+Fish Populations*. Fishery Investigations Series II, Volume 19. Ministry
+of Agriculture, Fisheries and Food, London.
+
 Chang, W.Y.B. (1982) A statistical method for evaluating the
 reproducibility of age determination. *Canadian Journal of Fisheries and
 Aquatic Sciences* **39**(8), 1208–1210.
@@ -387,6 +502,10 @@ random effects. *Canadian Journal of Fisheries and Aquatic Sciences*
 **64**(2), 205–218.
 [doi:10.1139/f06-179](https://doi.org/10.1139/f06-179)
 
+Francis, M.P. (1981) Von Bertalanffy growth rates in species of
+*Mustelus* (Elasmobranchii: Triakidae). *Copeia* **1981**(1), 189–192.
+[doi:10.2307/1444053](https://doi.org/10.2307/1444053)
+
 Harry, A.V., Butcher, P.A., Macbeth, W.G., Morgan, J.A.T., Taylor, S.M.
 and Geraghty, P.T. (2019) Life history of the common blacktip shark,
 *Carcharhinus limbatus*, from central eastern Australia and comparative
@@ -394,5 +513,38 @@ demography of a cryptic shark complex. *Marine and Freshwater Research*
 **70**(6), 834–848.
 [doi:10.1071/MF18141](https://doi.org/10.1071/MF18141)
 
+Harry, A.V., Smart, J.J. and Pardo, S.A. (2022) Understanding the age
+and growth of chondrichthyan fishes. In: Carrier, J.C., Simpfendorfer,
+C.A., Heithaus, M.R. and Yopak, K.E. (eds) *Biology of Sharks and Their
+Relatives*, 3rd edn. CRC Press, Boca Raton, FL, pp. 177–202.
+[doi:10.1201/9781003262190-6](https://doi.org/10.1201/9781003262190-6)
+
+Holden, M.J. (1974) Problems in the rational exploitation of
+elasmobranch populations and some suggested solutions. In: Harden Jones,
+F.R. (ed) *Sea Fisheries Research*. Halsted Press, John Wiley & Sons,
+New York, pp. 117–137.
+
 Kimura, D.K. (1980) Likelihood methods for the von Bertalanffy growth
 curve. *Fishery Bulletin* **77**(4), 765–776.
+
+Kirkwood, G.P. and Somers, I.F. (1984) Growth of two species of tiger
+prawn, *Penaeus esculentus* and *P. semisulcatus*, in the western Gulf
+of Carpentaria. *Australian Journal of Marine and Freshwater Research*
+**35**(6), 703–712.
+[doi:10.1071/MF9840703](https://doi.org/10.1071/MF9840703)
+
+Pratt, H.L., Jr. and Casey, J.G. (1990) Shark reproductive strategies as
+a limiting factor in directed fisheries, with a review of Holden’s
+method of estimating growth-parameters. In: Pratt, H.L., Jr., Gruber,
+S.H. and Taniuchi, T. (eds) *Elasmobranchs as Living Resources: Advances
+in the Biology, Ecology, Systematics, and the Status of the Fisheries*.
+NOAA Technical Report NMFS 90, pp. 97–109. [NOAA Technical Report NMFS
+90](https://spo.nmfs.noaa.gov/content/tr-90-elasmobranchs-living-resources-advances-biology-ecology-systematics-and-status)
+
+Restrepo, V.R., Diaz, G.A., Walter, J.F., Neilson, J.D., Campana, S.E.,
+Secor, D. and Wingate, R.L. (2010) Updated estimate of the growth curve
+of Western Atlantic bluefin tuna. *Aquatic Living Resources* **23**(4),
+335–342. [doi:10.1051/alr/2011004](https://doi.org/10.1051/alr/2011004)
+
+von Bertalanffy, L. (1938) A quantitative theory of organic growth
+(inquiries on growth laws. II). *Human Biology* **10**, 181–213.

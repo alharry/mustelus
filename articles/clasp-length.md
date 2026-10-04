@@ -59,13 +59,25 @@ adults, with the transition centred on 898 mm.
 plot(cl) + xlab("Total length (mm)") + ylab("Clasper length (mm)")
 ```
 
-![](clasp-length_files/figure-html/unnamed-chunk-2-1.png)
+![\*\*Figure 1.\*\* Clasper length against total length for male
+spot-tail sharks. The solid line is the fitted median, the dashed ribbon
+the 95% confidence interval and the dotted ribbon the 95% prediction
+interval. Points are shaded by calcification stage: white, uncalcified;
+grey, partially calcified; black, fully
+calcified.](clasp-length_files/figure-html/cl-length-1.png)
 
-The solid line is the fitted median, the dashed ribbon the 95%
+**Figure 1.** Clasper length against total length for male spot-tail
+sharks. The solid line is the fitted median, the dashed ribbon the 95%
 confidence interval and the dotted ribbon the 95% prediction interval.
-Both are obtained by bootstrap: the confidence interval from the
-percentiles of the resampled curves, and the prediction interval by
-combining that bootstrap variance with the residual variance of the fit.
+Points are shaded by calcification stage: white, uncalcified; grey,
+partially calcified; black, fully calcified.
+
+In [Figure 1](#cl-length) the solid line is the fitted median, the
+dashed ribbon the 95% confidence interval and the dotted ribbon the 95%
+prediction interval. Both are obtained by bootstrap: the confidence
+interval from the percentiles of the resampled curves, and the
+prediction interval by combining that bootstrap variance with the
+residual variance of the fit.
 
 Passing the optional calcification variable shades the points by stage —
 white for uncalcified, grey for partially calcified and black for fully
@@ -91,12 +103,19 @@ summary(cl_age)
 #> #   x.range <chr>
 ```
 
+The fitted curve is shown in [Figure 2](#cl-age).
+
 ``` r
 
 plot(cl_age) + xlab("Age (years)") + ylab("Clasper length (mm)")
 ```
 
-![](clasp-length_files/figure-html/unnamed-chunk-4-1.png)
+![\*\*Figure 2.\*\* Clasper length against age for male spot-tail
+sharks, with lines and shading as in \[Figure
+1\](#cl-length).](clasp-length_files/figure-html/cl-age-1.png)
+
+**Figure 2.** Clasper length against age for male spot-tail sharks, with
+lines and shading as in [Figure 1](#cl-length).
 
 ## Starting values
 
@@ -173,5 +192,5 @@ head(cl$boot_coefs[[1]])
 #> 3 80.53822 14.65627 907.4333 981.8426
 #> 4 81.25401 14.17027 900.9768 995.3944
 #> 5 81.47458 12.87377 897.5844 996.8090
-#> 6 80.93300 12.99348 900.6766 992.2189
+#> 6 80.93300 12.99348 900.6766 992.2190
 ```

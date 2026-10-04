@@ -73,6 +73,16 @@
 
     
     
+<style type="text/css">
+/* Set figure captions apart from the body text. The first selector is used
+   by rmarkdown::html_vignette and the second by pkgdown */
+.figcaption, p.caption {
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 0.25em;
+  margin-bottom: 1.5em;
+}
+</style>
 <div class="section level2">
 <h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
 </h2>
@@ -129,15 +139,26 @@ adults, with the transition centred on 898 mm.</p>
 <div class="section level2">
 <h2 id="plotting">Plotting<a class="anchor" aria-label="anchor" href="#plotting"></a>
 </h2>
+<div id="cl-length">
+
+</div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cl</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Total length (mm)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Clasper length (mm)"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="clasp-length_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" alt="" width="576"></p>
-<p>The solid line is the fitted median, the dashed ribbon the 95%
-confidence interval and the dotted ribbon the 95% prediction interval.
-Both are obtained by bootstrap: the confidence interval from the
-percentiles of the resampled curves, and the prediction interval by
-combining that bootstrap variance with the residual variance of the
-fit.</p>
+<div class="figure">
+<img src="clasp-length_files/figure-html/cl-length-1.png" class="r-plt" alt="**Figure 1.** Clasper length against total length for male spot-tail sharks. The solid line is the fitted median, the dashed ribbon the 95% confidence interval and the dotted ribbon the 95% prediction interval. Points are shaded by calcification stage: white, uncalcified; grey, partially calcified; black, fully calcified." width="576"><p class="caption">
+<strong>Figure 1.</strong> Clasper length against total length for male
+spot-tail sharks. The solid line is the fitted median, the dashed ribbon
+the 95% confidence interval and the dotted ribbon the 95% prediction
+interval. Points are shaded by calcification stage: white, uncalcified;
+grey, partially calcified; black, fully calcified.
+</p>
+</div>
+<p>In <a href="#cl-length">Figure 1</a> the solid line is the fitted
+median, the dashed ribbon the 95% confidence interval and the dotted
+ribbon the 95% prediction interval. Both are obtained by bootstrap: the
+confidence interval from the percentiles of the resampled curves, and
+the prediction interval by combining that bootstrap variance with the
+residual variance of the fit.</p>
 <p>Passing the optional calcification variable shades the points by
 stage — white for uncalcified, grey for partially calcified and black
 for fully calcified. This is a useful check on the fitted curve, since
@@ -160,9 +181,18 @@ is used only for plotting and does not enter the model.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  82.1    78.4    84.5  10.7    5.31    15.0  1.99      1.81      2.10  3.09</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: L95_lower &lt;dbl&gt;, L95_upper &lt;dbl&gt;, Sigma &lt;dbl&gt;, n &lt;int&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   x.range &lt;chr&gt;</span></span></span></code></pre></div>
+<p>The fitted curve is shown in <a href="#cl-age">Figure 2</a>.</p>
+<div id="cl-age">
+
+</div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cl_age</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Age (years)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Clasper length (mm)"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="clasp-length_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="576"></p>
+<div class="figure">
+<img src="clasp-length_files/figure-html/cl-age-1.png" class="r-plt" alt="**Figure 2.** Clasper length against age for male spot-tail sharks, with lines and shading as in [Figure 1](#cl-length)." width="576"><p class="caption">
+<strong>Figure 2.</strong> Clasper length against age for male spot-tail
+sharks, with lines and shading as in <a href="#cl-length">Figure 1</a>.
+</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="starting-values">Starting values<a class="anchor" aria-label="anchor" href="#starting-values"></a>
@@ -235,7 +265,7 @@ bootstrap parameter estimates:</p>
 <span><span class="co">#&gt; 3 80.53822 14.65627 907.4333 981.8426</span></span>
 <span><span class="co">#&gt; 4 81.25401 14.17027 900.9768 995.3944</span></span>
 <span><span class="co">#&gt; 5 81.47458 12.87377 897.5844 996.8090</span></span>
-<span><span class="co">#&gt; 6 80.93300 12.99348 900.6766 992.2189</span></span></code></pre></div>
+<span><span class="co">#&gt; 6 80.93300 12.99348 900.6766 992.2190</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

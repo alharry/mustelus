@@ -73,6 +73,16 @@
 
     
     
+<style type="text/css">
+/* Set figure captions apart from the body text. The first selector is used
+   by rmarkdown::html_vignette and the second by pkgdown */
+.figcaption, p.caption {
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 0.25em;
+  margin-bottom: 1.5em;
+}
+</style>
 <div class="section level2">
 <h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
 </h2>
@@ -196,19 +206,43 @@ is reached at 160.1 cm.</p>
 <p><code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> returns a ggplot object. The default shows binned
 observed proportions scaled by sample size, with the fitted curve and a
 bootstrap 95% confidence ribbon:</p>
+<div id="mt-fit">
+
+</div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mt</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Fork length (cm)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Proportion in maternal condition"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="maternity_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="576"></p>
-<p>The curve levels off well short of one, which is the whole point of
-the third parameter. A two-parameter ogive forced through an asymptote
-of one could not describe these data.</p>
+<div class="figure">
+<img src="maternity_files/figure-html/mt-fit-1.png" class="r-plt" alt="**Figure 1.** Proportion of female sandbar sharks in maternal condition against fork length, with the three-parameter logistic function fitted with $P_{Max}$ estimated. Points are observed proportions in length bins, sized by the number of females in each bin, and the grey ribbon is the bootstrap 95% confidence interval." width="576"><p class="caption">
+<strong>Figure 1.</strong> Proportion of female sandbar sharks in
+maternal condition against fork length, with the three-parameter
+logistic function fitted with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>P</mi><mrow><mi>M</mi><mi>a</mi><mi>x</mi></mrow></msub><annotation encoding="application/x-tex">P_{Max}</annotation></semantics></math>
+estimated. Points are observed proportions in length bins, sized by the
+number of females in each bin, and the grey ribbon is the bootstrap 95%
+confidence interval.
+</p>
+</div>
+<p>The curve in <a href="#mt-fit">Figure 1</a> levels off well short of
+one, which is the whole point of the third parameter. A two-parameter
+ogive forced through an asymptote of one could not describe these
+data.</p>
 <p>The same <code>raw_data</code> options as <code><a href="../reference/maturity.html">maturity()</a></code> are
 available: <code>"proportions"</code>, <code>"point"</code>,
 <code>"rug"</code>, <code>"bootstrap"</code> (a subsample of the
-resampled curves in place of the ribbon) and <code>"none"</code>.</p>
+resampled curves in place of the ribbon) and <code>"none"</code>. The
+rug option is shown in <a href="#mt-rug">Figure 2</a>.</p>
+<div id="mt-rug">
+
+</div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mt</span>, raw_data <span class="op">=</span> <span class="st">"rug"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Fork length (cm)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Proportion in maternal condition"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="maternity_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" alt="" width="576"></p>
+<div class="figure">
+<img src="maternity_files/figure-html/mt-rug-1.png" class="r-plt" alt="**Figure 2.** The fit in [Figure 1](#mt-fit) with individual females shown as a rug, maternal females along the top axis and non-maternal females along the bottom." width="576"><p class="caption">
+<strong>Figure 2.</strong> The fit in <a href="#mt-fit">Figure 1</a>
+with individual females shown as a rug, maternal females along the top
+axis and non-maternal females along the bottom.
+</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="fixing-the-asymptote-and-testing-reproductive-periodicity">Fixing the asymptote and testing reproductive periodicity<a class="anchor" aria-label="anchor" href="#fixing-the-asymptote-and-testing-reproductive-periodicity"></a>
@@ -251,11 +285,23 @@ fits equally well, because the confidence interval on
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>P</mi><mrow><mi>M</mi><mi>a</mi><mi>x</mi></mrow></msub><annotation encoding="application/x-tex">P_{Max}</annotation></semantics></math>
 shows what the data can and cannot resolve. Here it excludes 1/3 but
 comfortably includes 0.5.</p>
+<div id="mt-triennial">
+
+</div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mt_triennial</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Fork length (cm)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Proportion in maternal condition"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="maternity_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="576"></p>
-<p>Forcing the asymptote down to 1/3 pulls the curve below the observed
-proportions at large sizes, which is the source of the AIC penalty.</p>
+<div class="figure">
+<img src="maternity_files/figure-html/mt-triennial-1.png" class="r-plt" alt="**Figure 3.** Maternity ogive for female sandbar sharks with $P_{Max}$ fixed at 1/3, corresponding to a triennial cycle. Points and ribbon as in [Figure 1](#mt-fit)." width="576"><p class="caption">
+<strong>Figure 3.</strong> Maternity ogive for female sandbar sharks
+with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>P</mi><mrow><mi>M</mi><mi>a</mi><mi>x</mi></mrow></msub><annotation encoding="application/x-tex">P_{Max}</annotation></semantics></math>
+fixed at 1/3, corresponding to a triennial cycle. Points and ribbon as
+in <a href="#mt-fit">Figure 1</a>.
+</p>
+</div>
+<p>Forcing the asymptote down to 1/3 (<a href="#mt-triennial">Figure
+3</a>) pulls the curve below the observed proportions at large sizes,
+which is the source of the AIC penalty.</p>
 </div>
 <div class="section level2">
 <h2 id="comparison-with-maturity">Comparison with maturity<a class="anchor" aria-label="anchor" href="#comparison-with-maturity"></a>
@@ -308,13 +354,23 @@ ages, but <code>spottail</code> does:</p>
 <span><span class="co">#&gt;     m50 m50_lower m50_upper   m95  pmax     n     N</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  3.36      2.89      3.78  5.07     1    85    57</span></span></code></pre></div>
+<div id="mt-age">
+
+</div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mt_age</span>, binwidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Age (years)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Proportion in maternal condition"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="maternity_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" alt="" width="576"></p>
+<div class="figure">
+<img src="maternity_files/figure-html/mt-age-1.png" class="r-plt" alt="**Figure 4.** Proportion of female spot-tail sharks in maternal condition against age, in 1 year bins, with $P_{Max}$ estimated. Points and ribbon as in [Figure 1](#mt-fit)." width="576"><p class="caption">
+<strong>Figure 4.</strong> Proportion of female spot-tail sharks in
+maternal condition against age, in 1 year bins, with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>P</mi><mrow><mi>M</mi><mi>a</mi><mi>x</mi></mrow></msub><annotation encoding="application/x-tex">P_{Max}</annotation></semantics></math>
+estimated. Points and ribbon as in <a href="#mt-fit">Figure 1</a>.
+</p>
+</div>
 <p>Spot-tail sharks reproduce annually, so
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>P</mi><mrow><mi>M</mi><mi>a</mi><mi>x</mi></mrow></msub><annotation encoding="application/x-tex">P_{Max}</annotation></semantics></math>
-is estimated close to one and the maternity curve is nearly the same as
-a maturity ogive.</p>
+is estimated close to one (<a href="#mt-age">Figure 4</a>) and the
+maternity curve is nearly the same as a maturity ogive.</p>
 </div>
 <div class="section level2">
 <h2 id="sample-size">Sample size<a class="anchor" aria-label="anchor" href="#sample-size"></a>

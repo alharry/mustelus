@@ -52,17 +52,25 @@ model applies.
 ## Plotting
 
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) returns a
-ggplot object, which can be customised with standard ggplot2 calls. The
-solid line is the fitted mean, the dashed ribbon the 95% confidence
-interval, and the dotted ribbon the 95% prediction interval — the
-presentation used by Walker (2005).
+ggplot object, which can be customised with standard ggplot2 calls. In
+[Figure 1](#fec-length) the solid line is the fitted mean, the dashed
+ribbon the 95% confidence interval, and the dotted ribbon the 95%
+prediction interval — the presentation used by Walker (2005).
 
 ``` r
 
 plot(fec) + xlab("Total length (mm)") + ylab("Number of embryos")
 ```
 
-![](fecundity_files/figure-html/unnamed-chunk-2-1.png)
+![\*\*Figure 1.\*\* Number of embryos against maternal total length for
+gravid spot-tail sharks. The solid line is the fitted mean, the dashed
+ribbon the 95% confidence interval and the dotted ribbon the 95%
+prediction interval.](fecundity_files/figure-html/fec-length-1.png)
+
+**Figure 1.** Number of embryos against maternal total length for gravid
+spot-tail sharks. The solid line is the fitted mean, the dashed ribbon
+the 95% confidence interval and the dotted ribbon the 95% prediction
+interval.
 
 As in
 [`len_weight()`](https://alharry.github.io/mustelus/reference/len_weight.md),
@@ -89,12 +97,19 @@ summary(fec_age)
 #> # ℹ 2 more variables: fec.range <chr>, x.range <chr>
 ```
 
+The fitted relationship is shown in [Figure 2](#fec-age).
+
 ``` r
 
 plot(fec_age) + xlab("Age (years)") + ylab("Number of embryos")
 ```
 
-![](fecundity_files/figure-html/unnamed-chunk-4-1.png)
+![\*\*Figure 2.\*\* Number of embryos against maternal age for gravid
+spot-tail sharks, with lines as in \[Figure
+1\](#fec-length).](fecundity_files/figure-html/fec-age-1.png)
+
+**Figure 2.** Number of embryos against maternal age for gravid
+spot-tail sharks, with lines as in [Figure 1](#fec-length).
 
 ## Output structure
 

@@ -73,37 +73,153 @@
 
     
     
+<style type="text/css">
+/* Set figure captions apart from the body text. The first selector is used
+   by rmarkdown::html_vignette and the second by pkgdown */
+.figcaption, p.caption {
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 0.25em;
+  margin-bottom: 1.5em;
+}
+</style>
 <div class="section level2">
 <h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
 </h2>
-<p>Growth is usually described with a von Bertalanffy function, and
-usually parameterised by
+<p>Growth in fishes is usually described with the von Bertalanffy growth
+function (von Bertalanffy 1938). Von Bertalanffy derived it from the
+balance between the synthesis and breakdown of body tissue, and in the
+form used for length it assumes that growth rate declines linearly as
+length increases:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi>d</mi><mi>L</mi></mrow><mrow><mi>d</mi><mi>t</mi></mrow></mfrac><mo>=</mo><mi>K</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>L</mi><mi>∞</mi></msub><mo>−</mo><mi>L</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\frac{dL}{dt} = K(L_\infty - L)</annotation></semantics></math></p>
+<p>Here
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>
+is length and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>L</mi><mi>/</mi><mi>d</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">dL/dt</annotation></semantics></math>
+is growth rate, the change in length over time,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>.
+Growth is fastest in the smallest animals and slows as they approach
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_\infty</annotation></semantics></math>,
+the asymptotic length, at which growth rate reaches zero (<a href="#vb-rate">Figure 1</a>).
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_\infty</annotation></semantics></math>
+is usually interpreted as the average maximum length of individuals in
+the population.
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
-and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mn>0</mn></msub><annotation encoding="application/x-tex">t_0</annotation></semantics></math>.
-The third parameter is the hypothetical age at zero length, which has no
-biological meaning and is often estimated at implausible values when
-there are few young animals in the sample. <code><a href="../reference/growth.html">growth()</a></code> uses
-the reparameterisation of Harry et al. (2019), replacing
+is the growth coefficient, with units of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mtext mathvariant="normal">year</mtext><mrow><mi>−</mi><mn>1</mn></mrow></msup><annotation encoding="application/x-tex">\text{year}^{-1}</annotation></semantics></math>,
+and is the slope of the relationship between growth rate and length. It
+is not itself a growth rate. Rather, it describes how quickly length
+approaches the asymptote: an animal takes
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">ln</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mi>K</mi></mrow><annotation encoding="application/x-tex">\ln(2)/K</annotation></semantics></math>
+years to grow half of the remaining distance to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_\infty</annotation></semantics></math>,
+whatever its current length.</p>
+<div id="vb-rate">
+
+</div>
+<div class="figure">
+<img src="growth_files/figure-html/vb-rate-1.png" class="r-plt" alt="**Figure 1.** Growth rate, $dL/dt$, as a function of length, $L$, for values similar to those estimated for female blacktip sharks below ($L_0$ = 73 cm, $L_\infty$ = 265 cm, $K$ = 0.14). The dotted line extends the relationship below length at birth." width="672"><p class="caption">
+<strong>Figure 1.</strong> Growth rate,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>L</mi><mi>/</mi><mi>d</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">dL/dt</annotation></semantics></math>,
+as a function of length,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>,
+for values similar to those estimated for female blacktip sharks below
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>
+= 73 cm,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_\infty</annotation></semantics></math>
+= 265 cm,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
+= 0.14). The dotted line extends the relationship below length at birth.
+</p>
+</div>
+<p>The solution to this equation most often used in fisheries science,
+popularised by Beverton and Holt (1957), gives length as a function of
+age,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>L</mi><mi>∞</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msup><mi>e</mi><mrow><mi>−</mi><mi>K</mi><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>−</mo><msub><mi>t</mi><mn>0</mn></msub><mo stretchy="false" form="postfix">)</mo></mrow></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">L(a) = L_\infty\left(1 - e^{-K(a - t_0)}\right)</annotation></semantics></math></p>
+<p>The third parameter,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mn>0</mn></msub><annotation encoding="application/x-tex">t_0</annotation></semantics></math>,
+is the hypothetical age at which length would be zero. Many teleost
+fishes hatch as small larvae, and for these
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mn>0</mn></msub><annotation encoding="application/x-tex">t_0</annotation></semantics></math>
-with length at birth:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mrow><mi>i</mi><mo>,</mo><mi>g</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>L</mi><mn>0</mn></msub><mo>+</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>L</mi><mrow><mi>∞</mi><mo>,</mo><mi>g</mi></mrow></msub><mo>−</mo><msub><mi>L</mi><mn>0</mn></msub><mo stretchy="false" form="postfix">)</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msup><mi>e</mi><mrow><mi>−</mi><msub><mi>K</mi><mi>g</mi></msub><msub><mi>a</mi><mrow><mi>i</mi><mo>,</mo><mi>g</mi></mrow></msub></mrow></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">L_{i,g}(a) = L_0 + (L_{\infty,g} - L_0)\left(1 - e^{-K_g a_{i,g}}\right)</annotation></semantics></math></p>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>
-is interpretable, can be measured directly, and anchors the curve at the
-left-hand end where age data are usually weakest.
+has no biological meaning. Chondrichthyans are born live or hatch from
+egg cases at a relatively large size, and for them length at age zero is
+meaningful: it is length at birth. The curve can be recast with length
+at birth,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>,
+the y-intercept, in place of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mn>0</mn></msub><annotation encoding="application/x-tex">t_0</annotation></semantics></math>,
+the x-intercept (<a href="#vb-curve">Figure 2</a>):</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>L</mi><mn>0</mn></msub><mo>+</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>L</mi><mi>∞</mi></msub><mo>−</mo><msub><mi>L</mi><mn>0</mn></msub><mo stretchy="false" form="postfix">)</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msup><mi>e</mi><mrow><mi>−</mi><mi>K</mi><mi>a</mi></mrow></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">L(a) = L_0 + (L_\infty - L_0)\left(1 - e^{-Ka}\right)</annotation></semantics></math></p>
+<p>The two forms give identical lengths at age, and either intercept can
+be calculated from the other, since
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mn>0</mn></msub><mo>=</mo><msub><mi>L</mi><mi>∞</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msup><mi>e</mi><mrow><mi>K</mi><msub><mi>t</mi><mn>0</mn></msub></mrow></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">L_0 = L_\infty(1 - e^{K t_0})</annotation></semantics></math>
+(Harry et al. 2022). For the curve in <a href="#vb-curve">Figure 2</a>,
+a length at birth of 73 cm corresponds to a
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mn>0</mn></msub><annotation encoding="application/x-tex">t_0</annotation></semantics></math>
+of -2.3 years, a little over two years before birth. Holden (1974)
+suggested that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><msub><mi>t</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">-t_0</annotation></semantics></math>
+could be taken as the gestation period, on the assumption that embryos
+grow along the same curve as animals after birth, which gave a way of
+estimating
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
+for species that had not been aged (e.g. Francis 1981). Later
+comparisons with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
+from age and growth studies showed little agreement, and the assumption
+about embryonic growth is unsupported for most species (Pratt and Casey
+1990).</p>
+<div id="vb-curve">
+
+</div>
+<div class="figure">
+<img src="growth_files/figure-html/vb-curve-1.png" class="r-plt" alt="**Figure 2.** The relationship in [Figure 1](#vb-rate) expressed as length at age. The first form of the equation defines the curve by where it would cross zero length, $t_0$; the second by where it starts, at length at birth, $L_0$." width="672"><p class="caption">
+<strong>Figure 2.</strong> The relationship in <a href="#vb-rate">Figure
+1</a> expressed as length at age. The first form of the equation defines
+the curve by where it would cross zero length,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mn>0</mn></msub><annotation encoding="application/x-tex">t_0</annotation></semantics></math>;
+the second by where it starts, at length at birth,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>.
+</p>
+</div>
+<p><code><a href="../reference/growth.html">growth()</a></code> uses the second form, as in Harry et
+al. (2019).
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_\infty</annotation></semantics></math>
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
 are estimated separately for each group, typically sex, while
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>
-is shared.</p>
-<p>Observed length is normally distributed about the curve with a
-standard deviation proportional to expected length,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>σ</mi><mi>L</mi></msub><mo>=</mo><mi>C</mi><msub><mi>V</mi><mi>L</mi></msub><msub><mi>L</mi><mrow><mi>i</mi><mo>,</mo><mi>g</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\sigma_L = CV_L L_{i,g}</annotation></semantics></math>,
-following Cope and Punt (2007). Individual variability in length at age
-therefore grows with size, which is what length at age data normally
-look like.</p>
+is shared:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mi>g</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>L</mi><mn>0</mn></msub><mo>+</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>L</mi><mrow><mi>∞</mi><mo>,</mo><mi>g</mi></mrow></msub><mo>−</mo><msub><mi>L</mi><mn>0</mn></msub><mo stretchy="false" form="postfix">)</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msup><mi>e</mi><mrow><mi>−</mi><msub><mi>K</mi><mi>g</mi></msub><mi>a</mi></mrow></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">L_g(a) = L_0 + (L_{\infty,g} - L_0)\left(1 - e^{-K_g a}\right)</annotation></semantics></math></p>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>
+can be measured directly from neonates, and anchors the curve at the
+left-hand end, where age data are usually weakest.</p>
+<p>The equations above are deterministic. They describe the average
+length at age, not the lengths of individual animals, and fitting them
+to data requires some model of how individuals vary about the average.
+Growth curves are commonly fitted by nonlinear least squares regression
+of length on age (Harry et al. 2022). This implicitly assumes that the
+observed length of animal
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+is normally distributed about the curve with a constant standard
+deviation,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>l</mi><mi>i</mi></msub><mo>=</mo><mi>L</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>+</mo><msub><mi>ϵ</mi><mi>i</mi></msub><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>ϵ</mi><mi>i</mi></msub><mo>∼</mo><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">l_i = L(a_i) + \epsilon_i, \qquad \epsilon_i \sim N(0, \sigma^2)</annotation></semantics></math></p>
+<p>Under this assumption a newborn and a 20 year old animal are equally
+likely to differ from the average length for their age by any given
+amount. In practice length at age usually becomes more variable as
+animals get older and larger. A more realistic, but still simple,
+alternative is for the coefficient of variation to be constant, so that
+the standard deviation is proportional to expected length (Cope and Punt
+2007; Restrepo et al. 2010):</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ϵ</mi><mi>i</mi></msub><mo>∼</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mo stretchy="false" form="prefix">(</mo><mi>C</mi><msub><mi>V</mi><mi>L</mi></msub><mi>L</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\epsilon_i \sim N\left(0, (CV_L L(a_i))^2\right)</annotation></semantics></math></p>
+<p>Restrepo et al. (2010) arrived at this form by allowing asymptotic
+length to vary among individuals, following Kirkwood and Somers (1984).
+It is the form used by <code><a href="../reference/growth.html">growth()</a></code>, with a single
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><msub><mi>V</mi><mi>L</mi></msub></mrow><annotation encoding="application/x-tex">CV_L</annotation></semantics></math>
+shared between groups and estimated along with the growth
+parameters.</p>
 <p>Two further components from Harry et al. (2019) are optional, and can
 be used independently.</p>
 <div class="section level3">
@@ -182,13 +298,25 @@ That pattern, females larger and slower, is common in carcharhinids.</p>
 <div class="section level2">
 <h2 id="plotting">Plotting<a class="anchor" aria-label="anchor" href="#plotting"></a>
 </h2>
+<div id="growth-fit">
+
+</div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Age (years)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Stretched total length (cm)"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="growth_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="672"></p>
-<p>The solid line is the fitted curve, the dashed ribbon the 95%
-confidence interval on it, and the dotted ribbon the 95% prediction
-interval for individual animals. The prediction interval widens with
-size, which is the
+<div class="figure">
+<img src="growth_files/figure-html/growth-fit-1.png" class="r-plt" alt="**Figure 3.** Length at age of female (f) and male (m) blacktip sharks with the fitted growth curves. The solid line is the fitted curve, the dashed ribbon the 95% confidence interval and the dotted ribbon the 95% prediction interval. Neonates, which inform $L_0$, are not shown." width="672"><p class="caption">
+<strong>Figure 3.</strong> Length at age of female (f) and male (m)
+blacktip sharks with the fitted growth curves. The solid line is the
+fitted curve, the dashed ribbon the 95% confidence interval and the
+dotted ribbon the 95% prediction interval. Neonates, which inform
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>0</mn></msub><annotation encoding="application/x-tex">L_0</annotation></semantics></math>,
+are not shown.
+</p>
+</div>
+<p>In <a href="#growth-fit">Figure 3</a> the solid line is the fitted
+curve, the dashed ribbon the 95% confidence interval on it, and the
+dotted ribbon the 95% prediction interval for individual animals. The
+prediction interval widens with size, which is the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><msub><mi>V</mi><mi>L</mi></msub></mrow><annotation encoding="application/x-tex">CV_L</annotation></semantics></math>
 assumption at work.</p>
 </div>
@@ -259,12 +387,25 @@ at which the likelihood reaches the critical value.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> m      242.     233.     252. 0.163 0.142 0.187    69  0.95</span></span></code></pre></div>
 <p><code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> gives the estimates and the range of each
 parameter within the region.</p>
+<div id="growth-region">
+
+</div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Linf (cm)"</span>, y <span class="op">=</span> <span class="st">"K (per year)"</span>, linetype <span class="op">=</span> <span class="st">"Sex"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="growth_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="672"></p>
-<p>The regions are not symmetrical about the estimates, as an ellipse
-drawn from the covariance matrix would be. Each follows the curved ridge
-in the likelihood surface along which
+<div class="figure">
+<img src="growth_files/figure-html/growth-region-1.png" class="r-plt" alt="**Figure 4.** Approximate 95% joint confidence regions for $L_\infty$ and $K$ for female (f) and male (m) blacktip sharks, following Kimura (1980). Points are the maximum likelihood estimates." width="672"><p class="caption">
+<strong>Figure 4.</strong> Approximate 95% joint confidence regions for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_\infty</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
+for female (f) and male (m) blacktip sharks, following Kimura (1980).
+Points are the maximum likelihood estimates.
+</p>
+</div>
+<p>The regions in <a href="#growth-region">Figure 4</a> are not
+symmetrical about the estimates, as an ellipse drawn from the covariance
+matrix would be. Each follows the curved ridge in the likelihood surface
+along which
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">L_\infty</annotation></semantics></math>
 is traded against
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>,
@@ -455,6 +596,9 @@ objective is an external pointer and will not survive
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
+<p>Beverton, R.J.H. and Holt, S.J. (1957) <em>On the Dynamics of
+Exploited Fish Populations</em>. Fishery Investigations Series II,
+Volume 19. Ministry of Agriculture, Fisheries and Food, London.</p>
 <p>Chang, W.Y.B. (1982) A statistical method for evaluating the
 reproducibility of age determination. <em>Canadian Journal of Fisheries
 and Aquatic Sciences</em> <strong>39</strong>(8), 1208–1210. <a href="https://doi.org/10.1139/f82-158" class="external-link">doi:10.1139/f82-158</a></p>
@@ -462,13 +606,43 @@ and Aquatic Sciences</em> <strong>39</strong>(8), 1208–1210. <a href="https://
 growth curves: an example using the von Bertalanffy growth function with
 random effects. <em>Canadian Journal of Fisheries and Aquatic
 Sciences</em> <strong>64</strong>(2), 205–218. <a href="https://doi.org/10.1139/f06-179" class="external-link">doi:10.1139/f06-179</a></p>
+<p>Francis, M.P. (1981) Von Bertalanffy growth rates in species of
+<em>Mustelus</em> (Elasmobranchii: Triakidae). <em>Copeia</em>
+<strong>1981</strong>(1), 189–192. <a href="https://doi.org/10.2307/1444053" class="external-link">doi:10.2307/1444053</a></p>
 <p>Harry, A.V., Butcher, P.A., Macbeth, W.G., Morgan, J.A.T., Taylor,
 S.M. and Geraghty, P.T. (2019) Life history of the common blacktip
 shark, <em>Carcharhinus limbatus</em>, from central eastern Australia
 and comparative demography of a cryptic shark complex. <em>Marine and
 Freshwater Research</em> <strong>70</strong>(6), 834–848. <a href="https://doi.org/10.1071/MF18141" class="external-link">doi:10.1071/MF18141</a></p>
+<p>Harry, A.V., Smart, J.J. and Pardo, S.A. (2022) Understanding the age
+and growth of chondrichthyan fishes. In: Carrier, J.C., Simpfendorfer,
+C.A., Heithaus, M.R. and Yopak, K.E. (eds) <em>Biology of Sharks and
+Their Relatives</em>, 3rd edn. CRC Press, Boca Raton, FL, pp. 177–202.
+<a href="https://doi.org/10.1201/9781003262190-6" class="external-link">doi:10.1201/9781003262190-6</a></p>
+<p>Holden, M.J. (1974) Problems in the rational exploitation of
+elasmobranch populations and some suggested solutions. In: Harden Jones,
+F.R. (ed) <em>Sea Fisheries Research</em>. Halsted Press, John Wiley
+&amp; Sons, New York, pp. 117–137.</p>
 <p>Kimura, D.K. (1980) Likelihood methods for the von Bertalanffy growth
 curve. <em>Fishery Bulletin</em> <strong>77</strong>(4), 765–776.</p>
+<p>Kirkwood, G.P. and Somers, I.F. (1984) Growth of two species of tiger
+prawn, <em>Penaeus esculentus</em> and <em>P. semisulcatus</em>, in the
+western Gulf of Carpentaria. <em>Australian Journal of Marine and
+Freshwater Research</em> <strong>35</strong>(6), 703–712. <a href="https://doi.org/10.1071/MF9840703" class="external-link">doi:10.1071/MF9840703</a></p>
+<p>Pratt, H.L., Jr. and Casey, J.G. (1990) Shark reproductive strategies
+as a limiting factor in directed fisheries, with a review of Holden’s
+method of estimating growth-parameters. In: Pratt, H.L., Jr., Gruber,
+S.H. and Taniuchi, T. (eds) <em>Elasmobranchs as Living Resources:
+Advances in the Biology, Ecology, Systematics, and the Status of the
+Fisheries</em>. NOAA Technical Report NMFS 90, pp. 97–109. <a href="https://spo.nmfs.noaa.gov/content/tr-90-elasmobranchs-living-resources-advances-biology-ecology-systematics-and-status" class="external-link">NOAA
+Technical Report NMFS 90</a></p>
+<p>Restrepo, V.R., Diaz, G.A., Walter, J.F., Neilson, J.D., Campana,
+S.E., Secor, D. and Wingate, R.L. (2010) Updated estimate of the growth
+curve of Western Atlantic bluefin tuna. <em>Aquatic Living
+Resources</em> <strong>23</strong>(4), 335–342. <a href="https://doi.org/10.1051/alr/2011004" class="external-link">doi:10.1051/alr/2011004</a></p>
+<p>von Bertalanffy, L. (1938) A quantitative theory of organic growth
+(inquiries on growth laws. II). <em>Human Biology</em>
+<strong>10</strong>, 181–213.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

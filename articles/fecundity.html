@@ -73,6 +73,16 @@
 
     
     
+<style type="text/css">
+/* Set figure captions apart from the body text. The first selector is used
+   by rmarkdown::html_vignette and the second by pkgdown */
+.figcaption, p.caption {
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 0.25em;
+  margin-bottom: 1.5em;
+}
+</style>
 <div class="section level2">
 <h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
 </h2>
@@ -131,12 +141,23 @@ range over which the model applies.</p>
 <h2 id="plotting">Plotting<a class="anchor" aria-label="anchor" href="#plotting"></a>
 </h2>
 <p><code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> returns a ggplot object, which can be customised
-with standard ggplot2 calls. The solid line is the fitted mean, the
-dashed ribbon the 95% confidence interval, and the dotted ribbon the 95%
-prediction interval — the presentation used by Walker (2005).</p>
+with standard ggplot2 calls. In <a href="#fec-length">Figure 1</a> the
+solid line is the fitted mean, the dashed ribbon the 95% confidence
+interval, and the dotted ribbon the 95% prediction interval — the
+presentation used by Walker (2005).</p>
+<div id="fec-length">
+
+</div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fec</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Total length (mm)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Number of embryos"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="fecundity_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" alt="" width="576"></p>
+<div class="figure">
+<img src="fecundity_files/figure-html/fec-length-1.png" class="r-plt" alt="**Figure 1.** Number of embryos against maternal total length for gravid spot-tail sharks. The solid line is the fitted mean, the dashed ribbon the 95% confidence interval and the dotted ribbon the 95% prediction interval." width="576"><p class="caption">
+<strong>Figure 1.</strong> Number of embryos against maternal total
+length for gravid spot-tail sharks. The solid line is the fitted mean,
+the dashed ribbon the 95% confidence interval and the dotted ribbon the
+95% prediction interval.
+</p>
+</div>
 <p>As in <code><a href="../reference/len_weight.html">len_weight()</a></code>, the two interval types answer
 different questions. The confidence interval describes uncertainty in
 <em>mean</em> litter size at a given length and narrows as data
@@ -158,9 +179,20 @@ length:</p>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  1.73 ( 0.303 )   0.227 ( 0.0487 )      0.299 0.000<span style="text-decoration: underline;">023</span> 0.829    53     3.04</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: fec.range &lt;chr&gt;, x.range &lt;chr&gt;</span></span></span></code></pre></div>
+<p>The fitted relationship is shown in <a href="#fec-age">Figure
+2</a>.</p>
+<div id="fec-age">
+
+</div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fec_age</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Age (years)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Number of embryos"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="fecundity_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="576"></p>
+<div class="figure">
+<img src="fecundity_files/figure-html/fec-age-1.png" class="r-plt" alt="**Figure 2.** Number of embryos against maternal age for gravid spot-tail sharks, with lines as in [Figure 1](#fec-length)." width="576"><p class="caption">
+<strong>Figure 2.</strong> Number of embryos against maternal age for
+gravid spot-tail sharks, with lines as in <a href="#fec-length">Figure
+1</a>.
+</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="output-structure">Output structure<a class="anchor" aria-label="anchor" href="#output-structure"></a>
