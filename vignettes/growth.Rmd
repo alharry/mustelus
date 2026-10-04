@@ -55,10 +55,10 @@ length increases:
 
 $$\frac{dL}{dt} = K(L_\infty - L)$$
 
-Here $L$ is length and $dL/dt$ is growth rate, the change in length
-over time, $t$. Growth is fastest in the smallest animals and slows as
-they approach $L_\infty$, the asymptotic length, at which growth rate
-reaches zero (`r fig("vb-rate")`). $L_\infty$ is usually interpreted as the
+Here $L$ is length and $dL/dt$ is growth rate, the change in length over
+time, $t$. Growth is fastest in the smallest animals and slows as they
+approach $L_\infty$, the asymptotic length, at which growth rate reaches
+zero (`r fig("vb-rate")`). $L_\infty$ is usually interpreted as the
 average maximum length of individuals in the population. $K$ is the
 growth coefficient, with units of $\text{year}^{-1}$, and is the slope
 of the relationship between growth rate and length. It is not itself a
@@ -104,9 +104,10 @@ x-intercept (`r fig("vb-curve")`):
 
 $$L(a) = L_0 + (L_\infty - L_0)\left(1 - e^{-Ka}\right)$$
 
-The two forms give identical lengths at age, and either intercept can be
-calculated from the other, since $L_0 = L_\infty(1 - e^{K t_0})$ (Harry
-et al. 2022). For the curve in `r fig("vb-curve")`, a length at birth of 73 cm
+`growth()` uses this form, as did Harry et al. (2019). The two forms
+give identical lengths at age, and either intercept can be calculated
+from the other, since $L_0 = L_\infty(1 - e^{K t_0})$ (Harry et al.
+2022). For the curve in `r fig("vb-curve")`, a length at birth of 73 cm
 corresponds to a $t_0$ of `r round(t0, 1)` years, a little over two
 years before birth. Holden (1974) suggested that $-t_0$ could be taken
 as the gestation period, on the assumption that embryos grow along the
@@ -134,20 +135,13 @@ ggplot(len_age, aes(a, L)) +
   theme_classic()
 ```
 
-`growth()` uses the second form, as in Harry et al. (2019). $L_\infty$
-and $K$ are estimated separately for each group, typically sex, while
-$L_0$ is shared:
-
-$$L_g(a) = L_0 + (L_{\infty,g} - L_0)\left(1 - e^{-K_g a}\right)$$
-
-$L_0$ can be measured directly from neonates, and anchors the curve at
-the left-hand end, where age data are usually weakest.
-
 The equations above are deterministic. They describe the average length
-at age, not the lengths of individual animals, and fitting them to data
-requires some model of how individuals vary about the average. Growth
-curves are commonly fitted by nonlinear least squares regression of
-length on age (Harry et al. 2022). This implicitly assumes that the
+at age, not the lengths of individual animals. Estimating $L_\infty$,
+$K$ and $L_0$ means confronting the model with paired length at age
+data, and that requires some model of how individuals vary about the
+average. Growth curves are commonly fitted by nonlinear least squares
+regression of length on age (Harry et al. 2022). This has largely been a
+matter of statistical convenience, and it implicitly assumes that the
 observed length of animal $i$ is normally distributed about the curve
 with a constant standard deviation, $\sigma$:
 
@@ -161,15 +155,39 @@ alternative is for the coefficient of variation to be constant, so that
 the standard deviation is proportional to expected length (Cope and Punt
 2007; Restrepo et al. 2010):
 
-$$\epsilon_i \sim N\left(0, (CV_L L(a_i))^2\right)$$
+$$l_i = L(a_i) + \epsilon_i, \qquad \epsilon_i \sim N(0, \sigma_i^2)$$
 
-Restrepo et al. (2010) arrived at this form by allowing asymptotic
-length to vary among individuals, following Kirkwood and Somers (1984).
-It is the form used by `growth()`, with a single $CV_L$ shared between
-groups and estimated along with the growth parameters.
+$$\sigma_i = CV_L \, L(a_i)$$
 
-Two further components from Harry et al. (2019) are optional, and can be
-used independently.
+The standard deviation, $\sigma_i$, now differs between animals, and
+$CV_L$ is the coefficient of variation of length at age. Restrepo et al.
+(2010) arrived at this form by allowing asymptotic length to vary among
+individuals, following Kirkwood and Somers (1984). It is the form used
+by `growth()`, with $CV_L$ estimated along with the growth parameters.
+
+Harry et al. (2019) extended this model in three ways, each of which is
+optional in `growth()` and can be used independently of the others.
+
+### Sexual dimorphism
+
+Growth often differs between the sexes in fishes, and in sharks females
+are generally the larger sex. Cortés (2000) found that, on average, the
+maximum size of males was about 10% smaller than that of females, and
+that males had higher values of $K$, approaching their maximum size more
+quickly. This has been explained in part by the need for females to
+reach a larger size to carry their young (Cortés 2000), and the
+difference is most pronounced in live-bearing species (Gayford and
+Sternes 2024).
+
+Differences in growth between the sexes are usually accommodated by
+fitting separate models to males and females. For data-limited species
+such as many elasmobranchs, this means that parameters such as $L_0$ and
+$\sigma$ are estimated separately when they could reasonably be shared.
+`growth()` is more parsimonious. It fits both sexes in a single model,
+with $L_\infty$ and $K$ estimated separately for each group, typically
+sex, while $L_0$ and $CV_L$ are shared:
+
+$$L_g(a) = L_0 + (L_{\infty,g} - L_0)\left(1 - e^{-K_g a}\right)$$
 
 ### Ageing error
 
@@ -242,10 +260,10 @@ is common in carcharhinids.
 plot(g) + xlab("Age (years)") + ylab("Stretched total length (cm)")
 ```
 
-In `r fig("growth-fit")` the solid line is the fitted curve, the dashed ribbon the 95% confidence
-interval on it, and the dotted ribbon the 95% prediction interval for
-individual animals. The prediction interval widens with size, which is
-the $CV_L$ assumption at work.
+In `r fig("growth-fit")` the solid line is the fitted curve, the dashed
+ribbon the 95% confidence interval on it, and the dotted ribbon the 95%
+prediction interval for individual animals. The prediction interval
+widens with size, which is the $CV_L$ assumption at work.
 
 ## Comparing growth between sexes
 
@@ -309,16 +327,16 @@ above <- round(sr_f$Linf_max - sr_f$Linf)
 below <- round(sr_f$Linf - sr_f$Linf_min)
 ```
 
-The regions in `r fig("growth-region")` are not symmetrical about the estimates, as an ellipse drawn
-from the covariance matrix would be. Each follows the curved ridge in
-the likelihood surface along which $L_\infty$ is traded against $K$, and
-extends further above the estimates than below them. For females the
-region reaches about `r above` cm above the estimate of $L_\infty$ but
-only `r below` cm below it. The intervals on $K$ alone overlap between
-the sexes (`r k_ci[1]` to `r k_ci[3]` for females, `r k_ci[2]` to
-`r k_ci[4]` for males), but the two regions do not. Taken together, the
-two parameters describe clearly different growth curves for females and
-males.
+The regions in `r fig("growth-region")` are not symmetrical about the
+estimates, as an ellipse drawn from the covariance matrix would be. Each
+follows the curved ridge in the likelihood surface along which
+$L_\infty$ is traded against $K$, and extends further above the
+estimates than below them. For females the region reaches about
+`r above` cm above the estimate of $L_\infty$ but only `r below` cm
+below it. The intervals on $K$ alone overlap between the sexes
+(`r k_ci[1]` to `r k_ci[3]` for females, `r k_ci[2]` to `r k_ci[4]` for
+males), but the two regions do not. Taken together, the two parameters
+describe clearly different growth curves for females and males.
 
 As Kimura noted for $t_0$, holding $L_0$ fixed means these are
 cross-sections rather than true confidence regions, since more extreme
@@ -482,9 +500,17 @@ random effects. *Canadian Journal of Fisheries and Aquatic Sciences*
 **64**(2), 205–218.
 [doi:10.1139/f06-179](https://doi.org/10.1139/f06-179)
 
+Cortés, E. (2000) Life history patterns and correlations in sharks.
+*Reviews in Fisheries Science* **8**(4), 299–344.
+[doi:10.1080/10641260008951115](https://doi.org/10.1080/10641260008951115)
+
 Francis, M.P. (1981) Von Bertalanffy growth rates in species of
 *Mustelus* (Elasmobranchii: Triakidae). *Copeia* **1981**(1), 189–192.
 [doi:10.2307/1444053](https://doi.org/10.2307/1444053)
+
+Gayford, J.H. and Sternes, P.C. (2024) The origins and drivers of sexual
+size dimorphism in sharks. *Ecology and Evolution* **14**(3), e11163.
+[doi:10.1002/ece3.11163](https://doi.org/10.1002/ece3.11163)
 
 Harry, A.V., Butcher, P.A., Macbeth, W.G., Morgan, J.A.T., Taylor, S.M.
 and Geraghty, P.T. (2019) Life history of the common blacktip shark,
@@ -518,14 +544,13 @@ a limiting factor in directed fisheries, with a review of Holden's
 method of estimating growth-parameters. In: Pratt, H.L., Jr., Gruber,
 S.H. and Taniuchi, T. (eds) *Elasmobranchs as Living Resources: Advances
 in the Biology, Ecology, Systematics, and the Status of the Fisheries*.
-NOAA Technical Report NMFS 90, pp. 97–109.
-[NOAA Technical Report NMFS 90](https://spo.nmfs.noaa.gov/content/tr-90-elasmobranchs-living-resources-advances-biology-ecology-systematics-and-status)
+NOAA Technical Report NMFS 90, pp. 97–109. [NOAA Technical Report NMFS
+90](https://spo.nmfs.noaa.gov/content/tr-90-elasmobranchs-living-resources-advances-biology-ecology-systematics-and-status)
 
 Restrepo, V.R., Diaz, G.A., Walter, J.F., Neilson, J.D., Campana, S.E.,
 Secor, D. and Wingate, R.L. (2010) Updated estimate of the growth curve
 of Western Atlantic bluefin tuna. *Aquatic Living Resources* **23**(4),
-335–342.
-[doi:10.1051/alr/2011004](https://doi.org/10.1051/alr/2011004)
+335–342. [doi:10.1051/alr/2011004](https://doi.org/10.1051/alr/2011004)
 
 von Bertalanffy, L. (1938) A quantitative theory of organic growth
 (inquiries on growth laws. II). *Human Biology* **10**, 181–213.
