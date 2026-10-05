@@ -45,6 +45,11 @@ knitr::knit_hooks$set(fig.cap = function(before, options) {
 }
 ```
 
+This vignette describes how to fit growth models to length at age data
+with the `growth()` function. It describes and builds on the approach
+used by Harry et al. (2019) to model the growth of the common blacktip
+shark, *Carcharhinus limbatus*.
+
 ## Background
 
 Growth in fishes is usually described with the von Bertalanffy growth
@@ -107,7 +112,9 @@ $$L(a) = L_0 + (L_\infty - L_0)\left(1 - e^{-Ka}\right)$$
 `growth()` uses this form, as did Harry et al. (2019). The two forms
 give identical lengths at age, and either intercept can be calculated
 from the other, since $L_0 = L_\infty(1 - e^{K t_0})$ (Harry et al.
-2022). For the curve in `r fig("vb-curve")`, a length at birth of 73 cm
+2022). Both forms, and the conversion between them, are derived step by
+step in the [mathematical derivations](derivations.html) vignette. For
+the curve in `r fig("vb-curve")`, a length at birth of 73 cm
 corresponds to a $t_0$ of `r round(t0, 1)` years, a little over two
 years before birth. Holden (1974) suggested that $-t_0$ could be taken
 as the gestation period, on the assumption that embryos grow along the

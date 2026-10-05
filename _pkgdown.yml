@@ -21,6 +21,8 @@ navbar:
           href: articles/clasp-length.html
         - text: Growth analysis
           href: articles/growth.html
+        - text: Mathematical derivations
+          href: articles/derivations.html
 
 articles:
   - title: Function guides
@@ -31,4 +33,7 @@ articles:
       - fecundity
       - clasp-length
       - growth
+  - title: Methods
+    contents:
+      - derivations
 
