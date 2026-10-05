@@ -1,5 +1,12 @@
 # Growth analysis
 
+This vignette describes how to fit growth models to length at age data
+with the
+[`growth()`](https://alharry.github.io/mustelus/reference/growth.md)
+function. It describes and builds on the approach used by Harry et
+al. (2019) to model the growth of the common blacktip shark,
+*Carcharhinus limbatus*.
+
 ## Background
 
 Growth in fishes is usually described with the von Bertalanffy growth
@@ -57,15 +64,19 @@ L(a) = L_0 + (L_\infty - L_0)\left(1 - e^{-Ka}\right)
 [`growth()`](https://alharry.github.io/mustelus/reference/growth.md)
 uses this form, as did Harry et al. (2019). The two forms give identical
 lengths at age, and either intercept can be calculated from the other,
-since $`L_0 = L_\infty(1 - e^{K t_0})`$ (Harry et al. 2022). For the
-curve in [Figure 2](#vb-curve), a length at birth of 73 cm corresponds
-to a $`t_0`$ of -2.3 years, a little over two years before birth. Holden
-(1974) suggested that $`-t_0`$ could be taken as the gestation period,
-on the assumption that embryos grow along the same curve as animals
-after birth, which gave a way of estimating $`K`$ for species that had
-not been aged (e.g. Francis 1981). Later comparisons with $`K`$ from age
-and growth studies showed little agreement, and the assumption about
-embryonic growth is unsupported for most species (Pratt and Casey 1990).
+since $`L_0 = L_\infty(1 - e^{K t_0})`$ (Harry et al. 2022). Both forms,
+and the conversion between them, are derived step by step in the
+[mathematical
+derivations](https://alharry.github.io/mustelus/articles/derivations.md)
+vignette. For the curve in [Figure 2](#vb-curve), a length at birth of
+73 cm corresponds to a $`t_0`$ of -2.3 years, a little over two years
+before birth. Holden (1974) suggested that $`-t_0`$ could be taken as
+the gestation period, on the assumption that embryos grow along the same
+curve as animals after birth, which gave a way of estimating $`K`$ for
+species that had not been aged (e.g. Francis 1981). Later comparisons
+with $`K`$ from age and growth studies showed little agreement, and the
+assumption about embryonic growth is unsupported for most species (Pratt
+and Casey 1990).
 
 ![\*\*Figure 2.\*\* The relationship in \[Figure 1\](#vb-rate) expressed
 as length at age. The first form of the equation defines the curve by

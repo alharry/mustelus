@@ -14,3 +14,8 @@
   analysis](https://alharry.github.io/mustelus/articles/clasp-length.md):
 - [Growth
   analysis](https://alharry.github.io/mustelus/articles/growth.md):
+
+### Methods
+
+- [Mathematical
+  derivations](https://alharry.github.io/mustelus/articles/derivations.md):

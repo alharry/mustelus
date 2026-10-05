@@ -43,6 +43,7 @@
     <li><a class="dropdown-item" href="../articles/fecundity.html">Fecundity analysis</a></li>
     <li><a class="dropdown-item" href="../articles/clasp-length.html">Clasper length analysis</a></li>
     <li><a class="dropdown-item" href="../articles/growth.html">Growth analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/derivations.html">Mathematical derivations</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
@@ -83,6 +84,10 @@
   margin-bottom: 1.5em;
 }
 </style>
+<p>This vignette describes how to fit growth models to length at age
+data with the <code><a href="../reference/growth.html">growth()</a></code> function. It describes and builds on
+the approach used by Harry et al. (2019) to model the growth of the
+common blacktip shark, <em>Carcharhinus limbatus</em>.</p>
 <div class="section level2">
 <h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
 </h2>
@@ -155,8 +160,10 @@ the x-intercept (<a href="#vb-curve">Figure 2</a>):</p>
 two forms give identical lengths at age, and either intercept can be
 calculated from the other, since
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mn>0</mn></msub><mo>=</mo><msub><mi>L</mi><mi>∞</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msup><mi>e</mi><mrow><mi>K</mi><msub><mi>t</mi><mn>0</mn></msub></mrow></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">L_0 = L_\infty(1 - e^{K t_0})</annotation></semantics></math>
-(Harry et al. 2022). For the curve in <a href="#vb-curve">Figure 2</a>,
-a length at birth of 73 cm corresponds to a
+(Harry et al. 2022). Both forms, and the conversion between them, are
+derived step by step in the <a href="derivations.html">mathematical
+derivations</a> vignette. For the curve in <a href="#vb-curve">Figure
+2</a>, a length at birth of 73 cm corresponds to a
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mn>0</mn></msub><annotation encoding="application/x-tex">t_0</annotation></semantics></math>
 of -2.3 years, a little over two years before birth. Holden (1974)
 suggested that
